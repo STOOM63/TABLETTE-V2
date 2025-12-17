@@ -4,32 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0B1220" />
-  <title>STOOM • Outil Tablette</title>
+  <title>STOOM • Outil Tablette PRO</title>
   <style>
     :root{
       --bg:#070B14;
       --panel:#0B1220;
       --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.08);
       --stroke:rgba(255,255,255,.10);
       --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --muted2:rgba(255,255,255,.55);
+      --muted:rgba(255,255,255,.70);
+      --muted2:rgba(255,255,255,.56);
       --shadow: 0 18px 60px rgba(0,0,0,.55);
       --radius: 22px;
       --radius2: 16px;
       --gap: 14px;
-      --accent:#3B82F6; /* bleu */
+      --accent:#3B82F6;
       --good:#22C55E;
       --warn:#F59E0B;
       --bad:#EF4444;
-      --pink:#EC4899;
-      --cyan:#06B6D4;
-      --purple:#8B5CF6;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -45,21 +40,11 @@
     }
 
     /* Layout */
-    .app{
-      height:100%;
-      display:grid;
-      grid-template-columns: 360px 1fr;
-      gap:0;
-    }
-
-    @media (max-width: 980px){
-      body{overflow:auto}
-      .app{grid-template-columns: 1fr; overflow:auto}
-    }
+    .app{height:100%; display:grid; grid-template-columns: 380px 1fr;}
+    @media (max-width: 980px){body{overflow:auto}.app{grid-template-columns:1fr}}
 
     /* Sidebar */
     .sidebar{
-      position:relative;
       padding:18px;
       background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%);
       border-right:1px solid var(--stroke);
@@ -68,20 +53,15 @@
       height:100%;
       overflow:auto;
     }
-
     .brand{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:14px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px;
       border:1px solid var(--stroke);
       border-radius: var(--radius);
       background: rgba(255,255,255,.04);
       box-shadow: var(--shadow);
       margin-bottom:14px;
     }
-
     .brand-left{display:flex; gap:12px; align-items:center;}
     .logo{
       width:44px; height:44px; border-radius:14px;
@@ -93,6 +73,7 @@
     }
     .brand h1{font-size:14px; margin:0; letter-spacing:.08em; text-transform:uppercase}
     .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding:8px 10px;
@@ -103,12 +84,8 @@
       font-size:12px;
       user-select:none;
     }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: var(--good);
-      box-shadow: 0 0 0 5px rgba(34,197,94,.12);
-    }
-    .dot.locked{background:var(--warn); box-shadow:0 0 0 5px rgba(245,158,11,.12)}
+    .dot{width:8px;height:8px;border-radius:999px;background:var(--warn);box-shadow:0 0 0 5px rgba(245,158,11,.12)}
+    .dot.ok{background:var(--good);box-shadow:0 0 0 5px rgba(34,197,94,.12)}
     .pill button{
       all:unset; cursor:pointer; color:var(--text);
       padding:2px 6px; border-radius:10px;
@@ -117,13 +94,10 @@
     }
     .pill button:hover{background:rgba(255,255,255,.10)}
 
-    .nav{
-      display:flex; flex-direction:column; gap:10px;
-      margin-top:14px;
-    }
+    .nav{display:flex; flex-direction:column; gap:10px; margin-top:14px;}
     .navbtn{
       display:flex; align-items:center; gap:12px;
-      padding:12px 12px;
+      padding:12px;
       border-radius: 16px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.03);
@@ -138,7 +112,7 @@
       border-color: rgba(59,130,246,.35);
     }
     .icon{
-      width:34px; height:34px; border-radius: 14px;
+      width:34px; height:34px; border-radius:14px;
       display:grid; place-items:center;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.12);
@@ -147,7 +121,7 @@
       color:rgba(255,255,255,.85);
     }
     .navtxt{display:flex; flex-direction:column; gap:2px}
-    .navtxt .t{font-size:13px; font-weight:650}
+    .navtxt .t{font-size:13px; font-weight:700}
     .navtxt .s{font-size:12px; color:var(--muted)}
     .kbd{
       margin-left:auto;
@@ -172,7 +146,7 @@
     .side-card .row:first-of-type{border-top:none}
     .side-card .row span{font-size:12px; color:var(--muted)}
     .side-card .row strong{font-size:12px}
-    .side-card .btnrow{display:flex; gap:10px; margin-top:10px}
+    .btnrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:8px;
       padding:10px 12px;
@@ -187,47 +161,21 @@
     }
     .btn:hover{background: rgba(255,255,255,.08)}
     .btn:active{transform: scale(.99)}
-    .btn.primary{
-      border-color: rgba(59,130,246,.40);
-      background: rgba(59,130,246,.18);
-    }
-    .btn.danger{
-      border-color: rgba(239,68,68,.35);
-      background: rgba(239,68,68,.12);
-    }
+    .btn.primary{border-color: rgba(59,130,246,.40); background: rgba(59,130,246,.18);}
+    .btn.danger{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.12);}
+    .btn.warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12);}
 
     /* Main */
-    .main{
-      position:relative;
-      height:100%;
-      overflow:auto;
-      padding:18px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
+    .main{height:100%; overflow:auto; padding:18px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
     .search{
-      flex:1;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      flex:1; display:flex; align-items:center; gap:10px;
       padding:12px 14px;
-      border-radius: 999px;
+      border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.03);
     }
-    .search input{
-      all:unset;
-      flex:1;
-      font-size:13px;
-      color:var(--text);
-    }
+    .search input{all:unset; flex:1; font-size:13px; color:var(--text);}
     .search .hint{
       font-family:var(--mono);
       font-size:11px;
@@ -238,14 +186,8 @@
       background: rgba(255,255,255,.03);
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-    }
-    @media (min-width: 1180px){
-      .grid.cols2{grid-template-columns: 1.1fr .9fr;}
-    }
+    .grid{display:grid; grid-template-columns:1fr; gap:14px;}
+    @media (min-width:1180px){.grid.cols2{grid-template-columns:1.1fr .9fr;}}
 
     .panel{
       border:1px solid var(--stroke);
@@ -256,24 +198,16 @@
     }
     .panel .ph{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:14px 14px;
+      padding:14px;
       border-bottom:1px solid rgba(255,255,255,.08);
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
     }
-    .panel .ph h2{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.04em;
-    }
-    .panel .ph p{
-      margin:3px 0 0;
-      font-size:12px; color:var(--muted)
-    }
+    .panel .ph h2{margin:0;font-size:14px;letter-spacing:.04em}
+    .panel .ph p{margin:3px 0 0;font-size:12px;color:var(--muted)}
     .panel .pb{padding:14px;}
+
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       padding:8px 10px;
       border-radius:999px;
       font-size:12px;
@@ -283,56 +217,22 @@
       user-select:none;
     }
 
-    /* Wizard */
-    .wizard{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .steps{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .step{
-      flex:1;
-      min-width: 120px;
-      padding:10px 10px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-size:12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .step.active{
-      color: var(--text);
-      border-color: rgba(59,130,246,.35);
-      background: rgba(59,130,246,.10);
-    }
-    .step.done{
-      border-color: rgba(34,197,94,.35);
-      background: rgba(34,197,94,.10);
-      color: var(--text);
-    }
     .q{
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
       border-radius: var(--radius);
       padding:14px;
     }
-    .q h3{margin:0 0 6px; font-size:14px}
-    .q p{margin:0 0 10px; color:var(--muted); font-size:12px; line-height:1.4}
-    .choices{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:10px;
-    }
-    @media (min-width: 900px){
-      .choices.cols3{grid-template-columns: repeat(3, minmax(0,1fr));}
-      .choices.cols4{grid-template-columns: repeat(4, minmax(0,1fr));}
+    .q h3{margin:0 0 6px;font-size:14px}
+    .q p{margin:0 0 10px;color:var(--muted);font-size:12px;line-height:1.4}
+
+    .two{display:grid; grid-template-columns:1fr; gap:10px;}
+    @media (min-width:1180px){.two{grid-template-columns:1fr 1fr}}
+
+    .choices{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;}
+    @media (min-width:900px){
+      .choices.cols3{grid-template-columns:repeat(3, minmax(0,1fr));}
+      .choices.cols4{grid-template-columns:repeat(4, minmax(0,1fr));}
     }
     .choice{
       padding:12px;
@@ -349,53 +249,12 @@
       border-color: rgba(59,130,246,.45);
       background: rgba(59,130,246,.14);
     }
-    .choice .ct{font-weight:700; font-size:13px}
-    .choice .cs{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.35}
-    .wz-actions{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:2px;
-    }
-    .wz-actions .left, .wz-actions .right{display:flex; gap:10px; align-items:center}
-    .mini{
-      font-size:11px;
-      color:var(--muted2);
-      font-family:var(--mono);
-    }
-
-    /* Result card */
-    .result{
-      border-radius: var(--radius);
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(139,92,246,.10));
-      padding:14px;
-    }
-    .result h3{margin:0 0 8px; font-size:14px}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      font-size:12px;
-    }
-    .chip b{font-weight:800}
-    .two{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:10px;
-    }
-    @media (min-width: 1180px){
-      .two{grid-template-columns: 1fr 1fr}
-    }
+    .choice .ct{font-weight:800;font-size:13px}
+    .choice .cs{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
 
     textarea, select, input[type="number"], input[type="text"], input[type="password"]{
       width:100%;
-      padding:12px 12px;
+      padding:12px;
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.03);
@@ -405,43 +264,82 @@
     }
     textarea{min-height:96px; resize:vertical; line-height:1.4}
     label{font-size:12px; color:var(--muted); display:block; margin:0 0 6px}
+    .mono{font-family:var(--mono)}
+    .small{font-size:11px; color:var(--muted2)}
+    .hr{height:1px;background: rgba(255,255,255,.10); margin:12px 0}
 
+    /* Steps */
+    .steps{display:flex; gap:8px; flex-wrap:wrap;}
+    .step{
+      flex:1; min-width:120px;
+      padding:10px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size:12px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .step.active{
+      color: var(--text);
+      border-color: rgba(59,130,246,.35);
+      background: rgba(59,130,246,.10);
+    }
+    .step.done{
+      border-color: rgba(34,197,94,.35);
+      background: rgba(34,197,94,.10);
+      color: var(--text);
+    }
+
+    .result{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(139,92,246,.10));
+      padding:14px;
+    }
+    .result h3{margin:0 0 8px;font-size:14px}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size:12px;
+    }
+    .chip b{font-weight:900}
+
+    /* Toast */
     .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
+      position:fixed; left:50%; bottom:18px;
       transform: translateX(-50%);
-      min-width: 280px;
-      max-width: 92vw;
-      padding:12px 12px;
+      min-width: 280px; max-width: 92vw;
+      padding:12px;
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(12,18,32,.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: 0 20px 80px rgba(0,0,0,.6);
-      display:none;
-      z-index:9999;
+      display:none; z-index:9999;
     }
     .toast.show{display:block; animation: pop .16s ease-out}
     @keyframes pop{from{transform:translateX(-50%) translateY(8px); opacity:.2}to{transform:translateX(-50%) translateY(0); opacity:1}}
-    .toast .t{font-size:12px; color:var(--text)}
-    .toast .s{font-size:11px; color:var(--muted); margin-top:4px}
+    .toast .t{font-size:12px;color:var(--text)}
+    .toast .s{font-size:11px;color:var(--muted); margin-top:4px}
 
     /* Modal */
     .modal{
       position:fixed; inset:0;
-      display:none;
-      z-index:9998;
+      display:none; z-index:9998;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      padding:18px;
-      overflow:auto;
+      padding:18px; overflow:auto;
     }
     .modal.show{display:block}
     .modal-card{
-      max-width: 640px;
+      max-width: 720px;
       margin: 40px auto;
       border-radius: var(--radius);
       border:1px solid rgba(255,255,255,.14);
@@ -454,7 +352,7 @@
       border-bottom:1px solid rgba(255,255,255,.10);
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-    .modal-h h3{margin:0; font-size:14px}
+    .modal-h h3{margin:0;font-size:14px}
     .modal-b{padding:14px}
     .xbtn{
       all:unset; cursor:pointer;
@@ -466,10 +364,21 @@
       color:var(--text);
     }
     .xbtn:hover{background: rgba(255,255,255,.08)}
-    .hr{height:1px; background: rgba(255,255,255,.10); margin:12px 0}
-    .muted{color:var(--muted); font-size:12px; line-height:1.45}
-    .small{font-size:11px; color:var(--muted2)}
-    .mono{font-family:var(--mono)}
+
+    /* Table-ish list */
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 18px;
+      padding:12px;
+    }
+    .item .top{display:flex; justify-content:space-between; gap:12px; align-items:flex-start}
+    .item .top strong{font-size:13px}
+    .item .top span{font-size:11px;color:var(--muted2);font-family:var(--mono)}
+    .item p{margin:8px 0 0; color:var(--muted); font-size:12px; line-height:1.4}
+    .right{margin-left:auto}
+
     .dangerText{color: rgba(239,68,68,.92)}
     .goodText{color: rgba(34,197,94,.92)}
     .warnText{color: rgba(245,158,11,.92)}
@@ -484,89 +393,72 @@
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>STOOM</h1>
-          <p>Outil tablette • conseil & SAV</p>
+          <p>Outil tablette • PRO (audit + règles)</p>
         </div>
       </div>
-      <div class="pill" id="sellerPill">
-        <span class="dot locked" id="sellerDot"></span>
-        <span id="sellerLabel">Vendeur : verrouillé</span>
-        <button id="sellerBtn" title="Basculer mode vendeur">PIN</button>
+      <div class="pill" id="authPill" title="Connexion vendeur obligatoire">
+        <span class="dot" id="authDot"></span>
+        <span id="authLabel">Non connecté</span>
+        <button id="authBtn">PIN</button>
       </div>
     </div>
 
     <div class="nav" id="nav">
       <div class="navbtn active" data-view="home" tabindex="0">
         <div class="icon">01</div>
-        <div class="navtxt">
-          <div class="t">Accueil</div>
-          <div class="s">3 parcours simples</div>
-        </div>
+        <div class="navtxt"><div class="t">Accueil</div><div class="s">3 parcours + règles</div></div>
         <div class="kbd">H</div>
       </div>
 
       <div class="navbtn" data-view="client" tabindex="0">
         <div class="icon">CL</div>
-        <div class="navtxt">
-          <div class="t">Parcours client</div>
-          <div class="s">Diagnostic + fiche</div>
-        </div>
+        <div class="navtxt"><div class="t">Parcours client</div><div class="s">Diagnostic + fiche</div></div>
         <div class="kbd">C</div>
       </div>
 
       <div class="navbtn" data-view="sav" tabindex="0">
         <div class="icon">SV</div>
-        <div class="navtxt">
-          <div class="t">SAV guidé</div>
-          <div class="s">Pannes fréquentes</div>
-        </div>
+        <div class="navtxt"><div class="t">SAV guidé</div><div class="s">Pannes fréquentes</div></div>
         <div class="kbd">S</div>
       </div>
 
       <div class="navbtn" data-view="calc" tabindex="0">
         <div class="icon">€</div>
-        <div class="navtxt">
-          <div class="t">Calculatrices</div>
-          <div class="s">Conso, économies</div>
-        </div>
+        <div class="navtxt"><div class="t">Calculatrices</div><div class="s">Conso & économies</div></div>
         <div class="kbd">K</div>
-      </div>
-
-      <div class="navbtn" data-view="seller" tabindex="0" id="sellerNav">
-        <div class="icon">VD</div>
-        <div class="navtxt">
-          <div class="t">Mode vendeur</div>
-          <div class="s">Trame + anti-erreurs</div>
-        </div>
-        <div class="kbd">V</div>
       </div>
 
       <div class="navbtn" data-view="notes" tabindex="0">
         <div class="icon">📝</div>
-        <div class="navtxt">
-          <div class="t">Notes client</div>
-          <div class="s">Suivi & rappel</div>
-        </div>
+        <div class="navtxt"><div class="t">Notes client</div><div class="s">Suivi (protégé)</div></div>
         <div class="kbd">N</div>
+      </div>
+
+      <div class="navbtn" data-view="manager" tabindex="0" id="managerNav" style="display:none">
+        <div class="icon">AD</div>
+        <div class="navtxt"><div class="t">Espace responsable</div><div class="s">Audit + règles + users</div></div>
+        <div class="kbd">A</div>
       </div>
     </div>
 
     <div class="side-card">
       <h3>Session</h3>
       <div class="row"><span>Date</span> <strong id="today"></strong></div>
-      <div class="row"><span>Profil en cours</span> <strong id="profileMini">—</strong></div>
-      <div class="row"><span>Fiche</span> <strong id="sheetMini">—</strong></div>
+      <div class="row"><span>Utilisateur</span> <strong id="userMini">—</strong></div>
+      <div class="row"><span>Rôle</span> <strong id="roleMini">—</strong></div>
+      <div class="row"><span>Dernière fiche</span> <strong id="sheetMini">—</strong></div>
 
       <div class="btnrow">
         <button class="btn primary" id="printBtn">Imprimer fiche</button>
-        <button class="btn" id="exportBtn">Exporter JSON</button>
+        <button class="btn" id="exportStateBtn">Exporter</button>
       </div>
       <div class="btnrow">
+        <button class="btn" id="importStateBtn">Importer</button>
         <button class="btn danger" id="resetBtn">Réinitialiser</button>
-        <button class="btn" id="helpBtn">Aide</button>
       </div>
       <div class="small" style="margin-top:10px">
         Offline : OK (données stockées sur l’appareil).<br/>
-        Raccourcis : H C S K V N • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">Esc</span>.
+        Raccourcis : H C S K N A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
       </div>
     </div>
   </aside>
@@ -576,61 +468,55 @@
     <div class="topbar">
       <div class="search">
         <span style="opacity:.8">🔎</span>
-        <input id="searchInput" type="text" placeholder="Rechercher (ex: fuite, 10mg sel, MTL, résistance...)" />
+        <input id="searchInput" type="text" placeholder="Rechercher (ex: fuite, brûlé, 10mg sel, MTL, règle...)" />
         <span class="hint">/</span>
       </div>
       <button class="btn" id="quickNew">Nouveau client</button>
+      <button class="btn" id="logoutBtn">Déconnexion</button>
     </div>
 
+    <!-- HOME -->
     <div id="view-home" class="view">
       <div class="grid cols2">
         <section class="panel">
           <div class="ph">
             <div>
               <h2>Accueil</h2>
-              <p>Un outil vendeur-client, pensé pour la tablette.</p>
+              <p>Outil tablette pro : diagnostic + SAV + traçabilité.</p>
             </div>
-            <span class="badge">Ultra rapide • Sans blabla</span>
+            <span class="badge">Vendeur • Responsable</span>
           </div>
           <div class="pb">
             <div class="two">
               <div class="result">
-                <h3>✅ 3 parcours (recommandé)</h3>
+                <h3>✅ Les 3 parcours</h3>
                 <div class="chips">
                   <span class="chip"><b>Client</b> → Diagnostic</span>
                   <span class="chip"><b>SAV</b> → Guidage</span>
-                  <span class="chip"><b>Calcul</b> → Économies</span>
+                  <span class="chip"><b>Notes</b> → Suivi</span>
                 </div>
-                <p class="muted" style="margin-top:10px">
-                  L’objectif : une recommandation claire, cohérente avec le sevrage, et une fiche imprimable.
+                <p class="small" style="margin-top:10px">
+                  Objectif : une recommandation stable, sans erreurs, et une trace d’utilisation.
                 </p>
-                <div class="btnrow" style="margin-top:10px">
-                  <button class="btn primary" onclick="go('client')">Démarrer diagnostic client</button>
-                  <button class="btn" onclick="go('sav')">Démarrer SAV guidé</button>
+                <div class="btnrow">
+                  <button class="btn primary" onclick="go('client')">Démarrer diagnostic</button>
+                  <button class="btn" onclick="go('sav')">Démarrer SAV</button>
+                  <button class="btn" onclick="go('notes')">Ouvrir Notes</button>
                 </div>
               </div>
 
               <div class="q">
-                <h3>💡 Le “truc” qui fait la différence</h3>
-                <p>On ne vend pas un matériel. On vend une <b>solution stable</b> qui évite la rechute.</p>
-                <div class="choices cols2">
-                  <div class="choice" onclick="toast('Conseil', 'Nicotine élevée = matériel peu puissant (MTL). Objectif : confort + stabilité.')">
-                    <div class="ct">Repère nicotine / puissance</div>
-                    <div class="cs">Éviter irritations, hit trop fort, surdosage.</div>
-                  </div>
-                  <div class="choice" onclick="toast('Repère conso', 'En boutique, on peut rappeler : 10 flacons de 10ml ≈ conso moyenne d’un fumeur de ~20 cig/j (à ajuster).')">
-                    <div class="ct">Repère 10ml</div>
-                    <div class="cs">Simple à expliquer au client.</div>
-                  </div>
-                  <div class="choice" onclick="toast('Offres', 'Proposer systématiquement : Flavour Power 10+1 offert et 15+2 offert (si applicable en magasin).')">
-                    <div class="ct">Offres FP 10ml</div>
-                    <div class="cs">10+1 / 15+2</div>
-                  </div>
-                  <div class="choice" onclick="toast('Phrase', '“On vise d’abord zéro cigarette. La baisse de nicotine vient quand c’est stable.”')">
-                    <div class="ct">Phrase anti-rechute</div>
-                    <div class="cs">Rassure, cadre, fidélise.</div>
-                  </div>
+                <h3>⚙️ Règles actives (résumé)</h3>
+                <p class="muted" id="rulesSummary">—</p>
+                <div class="btnrow">
+                  <button class="btn" onclick="toast('Info', 'Les règles modifient automatiquement tirage/puissance/matériel/nicotine selon les réponses.')">Comprendre</button>
+                  <button class="btn primary" id="goManagerBtn" style="display:none" onclick="go('manager')">Modifier (responsable)</button>
                 </div>
+                <div class="hr"></div>
+                <h3>🧠 Message clé</h3>
+                <p class="muted">
+                  “On vise d’abord <b>zéro cigarette</b>. La baisse de nicotine vient quand c’est stable et confortable.”
+                </p>
               </div>
             </div>
           </div>
@@ -640,72 +526,56 @@
           <div class="ph">
             <div>
               <h2>Dernière fiche</h2>
-              <p>Récupère une session précédente automatiquement.</p>
+              <p>Reprise automatique (auto-save).</p>
             </div>
-            <span class="badge">Auto-save</span>
+            <span class="badge">Auto</span>
           </div>
           <div class="pb">
             <div id="lastSheetBox" class="q">
               <h3>—</h3>
-              <p class="muted">Aucune fiche enregistrée pour le moment.</p>
-              <div class="btnrow">
-                <button class="btn" onclick="go('client')">Créer une fiche</button>
-              </div>
+              <p class="muted">Aucune fiche pour le moment.</p>
+              <div class="btnrow"><button class="btn" onclick="go('client')">Créer une fiche</button></div>
             </div>
+
             <div class="hr"></div>
+
             <div class="q">
-              <h3>⚙️ Réglages rapides</h3>
-              <p class="muted">Personnalise le PIN vendeur et quelques defaults.</p>
-              <div class="two">
-                <div>
-                  <label>PIN vendeur</label>
-                  <input type="password" id="pinInput" placeholder="Ex: 2468" inputmode="numeric" />
-                  <div class="small" style="margin-top:8px">Stocké sur l’appareil (localStorage). Change-le si besoin.</div>
-                </div>
-                <div>
-                  <label>Nom boutique (affiché sur la fiche)</label>
-                  <input type="text" id="shopNameInput" placeholder="Ex: STOOM Clermont-Ferrand" />
-                </div>
-              </div>
-              <div class="btnrow" style="margin-top:10px">
-                <button class="btn primary" onclick="saveSettings()">Enregistrer</button>
-                <button class="btn" onclick="loadSettings(true)">Recharger</button>
+              <h3>🧾 Audit (aperçu)</h3>
+              <p class="muted">Dernières actions enregistrées (responsable : vue complète + export).</p>
+              <div id="auditPeek" class="list"></div>
+              <div class="btnrow">
+                <button class="btn" onclick="toast('Audit', 'Tout est horodaté et lié au vendeur connecté.')">Pourquoi c’est utile</button>
               </div>
             </div>
+
           </div>
         </section>
       </div>
     </div>
 
+    <!-- CLIENT -->
     <div id="view-client" class="view" style="display:none">
       <div class="grid cols2">
         <section class="panel">
           <div class="ph">
             <div>
               <h2>Parcours client</h2>
-              <p>5 questions. Une fiche claire. Zéro prise de tête.</p>
+              <p>5 questions → fiche claire (imprimable).</p>
             </div>
             <span class="badge">Wizard</span>
           </div>
           <div class="pb">
-            <div class="wizard">
-              <div class="steps" id="clientSteps"></div>
-
-              <div class="q" id="clientQuestionBox">
-                <!-- injected -->
+            <div class="steps" id="clientSteps"></div>
+            <div class="q" id="clientQuestionBox" style="margin-top:12px"></div>
+            <div class="btnrow" style="justify-content:space-between">
+              <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+                <button class="btn" id="clientPrev">Précédent</button>
+                <span class="small mono">Astuce : 1/2/3/4 pour répondre vite.</span>
               </div>
-
-              <div class="wz-actions">
-                <div class="left">
-                  <button class="btn" id="clientPrev">Précédent</button>
-                  <span class="mini" id="clientTip">Astuce : appuie sur 1/2/3/4 pour répondre vite.</span>
-                </div>
-                <div class="right">
-                  <button class="btn" onclick="clientReset()">Recommencer</button>
-                  <button class="btn primary" id="clientNext">Suivant</button>
-                </div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap">
+                <button class="btn" onclick="clientReset()">Recommencer</button>
+                <button class="btn primary" id="clientNext">Suivant</button>
               </div>
-
             </div>
           </div>
         </section>
@@ -714,52 +584,51 @@
           <div class="ph">
             <div>
               <h2>Fiche recommandation</h2>
-              <p>Auto-générée. Imprimable. Partageable.</p>
+              <p>Auto-générée selon les règles actives.</p>
             </div>
             <span class="badge">Fiche</span>
           </div>
           <div class="pb">
             <div class="result" id="sheetBox">
               <h3>En attente…</h3>
-              <p class="muted">Réponds aux questions à gauche pour générer la fiche.</p>
+              <p class="muted">Réponds aux questions pour générer la fiche.</p>
             </div>
 
             <div class="hr"></div>
 
             <div class="q">
-              <h3>🗣️ Message prêt à dire</h3>
-              <p class="muted" id="salesLine">—</p>
+              <h3>🗣️ Phrase prête à dire</h3>
+              <p class="muted mono" id="salesLine">—</p>
               <div class="btnrow">
                 <button class="btn" onclick="copySalesLine()">Copier</button>
-                <button class="btn" onclick="toast('Pro tip', 'Dis la phrase calmement + regarde le client : tu installes la confiance.')">Tip vendeur</button>
+                <button class="btn" onclick="toast('Tip', 'Une phrase courte + une explication simple = confiance.')">Tip</button>
               </div>
             </div>
-
           </div>
         </section>
       </div>
     </div>
 
+    <!-- SAV -->
     <div id="view-sav" class="view" style="display:none">
       <div class="grid cols2">
         <section class="panel">
           <div class="ph">
             <div>
               <h2>SAV guidé</h2>
-              <p>Diagnostic rapide des problèmes fréquents.</p>
+              <p>Symptôme → causes → actions.</p>
             </div>
             <span class="badge">Check</span>
           </div>
           <div class="pb">
             <div class="q">
               <h3>Quel problème principal ?</h3>
-              <p class="muted">Choisis le symptôme dominant. L’outil propose les causes + actions.</p>
+              <p class="muted">Choisis le symptôme dominant.</p>
               <div class="choices cols3" id="savChoices"></div>
             </div>
-
             <div class="q" id="savResult" style="margin-top:12px">
               <h3>En attente…</h3>
-              <p class="muted">Sélectionne un symptôme ci-dessus.</p>
+              <p class="muted">Sélectionne un symptôme.</p>
             </div>
           </div>
         </section>
@@ -767,39 +636,38 @@
         <section class="panel">
           <div class="ph">
             <div>
-              <h2>Checklist SAV (vendeur)</h2>
-              <p>Une trame simple pour éviter l’oubli.</p>
+              <h2>Checklist SAV</h2>
+              <p>Trame simple (60 secondes).</p>
             </div>
             <span class="badge">Pro</span>
           </div>
           <div class="pb">
             <div class="q">
-              <h3>Questions à poser (60 secondes)</h3>
+              <h3>Questions à poser</h3>
               <ul class="muted" style="margin:10px 0 0; padding-left:18px">
                 <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
-                <li>Liquide : taux / ratio / marque / nouveauté ?</li>
+                <li>Liquide : taux / ratio / nouveauté ?</li>
                 <li>Résistance : neuve ? amorçage ? puissance ?</li>
                 <li>Airflow : trop ouvert ? tirage trop fort ?</li>
-                <li>Le matériel a subi un choc / chaleur ?</li>
+                <li>Choc / chaleur / fuite dans la poche ?</li>
               </ul>
               <div class="hr"></div>
-              <h3>Conclusion simple</h3>
-              <p class="muted">
-                “On fait 1 changement à la fois : résistance + réglage, puis on valide. Le but : retrouver un usage stable.”
-              </p>
+              <h3>Conclusion</h3>
+              <p class="muted">“On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
             </div>
           </div>
         </section>
       </div>
     </div>
 
+    <!-- CALC -->
     <div id="view-calc" class="view" style="display:none">
       <div class="grid cols2">
         <section class="panel">
           <div class="ph">
             <div>
               <h2>Calculateur conso</h2>
-              <p>Estimation flacons 10ml (simple à expliquer).</p>
+              <p>Estimation flacons 10ml.</p>
             </div>
             <span class="badge">10ml</span>
           </div>
@@ -815,15 +683,16 @@
                   <input id="days" type="number" min="1" step="1" value="30" />
                 </div>
               </div>
+
               <div class="two" style="margin-top:10px">
                 <div>
-                  <label>Hypothèse (modifiable)</label>
+                  <label>Hypothèse</label>
                   <select id="mlPerDayAt20">
                     <option value="3">20 cig/j ≈ 3 ml/j</option>
                     <option value="4" selected>20 cig/j ≈ 4 ml/j</option>
                     <option value="5">20 cig/j ≈ 5 ml/j</option>
                   </select>
-                  <div class="small" style="margin-top:8px">C’est une estimation. Tu peux ajuster selon ton expérience boutique.</div>
+                  <div class="small" style="margin-top:8px">Estimation ajustable selon l’expérience boutique.</div>
                 </div>
                 <div>
                   <label>Prix flacon 10ml (€)</label>
@@ -831,7 +700,7 @@
                 </div>
               </div>
 
-              <div class="btnrow" style="margin-top:12px">
+              <div class="btnrow">
                 <button class="btn primary" onclick="calcBottles()">Calculer</button>
                 <button class="btn" onclick="fillExample()">Exemple (20 cig/j)</button>
               </div>
@@ -839,7 +708,7 @@
               <div class="hr"></div>
               <div class="result" id="bottleResult">
                 <h3>Résultat</h3>
-                <p class="muted">Entre tes chiffres et clique “Calculer”.</p>
+                <p class="muted">Renseigne les champs puis “Calculer”.</p>
               </div>
             </div>
           </div>
@@ -849,7 +718,7 @@
           <div class="ph">
             <div>
               <h2>Comparatif économies</h2>
-              <p>Tabac vs vape (argument clair).</p>
+              <p>Tabac vs vape.</p>
             </div>
             <span class="badge">€</span>
           </div>
@@ -877,15 +746,15 @@
                 </div>
               </div>
 
-              <div class="btnrow" style="margin-top:12px">
+              <div class="btnrow">
                 <button class="btn primary" onclick="calcSavings()">Calculer</button>
-                <button class="btn" onclick="toast('Tip', 'Même si les prix montent, l’écart avec le tabac reste généralement important. Garde l’argument simple.')">Tip</button>
+                <button class="btn" onclick="toast('Tip', 'Même si les prix montent, l’écart avec le tabac reste souvent très net.')">Tip</button>
               </div>
 
               <div class="hr"></div>
               <div class="result" id="savingsResult">
                 <h3>Résultat</h3>
-                <p class="muted">Renseigne les champs puis clique “Calculer”.</p>
+                <p class="muted">Renseigne puis “Calculer”.</p>
               </div>
             </div>
           </div>
@@ -893,96 +762,14 @@
       </div>
     </div>
 
-    <div id="view-seller" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Mode vendeur (interne)</h2>
-              <p>Trame, repères, anti-erreurs.</p>
-            </div>
-            <span class="badge">PIN requis</span>
-          </div>
-          <div class="pb">
-            <div class="q" id="sellerGate">
-              <h3>Verrouillé</h3>
-              <p class="muted">Active le mode vendeur avec le PIN (bouton “PIN” en haut à gauche).</p>
-              <button class="btn primary" onclick="openPinModal()">Entrer PIN</button>
-            </div>
-
-            <div class="q" id="sellerContent" style="display:none">
-              <h3>Trame de vente (30 secondes)</h3>
-              <ol class="muted" style="margin:10px 0 0; padding-left:18px">
-                <li><b>Rassurer</b> : “On va chercher une solution stable, pas parfaite du premier coup.”</li>
-                <li><b>Diagnostiquer</b> : conso, moments clés, type de cigarette, contraintes.</li>
-                <li><b>Décider</b> : tirage + taux + matériel + explication simple.</li>
-              </ol>
-              <div class="hr"></div>
-              <h3>Anti-erreurs (les 5 classiques)</h3>
-              <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-                <li><span class="dangerText">Taux élevé + matériel puissant</span> → hit trop fort, irritations, risque d’arrêt.</li>
-                <li><span class="warnText">Passage trop rapide en 0 mg</span> → frustration → rechute.</li>
-                <li><span class="warnText">Trop d’infos</span> → client perdu. 1 message simple.</li>
-                <li><span class="warnText">Changer 3 choses à la fois</span> (liquide, résistance, réglage) → impossible de comprendre.</li>
-                <li><span class="warnText">Oublier la sécurité</span> : batteries, chargeurs, manipulations.</li>
-              </ul>
-              <div class="hr"></div>
-              <h3>Repères nicotine (Stoom)</h3>
-              <div class="chips">
-                <span class="chip"><b>5–10</b> cig/j → 3 ou 6 mg</span>
-                <span class="chip"><b>10–15</b> cig/j → 6 ou 12 mg</span>
-                <span class="chip"><b>15–20</b> cig/j → 10 mg sel</span>
-                <span class="chip"><b>25+</b> cig/j → 20 mg sel</span>
-              </div>
-              <p class="muted" style="margin-top:10px">
-                Rappel : nicotine élevée = matériel peu puissant (MTL). Objectif : confort + éviter la rechute.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Scripts (phrases prêtes)</h2>
-              <p>À lire mot pour mot si besoin.</p>
-            </div>
-            <span class="badge">Copy</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Stabilité d’abord</h3>
-              <p class="muted mono" id="script1">“On vise d’abord zéro cigarette. La baisse de nicotine vient quand c’est stable et confortable.”</p>
-              <div class="btnrow">
-                <button class="btn" onclick="copyText('#script1')">Copier</button>
-              </div>
-            </div>
-            <div class="q" style="margin-top:12px">
-              <h3>Client qui veut 0 mg trop vite</h3>
-              <p class="muted mono" id="script2">“Passer trop vite à 0 mg, c’est souvent ce qui fait rechuter. On peut baisser progressivement, ou alterner, pour que ça reste facile.”</p>
-              <div class="btnrow">
-                <button class="btn" onclick="copyText('#script2')">Copier</button>
-              </div>
-            </div>
-            <div class="q" style="margin-top:12px">
-              <h3>Ventes additionnelles “éthiques”</h3>
-              <p class="muted mono" id="script3">“Je te mets une résistance de secours / une cartouche de rechange : ça évite la panne et donc la clope.”</p>
-              <div class="btnrow">
-                <button class="btn" onclick="copyText('#script3')">Copier</button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-
+    <!-- NOTES -->
     <div id="view-notes" class="view" style="display:none">
       <div class="grid cols2">
         <section class="panel">
           <div class="ph">
             <div>
               <h2>Notes client</h2>
-              <p>Suivi rapide (local, offline).</p>
+              <p>Suivi local (protégé par connexion vendeur).</p>
             </div>
             <span class="badge">CRM light</span>
           </div>
@@ -998,13 +785,20 @@
                   <input id="notePhone" type="text" placeholder="Ex: 06..." />
                 </div>
               </div>
+
               <div style="margin-top:10px">
                 <label>Note</label>
                 <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible à la gorge → baisser puissance. Revoir dans 2 semaines."></textarea>
               </div>
-              <div class="btnrow" style="margin-top:10px">
+
+              <div class="btnrow">
                 <button class="btn primary" onclick="saveNote()">Enregistrer</button>
                 <button class="btn" onclick="clearNoteForm()">Effacer</button>
+                <button class="btn" id="toggleMaskBtn" style="display:none" onclick="toggleMaskPhones()">Masquer/afficher numéros</button>
+              </div>
+
+              <div class="small" style="margin-top:10px">
+                Conseil RGPD : évite de stocker plus que nécessaire, et purge régulièrement.
               </div>
             </div>
           </div>
@@ -1014,17 +808,153 @@
           <div class="ph">
             <div>
               <h2>Historique</h2>
-              <p>Recherche instantanée + suppression.</p>
+              <p>Recherche + suppression.</p>
             </div>
             <span class="badge">Local</span>
           </div>
           <div class="pb">
             <div class="q">
               <label>Filtrer</label>
-              <input id="noteFilter" type="text" placeholder="Tape un nom, un mot, un numéro..." />
+              <input id="noteFilter" type="text" placeholder="Nom, mot, numéro..." />
               <div class="hr"></div>
-              <div id="notesList"></div>
+              <div id="notesList" class="list"></div>
             </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- MANAGER -->
+    <div id="view-manager" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Espace responsable</h2>
+              <p>Règles + utilisateurs + audit.</p>
+            </div>
+            <span class="badge">Admin</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <h3>1) Règles de recommandation (modifiables)</h3>
+              <p class="muted">Tu peux ajuster : <b>nicotine / tirage / puissance / matériel</b> pour chaque tranche de conso.</p>
+              <div id="rulesEditor"></div>
+              <div class="btnrow">
+                <button class="btn primary" onclick="saveRulesFromUI()">Enregistrer règles</button>
+                <button class="btn" onclick="resetRules()">Réinitialiser règles</button>
+              </div>
+              <div class="small" style="margin-top:10px">Les modifications s’appliquent immédiatement aux nouvelles fiches.</div>
+            </div>
+
+            <div class="q" style="margin-top:12px">
+              <h3>2) Politique RDL/DL</h3>
+              <p class="muted">On garde l’outil “sevrage-first”. Le RDL est proposé uniquement selon les règles ci-dessous.</p>
+              <div class="two">
+                <div>
+                  <label>RDL activé</label>
+                  <select id="rdlEnabled">
+                    <option value="true">Oui</option>
+                    <option value="false">Non</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Nicotine max (mg) pour proposer RDL</label>
+                  <input id="rdlMaxNic" type="number" min="0" step="1" />
+                </div>
+              </div>
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Exiger que l’objectif ≠ “Arrêter”</label>
+                  <select id="rdlRequireGoalNotArreter">
+                    <option value="true">Oui</option>
+                    <option value="false">Non</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Texte “matériel RDL” (fiche)</label>
+                  <input id="rdlHardwareText" type="text" placeholder="Ex: Kit RDL doux (si stable)" />
+                </div>
+              </div>
+              <div class="btnrow">
+                <button class="btn primary" onclick="saveRdlPolicyFromUI()">Enregistrer politique</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Utilisateurs & Audit</h2>
+              <p>Ajouter vendeurs / export journal.</p>
+            </div>
+            <span class="badge">Sécurité</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <h3>3) Gestion utilisateurs</h3>
+              <div id="usersList" class="list"></div>
+
+              <div class="hr"></div>
+
+              <h3>Ajouter un utilisateur</h3>
+              <div class="two">
+                <div>
+                  <label>Nom</label>
+                  <input id="newUserName" type="text" placeholder="Ex: Marie" />
+                </div>
+                <div>
+                  <label>PIN (4 chiffres mini)</label>
+                  <input id="newUserPin" type="password" inputmode="numeric" placeholder="Ex: 3344" />
+                </div>
+              </div>
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Rôle</label>
+                  <select id="newUserRole">
+                    <option value="seller">Vendeur</option>
+                    <option value="manager">Responsable</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Identifiant (auto)</label>
+                  <input id="newUserId" type="text" placeholder="auto" disabled />
+                </div>
+              </div>
+              <div class="btnrow">
+                <button class="btn primary" onclick="addUser()">Ajouter</button>
+              </div>
+            </div>
+
+            <div class="q" style="margin-top:12px">
+              <h3>4) Audit (journal d’utilisation)</h3>
+              <p class="muted">Qui a fait quoi, quand. Filtrable + export.</p>
+              <div class="two">
+                <div>
+                  <label>Filtrer (nom / action / mot)</label>
+                  <input id="auditFilter" type="text" placeholder="Ex: Evan, FICHE, NOTE..." />
+                </div>
+                <div>
+                  <label>Limiter aux derniers (lignes)</label>
+                  <select id="auditLimit">
+                    <option value="50">50</option>
+                    <option value="200" selected>200</option>
+                    <option value="500">500</option>
+                    <option value="2000">2000</option>
+                  </select>
+                </div>
+              </div>
+              <div class="btnrow">
+                <button class="btn" onclick="renderAudit()">Appliquer filtre</button>
+                <button class="btn primary" onclick="exportAuditJSON()">Exporter JSON</button>
+                <button class="btn" onclick="exportAuditCSV()">Exporter CSV</button>
+                <button class="btn danger" onclick="clearAudit()">Vider audit</button>
+              </div>
+              <div class="hr"></div>
+              <div id="auditList" class="list"></div>
+            </div>
+
           </div>
         </section>
       </div>
@@ -1039,109 +969,156 @@
   <div class="s" id="toastS">—</div>
 </div>
 
-<!-- PIN Modal -->
-<div class="modal" id="pinModal" role="dialog" aria-modal="true">
+<!-- AUTH MODAL -->
+<div class="modal" id="authModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <div class="modal-h">
-      <h3>Mode vendeur</h3>
-      <button class="xbtn" onclick="closeModal()">Fermer</button>
+      <h3>Connexion vendeur (PIN)</h3>
+      <button class="xbtn" onclick="closeAuthModal()">Fermer</button>
     </div>
     <div class="modal-b">
-      <p class="muted">Entre le PIN pour activer le mode vendeur sur cet appareil.</p>
-      <label>PIN</label>
-      <input type="password" id="pinField" placeholder="••••" inputmode="numeric" />
-      <div class="btnrow" style="margin-top:12px">
-        <button class="btn primary" onclick="unlockSeller()">Déverrouiller</button>
-        <button class="btn" onclick="lockSeller()">Verrouiller</button>
+      <p class="muted">Sélectionne ton nom puis entre ton PIN. (Tout est tracé.)</p>
+      <label>Utilisateur</label>
+      <select id="authUserSelect"></select>
+
+      <div style="margin-top:10px">
+        <label>PIN</label>
+        <input type="password" id="authPin" placeholder="••••" inputmode="numeric" />
       </div>
+
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn primary" onclick="login()">Se connecter</button>
+        <button class="btn" onclick="logout()">Déconnexion</button>
+      </div>
+
       <div class="hr"></div>
-      <p class="small">
-        Astuce : tu peux changer le PIN dans Accueil → Réglages rapides.
+      <p class="small mono">
+        Astuce : responsable = accès audit + règles + utilisateurs.
       </p>
     </div>
   </div>
 </div>
 
-<!-- Help Modal -->
-<div class="modal" id="helpModal" role="dialog" aria-modal="true">
+<!-- IMPORT MODAL -->
+<div class="modal" id="importModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <div class="modal-h">
-      <h3>Aide rapide</h3>
-      <button class="xbtn" onclick="closeHelp()">Fermer</button>
+      <h3>Importer un export</h3>
+      <button class="xbtn" onclick="closeImportModal()">Fermer</button>
     </div>
     <div class="modal-b">
-      <p class="muted">
-        Cet outil est conçu pour une utilisation boutique sur tablette :
-      </p>
-      <ul class="muted" style="padding-left:18px; margin:10px 0 0">
-        <li><b>Parcours client</b> : 5 questions → fiche imprimable.</li>
-        <li><b>SAV</b> : 1 symptôme → actions simples.</li>
-        <li><b>Mode vendeur</b> : trames + scripts (PIN).</li>
-        <li><b>Données</b> : tout est stocké sur l’appareil (localStorage).</li>
-      </ul>
-      <div class="hr"></div>
-      <p class="muted">
-        Raccourcis : <span class="mono">H</span> Accueil • <span class="mono">C</span> Client • <span class="mono">S</span> SAV •
-        <span class="mono">K</span> Calcul • <span class="mono">V</span> Vendeur • <span class="mono">N</span> Notes •
-        <span class="mono">/</span> Rechercher • <span class="mono">Esc</span> fermer les fenêtres.
-      </p>
+      <p class="muted">Colle ici le JSON exporté (état complet). Cela remplacera les données locales.</p>
+      <label>JSON</label>
+      <textarea id="importText" placeholder='{"exportedAt":"...","state":{...}}'></textarea>
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn primary" onclick="importState()">Importer maintenant</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
 /* =========================
-   STOOM • Outil Tablette
-   Single-file app (offline, localStorage)
+   STOOM • Outil Tablette PRO
+   - Auth PIN par vendeur
+   - Roles seller/manager
+   - Audit log (qui/quoi/quand)
+   - Rules editor (manager)
+   - Offline (localStorage)
    ========================= */
 
 const LS = {
-  settings: "stoom_settings_v1",
-  seller: "stoom_seller_unlocked_v1",
-  session: "stoom_session_v1",
-  notes: "stoom_notes_v1",
+  state: "stoom_pro_state_v1",
 };
 
-const DEFAULTS = {
-  pin: "2468",
-  shopName: "STOOM",
-};
-
-const state = {
-  view: "home",
-  sellerUnlocked: false,
-  settings: {...DEFAULTS},
+const DEFAULT_STATE = {
+  settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
+  users: [
+    { id:"arnaud", name:"Arnaud", pin:"1007", role:"manager" },
+    { id:"evan",   name:"Evan",   pin:"1517", role:"seller"  },
+    { id:"lea",    name:"Léa",    pin:"2109", role:"seller"  },
+  ],
+  currentUser: null, // {id,name,role}
+  audit: [],
+  notes: [],
+  sav: { symptom: null },
   client: {
     step: 0,
-    answers: {
-      cigs: null,
-      cigType: null,
-      moments: null,
-      goal: null,
-      tried: null
-    },
+    answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
     sheet: null
   },
-  sav: { symptom: null },
-  notes: []
+  rules: {
+    byCigs: {
+      "5-10":  { nicotine:"3–6 mg",        tirage:"MTL (serré à semi-serré)", power:"Modérée",  hardware:"Pod/kit MTL fiable" },
+      "10-15": { nicotine:"6–12 mg",       tirage:"MTL (serré)",             power:"Modérée",  hardware:"Pod/kit MTL fiable" },
+      "15-20": { nicotine:"10 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" },
+      "25+":   { nicotine:"20 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" }
+    },
+    rdlPolicy: {
+      enabled: true,
+      maxNicotineMg: 6,
+      requireGoalNotArreter: true,
+      rdlHardwareText: "Kit RDL doux (si stable)"
+    }
+  }
 };
 
-// ---------- Utils ----------
+const state = loadState();
+
+/* ---------- Utils ---------- */
 function $(q){ return document.querySelector(q); }
 function $all(q){ return Array.from(document.querySelectorAll(q)); }
-
-function formatDateFR(d){
-  try{
-    return new Intl.DateTimeFormat('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric'}).format(d);
-  }catch(e){
-    return d.toLocaleDateString('fr-FR');
-  }
-}
 
 function safeJsonParse(str, fallback){
   try{ return JSON.parse(str); }catch(e){ return fallback; }
 }
+function saveState(){
+  localStorage.setItem(LS.state, JSON.stringify(state));
+  refreshSidebarMini();
+  refreshHomeLastSheet();
+  refreshRulesSummary();
+  renderAuditPeek();
+}
+function loadState(){
+  const raw = localStorage.getItem(LS.state);
+  if(!raw) return structuredClone(DEFAULT_STATE);
+  const parsed = safeJsonParse(raw, null);
+  if(!parsed) return structuredClone(DEFAULT_STATE);
 
+  // merge minimal safety (if older versions)
+  const s = structuredClone(DEFAULT_STATE);
+  deepMerge(s, parsed);
+  return s;
+}
+function deepMerge(target, src){
+  if(!src || typeof src !== "object") return target;
+  for(const k of Object.keys(src)){
+    const v = src[k];
+    if(Array.isArray(v)) target[k] = v;
+    else if(v && typeof v === "object"){
+      if(!target[k] || typeof target[k] !== "object") target[k] = {};
+      deepMerge(target[k], v);
+    } else {
+      target[k] = v;
+    }
+  }
+  return target;
+}
+function formatDateFR(d){
+  try{ return new Intl.DateTimeFormat('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(d); }
+  catch(e){ return d.toLocaleDateString('fr-FR'); }
+}
+function formatDateTimeFR(ts){
+  const d = new Date(ts);
+  try{
+    return new Intl.DateTimeFormat('fr-FR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(d);
+  }catch(e){
+    return d.toLocaleString('fr-FR');
+  }
+}
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
 function toast(t, s){
   const el = $("#toast");
   $("#toastT").textContent = t || "Info";
@@ -1150,77 +1127,69 @@ function toast(t, s){
   clearTimeout(toast._t);
   toast._t = setTimeout(()=> el.classList.remove("show"), 3200);
 }
-
-function copyText(sel){
-  const text = (typeof sel === "string") ? $(sel)?.textContent : sel;
-  if(!text) return toast("Copie", "Rien à copier.");
-  navigator.clipboard?.writeText(text).then(
-    ()=> toast("Copié", "Texte copié dans le presse-papiers."),
-    ()=> toast("Copie", "Impossible de copier (permissions navigateur).")
-  );
-}
-
-function printHtml(html){
-  const w = window.open("", "_blank");
-  if(!w){ toast("Impression", "Pop-up bloquée. Autorise les pop-ups puis réessaie."); return; }
-  w.document.write(html);
-  w.document.close();
-  w.focus();
-  w.print();
-}
-
-function download(filename, text){
+function download(filename, text, type="application/json"){
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([text], {type:"application/json"}));
+  a.href = URL.createObjectURL(new Blob([text], {type}));
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(()=> URL.revokeObjectURL(a.href), 1000);
 }
-
-// ---------- Persistence ----------
-function saveAll(){
-  localStorage.setItem(LS.settings, JSON.stringify(state.settings));
-  localStorage.setItem(LS.seller, JSON.stringify({unlocked: state.sellerUnlocked}));
-  localStorage.setItem(LS.session, JSON.stringify({
-    client: state.client,
-    savedAt: Date.now()
-  }));
-  localStorage.setItem(LS.notes, JSON.stringify(state.notes));
-  refreshSidebarMini();
-  refreshHomeLastSheet();
+function copyToClipboard(text){
+  if(!text) return toast("Copie", "Rien à copier.");
+  navigator.clipboard?.writeText(text).then(
+    ()=> toast("Copié", "Copié."),
+    ()=> toast("Copie", "Impossible de copier (permissions navigateur).")
+  );
 }
 
-function loadAll(){
-  state.settings = {...DEFAULTS, ...(safeJsonParse(localStorage.getItem(LS.settings), {})||{})};
-  const seller = safeJsonParse(localStorage.getItem(LS.seller), {unlocked:false});
-  state.sellerUnlocked = !!seller.unlocked;
-  const session = safeJsonParse(localStorage.getItem(LS.session), null);
-  if(session?.client){
-    state.client = session.client;
+/* ---------- Auth + Audit ---------- */
+function audit(action, detail){
+  const who = state.currentUser?.name || "INCONNU";
+  state.audit.push({
+    who,
+    role: state.currentUser?.role || "none",
+    action,
+    detail: detail || "",
+    ts: Date.now()
+  });
+  if(state.audit.length > 2000) state.audit.shift();
+  saveState();
+}
+function requireAuth(){
+  if(!state.currentUser){
+    openAuthModal(true);
+    toast("Connexion requise", "Sélectionne ton nom et entre ton PIN.");
+    return false;
   }
-  state.notes = safeJsonParse(localStorage.getItem(LS.notes), []);
-  applySellerUI();
+  return true;
 }
+function isManager(){ return state.currentUser?.role === "manager"; }
 
-// ---------- Navigation ----------
+/* ---------- Navigation ---------- */
 function go(view){
-  // seller view: gate
-  if(view === "seller" && !state.sellerUnlocked){
-    toast("Mode vendeur", "Verrouillé. Entre le PIN.");
+  if(!requireAuth()) return;
+
+  // manager view restricted
+  if(view === "manager" && !isManager()){
+    toast("Accès refusé", "Réservé aux responsables.");
+    audit("DENY_MANAGER_VIEW", "");
+    return;
   }
+
   state.view = view;
   $all(".view").forEach(v => v.style.display = "none");
   $("#view-"+view).style.display = "block";
   $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
-  // view-specific refresh
+
   if(view === "client") renderClient();
   if(view === "sav") renderSav();
-  if(view === "calc") {/* no-op */}
-  if(view === "seller") renderSeller();
   if(view === "notes") renderNotes();
-  saveAll();
+  if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
+
+  audit("NAVIGATE", view);
+  saveState();
 }
 
 function bindNav(){
@@ -1231,71 +1200,161 @@ function bindNav(){
   });
 }
 
-// ---------- Settings ----------
-function loadSettings(pushToInputs=false){
-  $("#pinInput").value = state.settings.pin || DEFAULTS.pin;
-  $("#shopNameInput").value = state.settings.shopName || DEFAULTS.shopName;
-  if(pushToInputs) toast("Réglages", "Champs rechargés.");
+/* ---------- Auth Modal ---------- */
+function openAuthModal(force=false){
+  const modal = $("#authModal");
+  const sel = $("#authUserSelect");
+  sel.innerHTML = state.users
+    .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
+    .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
+    .join("");
+  $("#authPin").value = "";
+  modal.classList.add("show");
+
+  // If force: disable closing by clicking outside (we keep it open anyway)
+  setTimeout(()=> $("#authPin").focus(), 50);
 }
-function saveSettings(){
-  const pin = ($("#pinInput").value || "").trim();
-  const shopName = ($("#shopNameInput").value || "").trim();
-  if(pin && pin.length < 4){
-    toast("PIN", "Choisis un PIN d'au moins 4 chiffres.");
+function closeAuthModal(){
+  // allow closing only if already connected
+  if(!state.currentUser){
+    toast("Connexion", "Connexion obligatoire pour utiliser l’outil.");
     return;
   }
-  state.settings.pin = pin || DEFAULTS.pin;
-  state.settings.shopName = shopName || DEFAULTS.shopName;
-  saveAll();
-  toast("Enregistré", "Réglages mis à jour.");
+  $("#authModal").classList.remove("show");
 }
+function refreshAuthUI(){
+  const dot = $("#authDot");
+  const label = $("#authLabel");
+  const userMini = $("#userMini");
+  const roleMini = $("#roleMini");
 
-// ---------- Seller lock ----------
-function applySellerUI(){
-  const dot = $("#sellerDot");
-  const label = $("#sellerLabel");
-  if(state.sellerUnlocked){
-    dot.classList.remove("locked");
-    label.textContent = "Vendeur : actif";
-    $("#sellerNav").style.opacity = "1";
-  }else{
-    dot.classList.add("locked");
-    label.textContent = "Vendeur : verrouillé";
-    $("#sellerNav").style.opacity = "1";
+  if(state.currentUser){
+    dot.classList.add("ok");
+    label.textContent = state.currentUser.name;
+    userMini.textContent = state.currentUser.name;
+    roleMini.textContent = state.currentUser.role === "manager" ? "Responsable" : "Vendeur";
+    $("#logoutBtn").style.display = "inline-flex";
+  } else {
+    dot.classList.remove("ok");
+    label.textContent = "Non connecté";
+    userMini.textContent = "—";
+    roleMini.textContent = "—";
+    $("#logoutBtn").style.display = "none";
   }
-  renderSeller();
-}
 
-function openPinModal(){
-  $("#pinField").value = "";
-  $("#pinModal").classList.add("show");
-  setTimeout(()=> $("#pinField").focus(), 50);
+  // Manager nav
+  $("#managerNav").style.display = isManager() ? "flex" : "none";
+  $("#goManagerBtn").style.display = isManager() ? "inline-flex" : "none";
+  $("#toggleMaskBtn").style.display = isManager() ? "inline-flex" : "none";
 }
-function closeModal(){
-  $("#pinModal").classList.remove("show");
-}
-function unlockSeller(){
-  const pin = ($("#pinField").value || "").trim();
-  if(pin === (state.settings.pin || DEFAULTS.pin)){
-    state.sellerUnlocked = true;
-    applySellerUI();
-    saveAll();
-    closeModal();
-    toast("OK", "Mode vendeur activé.");
-    if(state.view === "seller") renderSeller();
-  }else{
+function login(){
+  const userId = $("#authUserSelect").value;
+  const pin = ($("#authPin").value || "").trim();
+  const user = state.users.find(u=>u.id===userId);
+  if(!user){
+    toast("Erreur", "Utilisateur introuvable.");
+    return;
+  }
+  if(!pin || pin !== user.pin){
     toast("PIN incorrect", "Réessaie.");
+    audit("LOGIN_FAIL", userId);
+    return;
   }
+  state.currentUser = { id:user.id, name:user.name, role:user.role };
+  $("#authModal").classList.remove("show");
+  refreshAuthUI();
+  audit("LOGIN_OK", user.name);
+  saveState();
 }
-function lockSeller(){
-  state.sellerUnlocked = false;
-  applySellerUI();
-  saveAll();
-  toast("OK", "Mode vendeur verrouillé.");
-  closeModal();
+function logout(){
+  if(state.currentUser) audit("LOGOUT", state.currentUser.name);
+  state.currentUser = null;
+  refreshAuthUI();
+  saveState();
+  openAuthModal(true);
 }
 
-// ---------- Client Wizard ----------
+/* ---------- Import / Export full state ---------- */
+function exportFullState(){
+  if(!requireAuth()) return;
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    state
+  };
+  download(`stoom-export-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2));
+  audit("EXPORT_STATE", "");
+}
+function openImportModal(){
+  if(!requireAuth()) return;
+  if(!isManager()){
+    toast("Accès refusé", "Import réservé aux responsables.");
+    audit("DENY_IMPORT", "");
+    return;
+  }
+  $("#importText").value = "";
+  $("#importModal").classList.add("show");
+}
+function closeImportModal(){ $("#importModal").classList.remove("show"); }
+function importState(){
+  if(!isManager()){
+    toast("Accès refusé", "Réservé aux responsables.");
+    return;
+  }
+  const txt = $("#importText").value || "";
+  const payload = safeJsonParse(txt, null);
+  if(!payload?.state){
+    toast("Import", "JSON invalide.");
+    return;
+  }
+  // Replace state carefully
+  const fresh = structuredClone(DEFAULT_STATE);
+  deepMerge(fresh, payload.state);
+  // keep current user null to force re-auth
+  fresh.currentUser = null;
+
+  // overwrite global state object
+  for(const k of Object.keys(state)) delete state[k];
+  Object.assign(state, fresh);
+
+  saveState();
+  closeImportModal();
+  toast("Import OK", "Données importées. Reconnexion requise.");
+  openAuthModal(true);
+}
+
+/* ---------- Reset ---------- */
+function clearAll(){
+  if(!isManager()){
+    toast("Accès refusé", "Réinitialisation réservée aux responsables.");
+    audit("DENY_RESET", "");
+    return;
+  }
+  if(!confirm("Réinitialiser TOUT (audit, notes, règles, users) sur cet appareil ?")) return;
+  localStorage.removeItem(LS.state);
+  location.reload();
+}
+
+/* ---------- Search ---------- */
+function runSearch(q){
+  const query = (q||"").toLowerCase().trim();
+  if(!query){ toast("Recherche", "Tape un mot-clé."); return; }
+
+  const savKeywords = ["fuite","glouglou","brûlé","brule","toux","gorge","vapeur","allume","panne","condensation"];
+  const clientKeywords = ["nicotine","sel","mtl","rdl","dl","sevrage","0mg","dosage","tirage","puissance"];
+  const managerKeywords = ["audit","règle","regle","users","utilisateur","pin"];
+
+  const hitSav = savKeywords.some(k=> query.includes(k));
+  const hitClient = clientKeywords.some(k=> query.includes(k));
+  const hitManager = managerKeywords.some(k=> query.includes(k));
+
+  if(hitSav){ go("sav"); toast("Recherche", "SAV ouvert."); return; }
+  if(hitClient){ go("client"); toast("Recherche", "Parcours client ouvert."); return; }
+  if(hitManager){ isManager() ? go("manager") : toast("Recherche", "Admin réservé responsable."); return; }
+
+  toast("Recherche", "Aucun raccourci trouvé. Essaie: fuite, brûlé, MTL, sel, règle, audit…");
+}
+
+/* ---------- Client Wizard ---------- */
 const clientSteps = [
   { key:"cigs", label:"Conso", desc:"cig/j" },
   { key:"cigType", label:"Cigarette", desc:"type" },
@@ -1320,7 +1379,7 @@ const clientQuestions = [
   {
     key:"cigType",
     title:"Type de cigarette ?",
-    subtitle:"Ça aide à choisir les sensations & saveurs.",
+    subtitle:"Ça aide à choisir sensations & saveurs.",
     cols:"cols3",
     choices:[
       {v:"blonde", t:"Blonde", s:"Classique / light"},
@@ -1330,14 +1389,14 @@ const clientQuestions = [
   },
   {
     key:"moments",
-    title:"Moments “difficiles” ?",
-    subtitle:"On sécurise ces moments-là en priorité.",
+    title:"Moments difficiles ? (le principal)",
+    subtitle:"On sécurise ce moment en priorité.",
     cols:"cols3",
     choices:[
       {v:"stress", t:"Stress", s:"Nerfs / pression"},
       {v:"cafe", t:"Café", s:"Habitude ancrée"},
-      {v:"soir", t:"Soir", s:"Détente / fin de journée"},
-      {v:"journee", t:"Toute la journée", s:"Usage fréquent"},
+      {v:"soir", t:"Soir", s:"Détente"},
+      {v:"journee", t:"Journée", s:"Usage fréquent"},
       {v:"apresRepas", t:"Après repas", s:"Rituel"},
       {v:"matin", t:"Matin", s:"Démarrage"},
     ]
@@ -1345,71 +1404,67 @@ const clientQuestions = [
   {
     key:"goal",
     title:"Objectif du client ?",
-    subtitle:"On adapte le rythme : l’objectif n°1 = ne pas rechuter.",
+    subtitle:"L’objectif n°1 = éviter la rechute.",
     cols:"cols3",
     choices:[
       {v:"arreter", t:"Arrêter", s:"Objectif clair"},
-      {v:"reduire", t:"Réduire", s:"Étape intermédiaire"},
+      {v:"reduire", t:"Réduire", s:"Étape"},
       {v:"remplacer", t:"Remplacer", s:"Sans pression"},
     ]
   },
   {
     key:"tried",
     title:"Déjà essayé la vape ?",
-    subtitle:"On corrige ce qui a bloqué la dernière fois.",
+    subtitle:"On corrige ce qui a bloqué.",
     cols:"cols3",
     choices:[
       {v:"non", t:"Non", s:"Découverte"},
       {v:"echec", t:"Oui (échec)", s:"On sécurise"},
-      {v:"ok", t:"Oui (ça marchait)", s:"On réplique le succès"},
+      {v:"ok", t:"Oui (ça marchait)", s:"On réplique"},
     ]
   },
 ];
 
 function clientReset(){
+  if(!requireAuth()) return;
   state.client.step = 0;
   state.client.answers = { cigs:null, cigType:null, moments:null, goal:null, tried:null };
   state.client.sheet = null;
   renderClient();
-  saveAll();
-  toast("Reset", "Parcours client réinitialisé.");
+  audit("CLIENT_RESET", "");
+  saveState();
 }
 
 function setAnswer(key, value){
   state.client.answers[key] = value;
-  // auto-next for single-choice questions
-  const idx = clientQuestions.findIndex(q => q.key === key);
-  if(idx === state.client.step && idx < clientQuestions.length-1){
-    // keep moments multi? Here we allow only one selection for speed.
-    setTimeout(()=> nextClient(), 80);
-  }else{
-    renderClient();
-  }
-  saveAll();
+  audit("CLIENT_ANSWER", `${key}=${value}`);
+  saveState();
+  // auto-next
+  setTimeout(()=> nextClient(), 60);
 }
 
 function prevClient(){
   state.client.step = Math.max(0, state.client.step - 1);
+  audit("CLIENT_PREV", String(state.client.step));
   renderClient();
-  saveAll();
+  saveState();
 }
 function nextClient(){
-  // must answer current
   const q = clientQuestions[state.client.step];
   if(!state.client.answers[q.key]){
-    toast("Réponse manquante", "Choisis une option pour continuer.");
+    toast("Réponse manquante", "Choisis une option.");
     return;
   }
   if(state.client.step < clientQuestions.length-1){
     state.client.step += 1;
+    audit("CLIENT_NEXT", String(state.client.step));
     renderClient();
-  }else{
-    // generate sheet
+  } else {
     state.client.sheet = buildSheet(state.client.answers);
+    audit("SHEET_GENERATED", JSON.stringify(state.client.answers));
     renderSheet();
-    toast("Fiche", "Recommandation générée.");
   }
-  saveAll();
+  saveState();
 }
 
 function renderClientSteps(){
@@ -1420,8 +1475,8 @@ function renderClientSteps(){
     div.className = "step";
     if(i === state.client.step) div.classList.add("active");
     if(state.client.answers[s.key]) div.classList.add("done");
-    div.innerHTML = `<span>${i+1}. ${s.label}</span><span class="mini">${s.desc}</span>`;
-    div.onclick = ()=> { state.client.step = i; renderClient(); saveAll(); };
+    div.innerHTML = `<span>${i+1}. ${escapeHtml(s.label)}</span><span class="small mono">${escapeHtml(s.desc)}</span>`;
+    div.onclick = ()=> { state.client.step = i; audit("CLIENT_GOTO_STEP", String(i)); renderClient(); saveState(); };
     el.appendChild(div);
   });
 }
@@ -1431,47 +1486,18 @@ function renderClientQuestion(){
   const q = clientQuestions[state.client.step];
   const current = state.client.answers[q.key];
   box.innerHTML = `
-    <h3>${q.title}</h3>
-    <p class="muted">${q.subtitle}</p>
-    <div class="choices ${q.cols || ""}" id="qChoices"></div>
+    <h3>${escapeHtml(q.title)}</h3>
+    <p class="muted">${escapeHtml(q.subtitle)}</p>
+    <div class="choices ${q.cols||""}" id="qChoices"></div>
   `;
   const ch = $("#qChoices");
   q.choices.forEach((c)=>{
     const d = document.createElement("div");
     d.className = "choice" + (current === c.v ? " selected":"");
-    d.innerHTML = `<div class="ct">${c.t}</div><div class="cs">${c.s||""}</div>`;
+    d.innerHTML = `<div class="ct">${escapeHtml(c.t)}</div><div class="cs">${escapeHtml(c.s||"")}</div>`;
     d.onclick = ()=> setAnswer(q.key, c.v);
     ch.appendChild(d);
   });
-}
-
-function renderSheet(){
-  const box = $("#sheetBox");
-  if(!state.client.sheet){
-    box.innerHTML = `<h3>En attente…</h3><p class="muted">Réponds aux questions à gauche pour générer la fiche.</p>`;
-    $("#salesLine").textContent = "—";
-    refreshSidebarMini();
-    return;
-  }
-  const sh = state.client.sheet;
-  box.innerHTML = `
-    <h3>${sh.title}</h3>
-    <div class="chips" style="margin:8px 0 10px">
-      <span class="chip"><b>Tirage</b> ${sh.tirage}</span>
-      <span class="chip"><b>Nicotine</b> ${sh.nicotine}</span>
-      <span class="chip"><b>Puissance</b> ${sh.power}</span>
-      <span class="chip"><b>Matériel</b> ${sh.hardware}</span>
-    </div>
-    <p class="muted">${sh.explain}</p>
-    <div class="hr"></div>
-    <div class="chips">
-      ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${a}</span>`).join("")}
-    </div>
-    <p class="small" style="margin-top:10px">Boutique : <span class="mono">${escapeHtml(state.settings.shopName||DEFAULTS.shopName)}</span> • Généré le ${formatDateFR(new Date())}</p>
-  `;
-  $("#salesLine").textContent = sh.salesLine;
-  refreshSidebarMini();
-  refreshHomeLastSheet();
 }
 
 function renderClient(){
@@ -1480,77 +1506,76 @@ function renderClient(){
   $("#clientPrev").onclick = prevClient;
   $("#clientNext").onclick = nextClient;
   $("#clientPrev").disabled = state.client.step === 0;
-  // If last step answered, allow generate
   renderSheet();
 }
 
-function copySalesLine(){
-  const line = $("#salesLine").textContent;
-  if(!line || line === "—") return toast("Copie", "Aucune phrase pour le moment.");
-  navigator.clipboard?.writeText(line).then(()=> toast("Copié", "Phrase copiée."), ()=> toast("Copie", "Impossible de copier."));
+function calcFlavorHint(a){
+  if(a.cigType === "blonde") return "Classiques (blond) ou légèrement gourmands";
+  if(a.cigType === "menthol") return "Menthol doux / frais";
+  if(a.cigType === "roulee") return "Classiques plus aromatiques (puissants)";
+  return "Saveurs au choix";
+}
+function calcMomentTip(a){
+  const m = a.moments;
+  if(m === "stress") return "Stress : tirage stable + dosage cohérent pour éviter la frustration.";
+  if(m === "cafe") return "Café : routine simple (même liquide / même tirage) pour remplacer le rituel.";
+  if(m === "soir") return "Soir : garder le confort (ne pas baisser trop vite).";
+  if(m === "journee") return "Journée : autonomie + fiabilité + simplicité.";
+  if(m === "apresRepas") return "Après repas : setup prêt, simple, toujours dispo.";
+  if(m === "matin") return "Matin : dosage suffisant (sinon manque immédiat).";
+  return "Sécuriser les moments clés avec le bon dosage.";
+}
+function calcReassurance(a){
+  if(a.tried === "echec") return "Si ça a déjà échoué, c’est souvent un mauvais couple taux/matériel. On sécurise.";
+  if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable.";
+  return "On ajuste si besoin, sans se précipiter.";
 }
 
-function escapeHtml(s){
-  return (s||"").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+function parseNicotineMg(nicStr){
+  // best-effort: extract first number (e.g. "6–12 mg" -> 6, "10 mg (sels)" -> 10)
+  const m = (nicStr||"").match(/(\d+)\s*/);
+  return m ? Number(m[1]) : null;
 }
 
 function buildSheet(a){
-  // Nicotine mapping from your shop rules
-  let nicotine = "—";
-  let tirage = "MTL (serré)";
-  let power = "Faible à modérée";
-  let hardware = "Pod/kit MTL fiable";
-  let warn = "";
+  const rule = state.rules.byCigs[a.cigs] || { nicotine:"—", tirage:"MTL", power:"—", hardware:"—" };
 
-  if(a.cigs === "5-10") nicotine = "3–6 mg";
-  if(a.cigs === "10-15") nicotine = "6–12 mg";
-  if(a.cigs === "15-20") nicotine = "10 mg (sels)";
-  if(a.cigs === "25+") nicotine = "20 mg (sels)";
+  let nicotine = rule.nicotine;
+  let tirage = rule.tirage;
+  let power = rule.power;
+  let hardware = rule.hardware;
 
-  // If nicotine high, keep power low
-  if(a.cigs === "15-20" || a.cigs === "25+"){
-    tirage = "MTL (serré, régulier)";
-    power = "Faible (confort)";
-    hardware = "Pod MTL / tirage serré";
-    warn = "⚠️ Éviter les matériels trop puissants avec un dosage élevé (hit trop fort, irritations).";
-  } else {
-    tirage = "MTL (serré à semi-serré)";
-    power = "Modérée";
-    hardware = "Pod MTL / kit simple";
+  const flavor = calcFlavorHint(a);
+  const reassurance = calcReassurance(a);
+  const momentTip = calcMomentTip(a);
+
+  // RDL suggestion policy (manager-config)
+  const pol = state.rules.rdlPolicy || { enabled:false };
+  const nicMg = parseNicotineMg(nicotine);
+  const allowRdl =
+    !!pol.enabled &&
+    (nicMg === null ? false : nicMg <= Number(pol.maxNicotineMg||0)) &&
+    (!pol.requireGoalNotArreter || a.goal !== "arreter");
+
+  if(allowRdl){
+    // We do NOT force RDL, we suggest it as an evolution
+    // Keep tirage baseline but add evolution note + optionally hardware text
+    tirage = `${tirage} → RDL possible (si stable)`;
+    if(pol.rdlHardwareText) hardware = `${hardware} / ${pol.rdlHardwareText}`;
   }
-
-  // Cig type flavor suggestion
-  let flavor = "Saveurs au choix";
-  if(a.cigType === "blonde") flavor = "Classiques (blond) ou légèrement gourmands";
-  if(a.cigType === "menthol") flavor = "Menthol doux / frais";
-  if(a.cigType === "roulee") flavor = "Classiques plus aromatiques (puissants)";
-
-  // Goal influences messaging
-  let goalLine = "On vise d’abord la stabilité et zéro cigarette.";
-  if(a.goal === "reduire") goalLine = "On sécurise le quotidien, puis on réduit doucement si c’est stable.";
-  if(a.goal === "remplacer") goalLine = "On remplace sans pression : confort + habitudes sécurisées.";
-
-  // Tried influences reassurance
-  let reassurance = "On ajuste si besoin, sans se précipiter.";
-  if(a.tried === "echec") reassurance = "Si ça a déjà échoué, c’est souvent un mauvais couple taux/matériel. On sécurise.";
-  if(a.tried === "ok") reassurance = "Si ça marchait, on réplique ce qui était confortable et stable.";
-
-  // Moments add-on
-  let momentTip = "On sécurise les moments clés (stress/café/soir) avec le bon dosage et un tirage simple.";
-  if(a.moments === "stress") momentTip = "Stress : privilégier un tirage stable + dosage cohérent pour éviter la “frustration”.";
-  if(a.moments === "cafe") momentTip = "Café : prévoir une routine (même liquide, même tirage) pour remplacer le rituel.";
-  if(a.moments === "soir") momentTip = "Soir : éviter la baisse trop rapide, garder le confort.";
-  if(a.moments === "journee") momentTip = "Toute la journée : autonomie + fiabilité + simplicité.";
-  if(a.moments === "apresRepas") momentTip = "Après repas : un setup prêt, simple, toujours dispo.";
-  if(a.moments === "matin") momentTip = "Matin : doser juste, pas trop faible, sinon manque immédiat.";
 
   const addons = [
     "Résistance/cartouche de secours",
-    "Conseil réglage puissance (confort)",
-    "Rappel : baisser la nicotine quand c’est stable",
+    "Réglage puissance (confort)",
+    "Rappel : baisser la nicotine quand c’est stable"
   ];
 
-  const salesLine = `“Je te propose ${tirage} avec ${nicotine}. L’objectif, c’est ${goalLine.toLowerCase()} On ajuste ensuite si besoin.”`;
+  const goalLine =
+    a.goal === "arreter" ? "viser d’abord zéro cigarette" :
+    a.goal === "reduire" ? "sécuriser le quotidien puis réduire doucement" :
+    "remplacer sans pression (confort)";
+
+  const salesLine = `“Je te propose ${tirage} avec ${nicotine}. L’objectif, c’est de ${goalLine}. On ajuste ensuite si besoin.”`;
 
   return {
     title: "Recommandation STOOM (profil client)",
@@ -1558,335 +1583,60 @@ function buildSheet(a){
     nicotine,
     power,
     hardware,
-    explain: `${warn ? warn+" " : ""}${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
+    explain: `${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
     addons,
     salesLine
   };
 }
 
-// ---------- SAV ----------
-const savMap = [
-  {
-    id:"fuite",
-    t:"Fuite",
-    s:"liquide partout / glouglou",
-    causes:[
-      "Résistance en fin de vie ou mal amorcée",
-      "Airflow trop ouvert + aspiration trop forte",
-      "Liquide trop fluide (ratio PG/VG) / chaleur",
-      "Cartouche usée / joint abîmé"
-    ],
-    actions:[
-      "Changer résistance + amorcer (quelques gouttes + attente 5–10 min)",
-      "Baisser puissance / fermer un peu l’airflow",
-      "Nettoyer, vérifier joints, resserrer correctement",
-      "Si persiste : tester autre cartouche / autre liquide"
-    ],
-    tip:"Règle d’or : 1 changement à la fois, puis on valide."
-  },
-  {
-    id:"goutBrule",
-    t:"Goût brûlé",
-    s:"dry hit / brûlé",
-    causes:[
-      "Résistance cramée ou pas assez imbibée",
-      "Puissance trop haute",
-      "Chaînes de bouffées sans pause"
-    ],
-    actions:[
-      "Changer résistance + amorçage",
-      "Baisser la puissance (W) et tester",
-      "Faire des pauses entre bouffées",
-    ],
-    tip:"Si goût brûlé permanent : résistance à remplacer."
-  },
-  {
-    id:"toux",
-    t:"Toux / gorge irritée",
-    s:"inconfort, hit trop fort",
-    causes:[
-      "Taux nicotine trop élevé pour le matériel",
-      "Puissance trop haute / tirage trop aérien",
-      "Liquide trop “sec” (PG) / arôme agressif"
-    ],
-    actions:[
-      "Adapter matériel au taux (MTL + puissance basse)",
-      "Ou baisser progressivement le taux si le client veut plus puissant",
-      "Tester un liquide plus doux / plus VG / autre arôme"
-    ],
-    tip:"Objectif : confort → sinon abandon → rechute."
-  },
-  {
-    id:"pasDeVapeur",
-    t:"Pas de vapeur",
-    s:"ne s’allume pas / rien",
-    causes:[
-      "Batterie vide / mauvais contact",
-      "Cartouche mal enclenchée",
-      "Pod verrouillé / défaut coil"
-    ],
-    actions:[
-      "Charger / vérifier câble / nettoyer contacts",
-      "Retirer-remettre la cartouche, vérifier aimants",
-      "Tester une autre cartouche / résistance"
-    ],
-    tip:"Toujours commencer par contacts + charge."
-  },
-  {
-    id:"glouglou",
-    t:"Glouglou",
-    s:"bruit, remontées",
-    causes:[
-      "Sur-alimentation / condensation",
-      "Aspiration trop forte",
-      "Résistance noyée"
-    ],
-    actions:[
-      "Souffler doucement dans le drip tip (papier dessous)",
-      "Nettoyer cheminée / base",
-      "Réduire aspiration, fermer un peu l’airflow"
-    ],
-    tip:"Glouglou = trop de liquide dans la cheminée."
-  },
-];
-
-function renderSav(){
-  const box = $("#savChoices");
-  box.innerHTML = "";
-  savMap.forEach(it=>{
-    const d = document.createElement("div");
-    d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
-    d.innerHTML = `<div class="ct">${it.t}</div><div class="cs">${it.s}</div>`;
-    d.onclick = ()=> { state.sav.symptom = it.id; renderSavResult(); saveAll(); };
-    box.appendChild(d);
-  });
-  renderSavResult();
-}
-
-function renderSavResult(){
-  const r = $("#savResult");
-  const it = savMap.find(x=>x.id===state.sav.symptom);
-  if(!it){
-    r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme ci-dessus.</p>`;
-    return;
-  }
-  r.innerHTML = `
-    <h3>✅ ${it.t}</h3>
-    <p class="muted">${it.tip}</p>
-    <div class="hr"></div>
-    <div class="two">
-      <div>
-        <h3>Causes probables</h3>
-        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-          ${it.causes.map(c=>`<li>${c}</li>`).join("")}
-        </ul>
-      </div>
-      <div>
-        <h3>Actions recommandées</h3>
-        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-          ${it.actions.map(a=>`<li>${a}</li>`).join("")}
-        </ul>
-      </div>
-    </div>
-    <div class="btnrow" style="margin-top:12px">
-      <button class="btn" onclick="toast('SAV', 'Noter le cas dans Notes client si nécessaire.')">Conseil</button>
-      <button class="btn primary" onclick="go('notes')">Ouvrir Notes client</button>
-    </div>
-  `;
-}
-
-// ---------- Seller view ----------
-function renderSeller(){
-  const gate = $("#sellerGate");
-  const content = $("#sellerContent");
-  if(state.sellerUnlocked){
-    gate.style.display = "none";
-    content.style.display = "block";
-  } else {
-    gate.style.display = "block";
-    content.style.display = "none";
-  }
-}
-
-// ---------- Calculators ----------
-function fillExample(){
-  $("#cigsPerDay").value = 20;
-  $("#days").value = 30;
-  $("#mlPerDayAt20").value = 4;
-  $("#price10ml").value = 5.9;
-  toast("Exemple", "Valeurs remplies.");
-}
-
-function calcBottles(){
-  const cigs = Number($("#cigsPerDay").value||0);
-  const days = Number($("#days").value||0);
-  const mlAt20 = Number($("#mlPerDayAt20").value||4);
-  const price = Number($("#price10ml").value||0);
-
-  if(days <= 0){ toast("Erreur", "Durée invalide."); return; }
-
-  // simple proportional model: (cigs/20) * mlAt20
-  const mlPerDay = (cigs/20) * mlAt20;
-  const totalMl = mlPerDay * days;
-  const bottles = totalMl / 10;
-
-  const bottlesCeil = Math.max(0, Math.ceil(bottles));
-  const bottlesRound = Math.max(0, Math.round(bottles*10)/10);
-
-  let cost = null;
-  if(price>0) cost = bottlesCeil * price;
-
-  const offerText = (bottlesCeil >= 15) ? "Astuce : propose 15+2 offert (si applicable)." :
-                    (bottlesCeil >= 10) ? "Astuce : propose 10+1 offert (si applicable)." :
-                    "Astuce : proposer une marge de sécurité (1 flacon de plus).";
-
-  $("#bottleResult").innerHTML = `
-    <h3>Résultat (estimation)</h3>
-    <div class="chips" style="margin:8px 0 10px">
-      <span class="chip"><b>ml/j</b> ${mlPerDay.toFixed(1)}</span>
-      <span class="chip"><b>Total</b> ${totalMl.toFixed(0)} ml</span>
-      <span class="chip"><b>Flacons</b> ~${bottlesRound} (10ml)</span>
-      <span class="chip"><b>À prévoir</b> ${bottlesCeil} flacons</span>
-    </div>
-    <p class="muted">${offerText}</p>
-    ${cost !== null ? `<p class="muted"><b>Budget indicatif :</b> ~${cost.toFixed(2)} € (selon prix flacon).</p>` : ``}
-    <p class="small">Modèle simple : proportionnel à 20 cig/j. Ajuste selon ton expérience boutique.</p>
-  `;
-}
-
-function calcSavings(){
-  const packPrice = Number($("#packPrice").value||0);
-  const packsPerDay = Number($("#packsPerDay").value||0);
-  const vapeMonthly = Number($("#vapeMonthly").value||0);
-  const months = Number($("#months").value||0);
-
-  if(months <= 0){ toast("Erreur", "Durée invalide."); return; }
-  const tobaccoMonthly = packPrice * packsPerDay * 30;
-  const tobaccoTotal = tobaccoMonthly * months;
-  const vapeTotal = vapeMonthly * months;
-  const save = tobaccoTotal - vapeTotal;
-
-  $("#savingsResult").innerHTML = `
-    <h3>Résultat</h3>
-    <div class="chips" style="margin:8px 0 10px">
-      <span class="chip"><b>Tabac/mois</b> ${tobaccoMonthly.toFixed(2)} €</span>
-      <span class="chip"><b>Tabac</b> ${tobaccoTotal.toFixed(2)} €</span>
-      <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
-      <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
-    </div>
-    <p class="muted">${save >= 0 ? "✅ La vape reste gagnante financièrement sur cette hypothèse." : "⚠️ Selon ces chiffres, c’est défavorable : vérifier les entrées (paquets/j, budget vape)."} </p>
-    <p class="small">C’est un argument simple : “même si ça monte, l’écart avec le tabac reste souvent important”.</p>
-  `;
-}
-
-// ---------- Notes ----------
-function renderNotes(){
-  const list = $("#notesList");
-  const filter = ($("#noteFilter").value||"").toLowerCase().trim();
-  const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
-    if(!filter) return true;
-    return (n.name||"").toLowerCase().includes(filter)
-      || (n.phone||"").toLowerCase().includes(filter)
-      || (n.text||"").toLowerCase().includes(filter);
-  });
-
-  if(items.length === 0){
-    list.innerHTML = `<p class="muted">Aucune note.</p>`;
-    return;
-  }
-
-  list.innerHTML = items.map(n=>{
-    const d = new Date(n.createdAt);
-    return `
-      <div class="q" style="margin-top:12px">
-        <h3>${escapeHtml(n.name||"Sans nom")} <span class="small">• ${escapeHtml(n.phone||"")}</span></h3>
-        <p class="muted">${escapeHtml(n.text||"")}</p>
-        <div class="btnrow" style="margin-top:10px">
-          <button class="btn" onclick="prefillNote('${n.id}')">Modifier</button>
-          <button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>
-          <span class="small" style="margin-left:auto">Créé le ${formatDateFR(d)}</span>
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function saveNote(){
-  const name = ($("#noteName").value||"").trim();
-  const phone = ($("#notePhone").value||"").trim();
-  const text = ($("#noteText").value||"").trim();
-  if(!name && !phone && !text){
-    toast("Note", "Rien à enregistrer.");
-    return;
-  }
-  const id = crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
-  state.notes.push({ id, name, phone, text, createdAt: Date.now() });
-  saveAll();
-  clearNoteForm();
-  renderNotes();
-  toast("OK", "Note enregistrée.");
-}
-
-function prefillNote(id){
-  const n = state.notes.find(x=>x.id===id);
-  if(!n) return;
-  $("#noteName").value = n.name||"";
-  $("#notePhone").value = n.phone||"";
-  $("#noteText").value = n.text||"";
-  toast("Note", "Modifie puis enregistre (ça créera une nouvelle note).");
-}
-
-function deleteNote(id){
-  state.notes = state.notes.filter(x=>x.id!==id);
-  saveAll();
-  renderNotes();
-  toast("Supprimé", "Note supprimée.");
-}
-
-function clearNoteForm(){
-  $("#noteName").value = "";
-  $("#notePhone").value = "";
-  $("#noteText").value = "";
-}
-
-function clearAll(){
-  if(!confirm("Réinitialiser l’outil (session + notes + réglages) ?")) return;
-  localStorage.removeItem(LS.settings);
-  localStorage.removeItem(LS.seller);
-  localStorage.removeItem(LS.session);
-  localStorage.removeItem(LS.notes);
-  location.reload();
-}
-
-// ---------- Printing / Export ----------
-function getExportPayload(){
-  return {
-    exportedAt: new Date().toISOString(),
-    settings: state.settings,
-    sellerUnlocked: state.sellerUnlocked,
-    client: state.client,
-    sav: state.sav,
-    notes: state.notes
-  };
-}
-
-function exportJson(){
-  const payload = JSON.stringify(getExportPayload(), null, 2);
-  const name = `stoom-export-${new Date().toISOString().slice(0,10)}.json`;
-  download(name, payload);
-  toast("Export", "Fichier JSON téléchargé.");
-}
-
-function printSheet(){
+function renderSheet(){
+  const box = $("#sheetBox");
   if(!state.client.sheet){
-    toast("Impression", "Aucune fiche à imprimer.");
+    box.innerHTML = `<h3>En attente…</h3><p class="muted">Réponds aux questions pour générer la fiche.</p>`;
+    $("#salesLine").textContent = "—";
+    refreshSidebarMini();
+    refreshHomeLastSheet();
     return;
   }
   const sh = state.client.sheet;
+  box.innerHTML = `
+    <h3>${escapeHtml(sh.title)}</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tirage</b> ${escapeHtml(sh.tirage)}</span>
+      <span class="chip"><b>Nicotine</b> ${escapeHtml(sh.nicotine)}</span>
+      <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
+      <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
+    </div>
+    <p class="muted">${escapeHtml(sh.explain)}</p>
+    <div class="hr"></div>
+    <div class="chips">
+      ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${escapeHtml(a)}</span>`).join("")}
+    </div>
+    <p class="small" style="margin-top:10px">Boutique : <span class="mono">${escapeHtml(state.settings.shopName)}</span> • ${escapeHtml(formatDateFR(new Date()))}</p>
+  `;
+  $("#salesLine").textContent = sh.salesLine;
+  refreshSidebarMini();
+  refreshHomeLastSheet();
+}
+
+function copySalesLine(){
+  const line = $("#salesLine").textContent;
+  if(!line || line === "—") return toast("Copie", "Aucune phrase.");
+  copyToClipboard(line);
+  audit("COPY_SALESLINE", "");
+}
+
+/* ---------- Printing ---------- */
+function printSheet(){
+  if(!requireAuth()) return;
+  if(!state.client.sheet){ toast("Impression", "Aucune fiche."); return; }
+
+  audit("PRINT_SHEET", "");
+
+  const sh = state.client.sheet;
   const a = state.client.answers;
   const html = `
-    <!doctype html>
-    <html><head><meta charset="utf-8"/>
+    <!doctype html><html><head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Fiche STOOM</title>
     <style>
@@ -1899,10 +1649,8 @@ function printSheet(){
       .muted{color:#475569; font-size:12px; line-height:1.45}
       .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
       .hr{height:1px; background:#e2e8f0; margin:12px 0}
-      @media print{button{display:none}}
-    </style></head>
-    <body>
-      <h1>${escapeHtml(state.settings.shopName||DEFAULTS.shopName)} • Fiche recommandation</h1>
+    </style></head><body>
+      <h1>${escapeHtml(state.settings.shopName)} • Fiche recommandation</h1>
       <p class="sub">Généré le ${escapeHtml(formatDateFR(new Date()))}</p>
 
       <div class="card">
@@ -1934,32 +1682,592 @@ function printSheet(){
           ${sh.addons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}
         </ul>
       </div>
+      <script>window.print();</script>
     </body></html>
   `;
-  printHtml(html);
+  const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée."); return; }
+  w.document.write(html);
+  w.document.close();
 }
 
-// ---------- Sidebar mini + home last sheet ----------
+/* ---------- SAV ---------- */
+const savMap = [
+  {
+    id:"fuite",
+    t:"Fuite",
+    s:"liquide partout / glouglou",
+    causes:[
+      "Résistance en fin de vie ou mal amorcée",
+      "Airflow trop ouvert + aspiration trop forte",
+      "Liquide trop fluide / chaleur",
+      "Cartouche/joint usé"
+    ],
+    actions:[
+      "Changer résistance + amorcer (attendre 5–10 min)",
+      "Baisser puissance / fermer un peu l’airflow",
+      "Nettoyer, vérifier joints, resserrer correctement",
+      "Si persiste : tester autre cartouche / autre liquide"
+    ],
+    tip:"Règle d’or : 1 changement à la fois."
+  },
+  {
+    id:"goutBrule",
+    t:"Goût brûlé",
+    s:"dry hit / brûlé",
+    causes:[
+      "Résistance cramée ou mal imbibée",
+      "Puissance trop haute",
+      "Chaînes de bouffées"
+    ],
+    actions:[
+      "Changer résistance + amorçage",
+      "Baisser la puissance (W)",
+      "Faire des pauses"
+    ],
+    tip:"Si brûlé permanent : résistance à remplacer."
+  },
+  {
+    id:"toux",
+    t:"Toux / gorge irritée",
+    s:"inconfort, hit trop fort",
+    causes:[
+      "Taux nicotine trop élevé pour le matériel",
+      "Puissance trop haute / tirage trop aérien",
+      "Liquide/arôme agressif"
+    ],
+    actions:[
+      "Adapter matériel au taux (MTL + puissance basse)",
+      "Ou baisser progressivement le taux si client veut plus puissant",
+      "Tester un liquide plus doux"
+    ],
+    tip:"Objectif : confort → sinon abandon → rechute."
+  },
+  {
+    id:"pasDeVapeur",
+    t:"Pas de vapeur",
+    s:"ne s’allume pas / rien",
+    causes:[
+      "Batterie vide / mauvais contact",
+      "Cartouche mal enclenchée",
+      "Défaut résistance"
+    ],
+    actions:[
+      "Charger / vérifier câble / nettoyer contacts",
+      "Retirer-remettre la cartouche",
+      "Tester une autre résistance/cartouche"
+    ],
+    tip:"Toujours commencer par contacts + charge."
+  },
+  {
+    id:"glouglou",
+    t:"Glouglou",
+    s:"bruit / remontées",
+    causes:[
+      "Condensation / noyade",
+      "Aspiration trop forte",
+      "Résistance noyée"
+    ],
+    actions:[
+      "Souffler doucement (papier dessous)",
+      "Nettoyer cheminée / base",
+      "Réduire aspiration / fermer airflow"
+    ],
+    tip:"Glouglou = trop de liquide dans la cheminée."
+  },
+];
+
+function renderSav(){
+  const box = $("#savChoices");
+  box.innerHTML = "";
+  savMap.forEach(it=>{
+    const d = document.createElement("div");
+    d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
+    d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
+    d.onclick = ()=> { state.sav.symptom = it.id; audit("SAV_SYMPTOM", it.id); renderSavResult(); saveState(); };
+    box.appendChild(d);
+  });
+  renderSavResult();
+}
+function renderSavResult(){
+  const r = $("#savResult");
+  const it = savMap.find(x=>x.id===state.sav.symptom);
+  if(!it){
+    r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme.</p>`;
+    return;
+  }
+  r.innerHTML = `
+    <h3>✅ ${escapeHtml(it.t)}</h3>
+    <p class="muted">${escapeHtml(it.tip)}</p>
+    <div class="hr"></div>
+    <div class="two">
+      <div>
+        <h3>Causes probables</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.causes.map(c=>`<li>${escapeHtml(c)}</li>`).join("")}
+        </ul>
+      </div>
+      <div>
+        <h3>Actions recommandées</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.actions.map(a=>`<li>${escapeHtml(a)}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
+    <div class="btnrow" style="margin-top:12px">
+      <button class="btn" onclick="go('notes')">Noter ce cas</button>
+    </div>
+  `;
+}
+
+/* ---------- Notes ---------- */
+function maskPhone(p){
+  if(!p) return "";
+  const s = String(p).replace(/\s+/g,"");
+  if(s.length <= 4) return "••••";
+  return "••••••" + s.slice(-2);
+}
+function toggleMaskPhones(){
+  if(!isManager()){ toast("Accès", "Réservé responsable."); return; }
+  state.settings.maskPhones = !state.settings.maskPhones;
+  audit("TOGGLE_MASK_PHONES", String(state.settings.maskPhones));
+  saveState();
+  renderNotes();
+}
+function saveNote(){
+  if(!requireAuth()) return;
+  const name = ($("#noteName").value||"").trim();
+  const phone = ($("#notePhone").value||"").trim();
+  const text = ($("#noteText").value||"").trim();
+  if(!name && !phone && !text){ toast("Note", "Rien à enregistrer."); return; }
+
+  const id = (crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2));
+  state.notes.push({
+    id, name, phone, text,
+    createdAt: Date.now(),
+    createdBy: state.currentUser?.name || "INCONNU"
+  });
+  audit("NOTE_ADD", `${name} ${phone}`.trim());
+  saveState();
+  clearNoteForm();
+  renderNotes();
+  toast("OK", "Note enregistrée.");
+}
+function clearNoteForm(){
+  $("#noteName").value = "";
+  $("#notePhone").value = "";
+  $("#noteText").value = "";
+}
+function deleteNote(id){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_NOTE_DELETE", id);
+    return;
+  }
+  state.notes = state.notes.filter(n=>n.id!==id);
+  audit("NOTE_DELETE", id);
+  saveState();
+  renderNotes();
+}
+function renderNotes(){
+  const list = $("#notesList");
+  const filter = ($("#noteFilter").value||"").toLowerCase().trim();
+  const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
+    if(!filter) return true;
+    return (n.name||"").toLowerCase().includes(filter)
+      || (n.phone||"").toLowerCase().includes(filter)
+      || (n.text||"").toLowerCase().includes(filter)
+      || (n.createdBy||"").toLowerCase().includes(filter);
+  });
+
+  if(items.length === 0){
+    list.innerHTML = `<p class="muted">Aucune note.</p>`;
+    return;
+  }
+
+  list.innerHTML = items.map(n=>{
+    const d = formatDateTimeFR(n.createdAt);
+    const phoneShown = state.settings.maskPhones ? maskPhone(n.phone) : (n.phone||"");
+    return `
+      <div class="item">
+        <div class="top">
+          <div>
+            <strong>${escapeHtml(n.name||"Sans nom")}</strong>
+            <div class="small">Par ${escapeHtml(n.createdBy||"—")} • ${escapeHtml(d)}</div>
+          </div>
+          <div class="right">
+            <span>${escapeHtml(phoneShown)}</span>
+          </div>
+        </div>
+        <p>${escapeHtml(n.text||"")}</p>
+        <div class="btnrow" style="margin-top:10px">
+          ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* ---------- Calculators ---------- */
+function fillExample(){
+  $("#cigsPerDay").value = 20;
+  $("#days").value = 30;
+  $("#mlPerDayAt20").value = 4;
+  $("#price10ml").value = 5.9;
+  audit("CALC_FILL_EXAMPLE", "");
+  toast("Exemple", "Valeurs remplies.");
+}
+function calcBottles(){
+  const cigs = Number($("#cigsPerDay").value||0);
+  const days = Number($("#days").value||0);
+  const mlAt20 = Number($("#mlPerDayAt20").value||4);
+  const price = Number($("#price10ml").value||0);
+  if(days <= 0){ toast("Erreur", "Durée invalide."); return; }
+
+  const mlPerDay = (cigs/20) * mlAt20;
+  const totalMl = mlPerDay * days;
+  const bottles = totalMl / 10;
+  const bottlesCeil = Math.max(0, Math.ceil(bottles));
+  const bottlesRound = Math.max(0, Math.round(bottles*10)/10);
+  let cost = null;
+  if(price>0) cost = bottlesCeil * price;
+
+  const offerText = (bottlesCeil >= 15) ? "Astuce : 15+2 offert (si applicable)." :
+                    (bottlesCeil >= 10) ? "Astuce : 10+1 offert (si applicable)." :
+                    "Astuce : prévoir 1 flacon de sécurité.";
+
+  $("#bottleResult").innerHTML = `
+    <h3>Résultat (estimation)</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>ml/j</b> ${mlPerDay.toFixed(1)}</span>
+      <span class="chip"><b>Total</b> ${totalMl.toFixed(0)} ml</span>
+      <span class="chip"><b>Flacons</b> ~${bottlesRound}</span>
+      <span class="chip"><b>À prévoir</b> ${bottlesCeil}</span>
+    </div>
+    <p class="muted">${offerText}</p>
+    ${cost !== null ? `<p class="muted"><b>Budget :</b> ~${cost.toFixed(2)} €</p>` : ``}
+    <p class="small">Modèle proportionnel à 20 cig/j. Ajuster au besoin.</p>
+  `;
+  audit("CALC_BOTTLES", `cigs=${cigs},days=${days},mlAt20=${mlAt20}`);
+}
+function calcSavings(){
+  const packPrice = Number($("#packPrice").value||0);
+  const packsPerDay = Number($("#packsPerDay").value||0);
+  const vapeMonthly = Number($("#vapeMonthly").value||0);
+  const months = Number($("#months").value||0);
+  if(months <= 0){ toast("Erreur", "Durée invalide."); return; }
+  const tobaccoMonthly = packPrice * packsPerDay * 30;
+  const tobaccoTotal = tobaccoMonthly * months;
+  const vapeTotal = vapeMonthly * months;
+  const save = tobaccoTotal - vapeTotal;
+
+  $("#savingsResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tabac/mois</b> ${tobaccoMonthly.toFixed(2)} €</span>
+      <span class="chip"><b>Tabac</b> ${tobaccoTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
+    </div>
+    <p class="muted">${save >= 0 ? "✅ Argument clair : la vape reste gagnante sur cette hypothèse." : "⚠️ Vérifier les entrées (paquets/j, budget vape)."} </p>
+  `;
+  audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
+}
+
+/* ---------- Manager: Rules editor ---------- */
+function refreshRulesSummary(){
+  const r = state.rules?.byCigs || {};
+  const parts = [];
+  for(const k of ["5-10","10-15","15-20","25+"]){
+    const x = r[k];
+    if(!x) continue;
+    parts.push(`${k}: ${x.nicotine} • ${x.tirage} • ${x.power}`);
+  }
+  const pol = state.rules?.rdlPolicy;
+  const polTxt = pol?.enabled ? `RDL: ON (≤${pol.maxNicotineMg}mg)` : `RDL: OFF`;
+  $("#rulesSummary").textContent = parts.length ? (parts.join(" | ") + " • " + polTxt) : "—";
+}
+
+function renderRulesEditor(){
+  if(!isManager()) return;
+  const wrap = $("#rulesEditor");
+  const r = state.rules.byCigs;
+
+  const row = (key, label) => {
+    const x = r[key];
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${label}</strong>
+          <span>${key}</span>
+        </div>
+        <div class="hr"></div>
+        <div class="two">
+          <div>
+            <label>Nicotine</label>
+            <input data-rule="${key}" data-field="nicotine" type="text" value="${escapeHtml(x.nicotine||"")}" />
+          </div>
+          <div>
+            <label>Tirage</label>
+            <input data-rule="${key}" data-field="tirage" type="text" value="${escapeHtml(x.tirage||"")}" />
+          </div>
+        </div>
+        <div class="two" style="margin-top:10px">
+          <div>
+            <label>Puissance</label>
+            <input data-rule="${key}" data-field="power" type="text" value="${escapeHtml(x.power||"")}" />
+          </div>
+          <div>
+            <label>Matériel</label>
+            <input data-rule="${key}" data-field="hardware" type="text" value="${escapeHtml(x.hardware||"")}" />
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
+  wrap.innerHTML = [
+    row("5-10", "Profil 5–10 cig/j"),
+    row("10-15","Profil 10–15 cig/j"),
+    row("15-20","Profil 15–20 cig/j"),
+    row("25+","Profil 25+ cig/j"),
+  ].join("");
+
+  // RDL policy UI
+  $("#rdlEnabled").value = String(state.rules.rdlPolicy.enabled);
+  $("#rdlMaxNic").value = String(state.rules.rdlPolicy.maxNicotineMg ?? 6);
+  $("#rdlRequireGoalNotArreter").value = String(state.rules.rdlPolicy.requireGoalNotArreter);
+  $("#rdlHardwareText").value = state.rules.rdlPolicy.rdlHardwareText || "";
+}
+
+function saveRulesFromUI(){
+  if(!isManager()) return;
+  const inputs = $all("#rulesEditor input[data-rule]");
+  inputs.forEach(inp=>{
+    const key = inp.getAttribute("data-rule");
+    const field = inp.getAttribute("data-field");
+    if(!state.rules.byCigs[key]) state.rules.byCigs[key] = {};
+    state.rules.byCigs[key][field] = (inp.value||"").trim();
+  });
+  audit("RULES_SAVE", "");
+  saveState();
+  toast("Règles", "Enregistrées.");
+}
+
+function resetRules(){
+  if(!isManager()) return;
+  if(!confirm("Réinitialiser les règles par défaut ?")) return;
+  state.rules = structuredClone(DEFAULT_STATE.rules);
+  audit("RULES_RESET", "");
+  saveState();
+  renderRulesEditor();
+  toast("Règles", "Réinitialisées.");
+}
+
+function saveRdlPolicyFromUI(){
+  if(!isManager()) return;
+  state.rules.rdlPolicy.enabled = ($("#rdlEnabled").value === "true");
+  state.rules.rdlPolicy.maxNicotineMg = Number($("#rdlMaxNic").value||0);
+  state.rules.rdlPolicy.requireGoalNotArreter = ($("#rdlRequireGoalNotArreter").value === "true");
+  state.rules.rdlPolicy.rdlHardwareText = ($("#rdlHardwareText").value||"").trim();
+  audit("RDL_POLICY_SAVE", JSON.stringify(state.rules.rdlPolicy));
+  saveState();
+  toast("RDL", "Politique enregistrée.");
+}
+
+/* ---------- Manager: Users ---------- */
+function slugifyName(name){
+  return (name||"")
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"") || ("u"+Math.random().toString(16).slice(2,7));
+}
+function renderUsers(){
+  if(!isManager()) return;
+  const wrap = $("#usersList");
+  const users = state.users.slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'));
+  wrap.innerHTML = users.map(u=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(u.name)}</strong>
+          <span>${escapeHtml(u.role)}</span>
+        </div>
+        <p class="small mono">id=${escapeHtml(u.id)} • PIN=••••</p>
+        <div class="btnrow">
+          <button class="btn" onclick="openEditUser('${u.id}')">Modifier</button>
+          ${u.id === "arnaud" ? `<span class="small">Arnaud protégé</span>` : `<button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // auto fill id
+  $("#newUserName").addEventListener("input", ()=>{
+    $("#newUserId").value = slugifyName($("#newUserName").value);
+  }, { once:false });
+}
+function addUser(){
+  if(!isManager()) return;
+  const name = ($("#newUserName").value||"").trim();
+  const pin = ($("#newUserPin").value||"").trim();
+  const role = $("#newUserRole").value;
+  const id = slugifyName(name);
+
+  if(!name){ toast("User", "Nom requis."); return; }
+  if(!pin || pin.length < 4){ toast("User", "PIN 4 chiffres mini."); return; }
+  if(state.users.some(u=>u.id===id)){ toast("User", "ID existe déjà (change le nom)."); return; }
+
+  state.users.push({ id, name, pin, role });
+  audit("USER_ADD", `${id}:${role}`);
+  saveState();
+  $("#newUserName").value = "";
+  $("#newUserPin").value = "";
+  $("#newUserId").value = "";
+  renderUsers();
+  toast("OK", "Utilisateur ajouté.");
+}
+function removeUser(id){
+  if(!isManager()) return;
+  if(!confirm("Supprimer cet utilisateur ?")) return;
+  state.users = state.users.filter(u=>u.id!==id);
+  audit("USER_REMOVE", id);
+  saveState();
+  renderUsers();
+}
+function openEditUser(id){
+  const u = state.users.find(x=>x.id===id);
+  if(!u) return;
+
+  const name = prompt("Nom", u.name);
+  if(name === null) return;
+  const role = prompt("Rôle (seller/manager)", u.role);
+  if(role === null) return;
+  const pin = prompt("Nouveau PIN (laisser vide pour ne pas changer)", "");
+  if(pin === null) return;
+
+  u.name = name.trim() || u.name;
+  u.role = (role.trim()==="manager") ? "manager" : "seller";
+  if(pin.trim()){
+    if(pin.trim().length < 4){ toast("PIN", "4 chiffres mini."); return; }
+    u.pin = pin.trim();
+  }
+
+  // If edited current user, refresh session
+  if(state.currentUser?.id === u.id){
+    state.currentUser.name = u.name;
+    state.currentUser.role = u.role;
+  }
+
+  audit("USER_EDIT", `${u.id}:${u.role}`);
+  saveState();
+  renderUsers();
+  refreshAuthUI();
+}
+
+/* ---------- Manager: Audit ---------- */
+function renderAuditPeek(){
+  const box = $("#auditPeek");
+  const last = state.audit.slice(-5).reverse();
+  if(last.length === 0){
+    box.innerHTML = `<div class="small">Aucune action enregistrée pour le moment.</div>`;
+    return;
+  }
+  box.innerHTML = last.map(e=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(e.who)} • ${escapeHtml(e.action)}</strong>
+          <span>${escapeHtml(formatDateTimeFR(e.ts))}</span>
+        </div>
+        <p>${escapeHtml(e.detail||"")}</p>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderAudit(){
+  if(!isManager()) return;
+  const filter = ($("#auditFilter").value||"").toLowerCase().trim();
+  const limit = Number($("#auditLimit").value||200);
+
+  let rows = state.audit.slice().reverse(); // newest first
+  if(filter){
+    rows = rows.filter(e =>
+      (e.who||"").toLowerCase().includes(filter) ||
+      (e.action||"").toLowerCase().includes(filter) ||
+      (e.detail||"").toLowerCase().includes(filter)
+    );
+  }
+  rows = rows.slice(0, limit);
+
+  const box = $("#auditList");
+  if(rows.length === 0){
+    box.innerHTML = `<div class="small">Aucune ligne.</div>`;
+    return;
+  }
+  box.innerHTML = rows.map(e=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(e.who)} <span class="small">(${escapeHtml(e.role)})</span> • ${escapeHtml(e.action)}</strong>
+          <span>${escapeHtml(formatDateTimeFR(e.ts))}</span>
+        </div>
+        <p>${escapeHtml(e.detail||"")}</p>
+      </div>
+    `;
+  }).join("");
+}
+
+function exportAuditJSON(){
+  if(!isManager()) return;
+  const payload = { exportedAt: new Date().toISOString(), audit: state.audit };
+  download(`stoom-audit-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2));
+  audit("AUDIT_EXPORT_JSON", "");
+}
+function exportAuditCSV(){
+  if(!isManager()) return;
+  const header = ["timestamp","date","who","role","action","detail"];
+  const lines = [header.join(",")];
+  for(const e of state.audit){
+    const row = [
+      e.ts,
+      `"${formatDateTimeFR(e.ts).replace(/"/g,'""')}"`,
+      `"${String(e.who||"").replace(/"/g,'""')}"`,
+      `"${String(e.role||"").replace(/"/g,'""')}"`,
+      `"${String(e.action||"").replace(/"/g,'""')}"`,
+      `"${String(e.detail||"").replace(/"/g,'""')}"`,
+    ];
+    lines.push(row.join(","));
+  }
+  download(`stoom-audit-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("AUDIT_EXPORT_CSV", "");
+}
+function clearAudit(){
+  if(!isManager()) return;
+  if(!confirm("Vider le journal d’audit ?")) return;
+  state.audit = [];
+  audit("AUDIT_CLEARED", "");
+  saveState();
+  renderAudit();
+}
+
+/* ---------- Sidebar mini + home last sheet ---------- */
 function refreshSidebarMini(){
-  const a = state.client.answers || {};
-  const mini = [];
-  if(a.cigs) mini.push(a.cigs);
-  if(a.cigType) mini.push(a.cigType);
-  $("#profileMini").textContent = mini.length ? mini.join(" • ") : "—";
+  $("#today").textContent = formatDateFR(new Date());
   $("#sheetMini").textContent = state.client.sheet ? "OK" : "—";
 }
-
 function refreshHomeLastSheet(){
   const box = $("#lastSheetBox");
   if(!state.client.sheet){
-    box.innerHTML = `<h3>—</h3><p class="muted">Aucune fiche enregistrée pour le moment.</p>
-      <div class="btnrow"><button class="btn" onclick="go('client')">Créer une fiche</button></div>`;
+    box.innerHTML = `<h3>—</h3><p class="muted">Aucune fiche pour le moment.</p><div class="btnrow"><button class="btn" onclick="go('client')">Créer une fiche</button></div>`;
     return;
   }
   const sh = state.client.sheet;
   box.innerHTML = `
-    <h3>${sh.title}</h3>
-    <p class="muted">${sh.tirage} • ${sh.nicotine} • ${sh.hardware}</p>
+    <h3>${escapeHtml(sh.title)}</h3>
+    <p class="muted">${escapeHtml(sh.tirage)} • ${escapeHtml(sh.nicotine)} • ${escapeHtml(sh.hardware)}</p>
     <div class="btnrow">
       <button class="btn primary" onclick="go('client')">Voir</button>
       <button class="btn" onclick="printSheet()">Imprimer</button>
@@ -1967,79 +2275,29 @@ function refreshHomeLastSheet(){
   `;
 }
 
-// ---------- Search ----------
-function runSearch(q){
-  const query = (q||"").toLowerCase().trim();
-  if(!query){
-    toast("Recherche", "Tape un mot-clé (ex: fuite, brûlé, sel, MTL).");
-    return;
-  }
-
-  // lightweight "smart routing"
-  const savKeywords = ["fuite","glouglou","brûlé","brule","toux","gorge","vapeur","allume","panne","condensation"];
-  const clientKeywords = ["nicotine","sel","mtl","rdl","cig","sevrage","0mg","dosage"];
-  const noteKeywords = ["dupont","client","tel","rappel"];
-
-  const hitSav = savKeywords.some(k=> query.includes(k));
-  const hitClient = clientKeywords.some(k=> query.includes(k));
-  const hitNotes = noteKeywords.some(k=> query.includes(k));
-
-  if(hitSav){
-    go("sav");
-    // auto-select symptom if match
-    if(query.includes("fuite")) state.sav.symptom="fuite";
-    else if(query.includes("glouglou")) state.sav.symptom="glouglou";
-    else if(query.includes("brûl") || query.includes("brul")) state.sav.symptom="goutBrule";
-    else if(query.includes("toux") || query.includes("gorge")) state.sav.symptom="toux";
-    else if(query.includes("vapeur") || query.includes("allume") || query.includes("panne")) state.sav.symptom="pasDeVapeur";
-    renderSav();
-    toast("Recherche", "SAV ouvert.");
-    return;
-  }
-
-  if(hitClient){
-    go("client");
-    toast("Recherche", "Parcours client ouvert.");
-    return;
-  }
-
-  if(hitNotes){
-    go("notes");
-    $("#noteFilter").value = q;
-    renderNotes();
-    toast("Recherche", "Notes ouvertes.");
-    return;
-  }
-
-  toast("Recherche", "Aucun raccourci trouvé. Essaie 'fuite', 'brûlé', 'MTL', 'sel', etc.");
-}
-
-// ---------- Keyboard shortcuts ----------
+/* ---------- Keyboard shortcuts ---------- */
 function bindKeys(){
   window.addEventListener("keydown", (e)=>{
     if(e.key === "Escape"){
-      closeModal(); closeHelp();
+      $("#authModal").classList.remove("show");
+      $("#importModal").classList.remove("show");
       return;
     }
-
-    // / to focus search
     if(e.key === "/" && !e.metaKey && !e.ctrlKey){
       e.preventDefault();
       $("#searchInput").focus();
       return;
     }
-
-    // quick nav (avoid while typing)
     const tag = (document.activeElement?.tagName || "").toLowerCase();
     const typing = ["input","textarea","select"].includes(tag);
-    if(typing) {
-      // numeric quick answer in wizard
+
+    if(typing){
       if(state.view === "client"){
         const n = Number(e.key);
         if(n>=1 && n<=4){
           const q = clientQuestions[state.client.step];
           const opt = q.choices[n-1];
-          if(opt){ setAnswer(q.key, opt.v); }
+          if(opt) setAnswer(q.key, opt.v);
         }
       }
       return;
@@ -2050,10 +2308,9 @@ function bindKeys(){
     if(k==="c") go("client");
     if(k==="s") go("sav");
     if(k==="k") go("calc");
-    if(k==="v") go("seller");
     if(k==="n") go("notes");
+    if(k==="a") isManager() ? go("manager") : null;
 
-    // Print
     if((e.ctrlKey || e.metaKey) && k==="p"){
       e.preventDefault();
       printSheet();
@@ -2061,53 +2318,51 @@ function bindKeys(){
   });
 }
 
-// ---------- Modals ----------
-function openHelp(){ $("#helpModal").classList.add("show"); }
-function closeHelp(){ $("#helpModal").classList.remove("show"); }
-
-// ---------- Buttons ----------
+/* ---------- Bind buttons ---------- */
 function bindButtons(){
-  $("#sellerBtn").addEventListener("click", openPinModal);
-  $("#helpBtn").addEventListener("click", openHelp);
-  $("#resetBtn").addEventListener("click", clearAll);
-  $("#exportBtn").addEventListener("click", exportJson);
-  $("#printBtn").addEventListener("click", printSheet);
+  $("#authBtn").addEventListener("click", ()=> openAuthModal(false));
+  $("#logoutBtn").addEventListener("click", logout);
 
   $("#quickNew").addEventListener("click", ()=>{
+    if(!requireAuth()) return;
     clientReset();
     go("client");
   });
 
-  $("#noteFilter").addEventListener("input", renderNotes);
-
   $("#searchInput").addEventListener("keydown", (e)=>{
-    if(e.key === "Enter"){
-      runSearch(e.target.value);
-    }
+    if(e.key === "Enter") runSearch(e.target.value);
   });
 
-  $("#searchInput").addEventListener("blur", ()=>{/* noop */});
+  $("#noteFilter").addEventListener("input", renderNotes);
 
-  // click outside modals
-  $("#pinModal").addEventListener("click", (e)=>{ if(e.target.id==="pinModal") closeModal(); });
-  $("#helpModal").addEventListener("click", (e)=>{ if(e.target.id==="helpModal") closeHelp(); });
+  $("#printBtn").addEventListener("click", printSheet);
+  $("#exportStateBtn").addEventListener("click", exportFullState);
+  $("#importStateBtn").addEventListener("click", openImportModal);
+  $("#resetBtn").addEventListener("click", clearAll);
+
+  $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
+  $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
 }
+function closeImportModal(){ $("#importModal").classList.remove("show"); }
 
-// ---------- Init ----------
+/* ---------- Init ---------- */
 function init(){
-  $("#today").textContent = formatDateFR(new Date());
+  refreshSidebarMini();
+  refreshAuthUI();
+  refreshRulesSummary();
+  renderAuditPeek();
   bindNav();
   bindButtons();
   bindKeys();
-  loadAll();
-  loadSettings(true);
-  applySellerUI();
-  refreshSidebarMini();
-  refreshHomeLastSheet();
-  go(state.view || "home");
-}
 
+  // default view
+  $all(".view").forEach(v=> v.style.display="none");
+  $("#view-home").style.display = "block";
+
+  // Force auth at start
+  if(!state.currentUser) openAuthModal(true);
+}
 init();
 </script>
 </body>
-    </html>
+                </html>
