@@ -1,0 +1,2113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B1220" />
+  <title>STOOM • Outil Tablette</title>
+  <style>
+    :root{
+      --bg:#070B14;
+      --panel:#0B1220;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.68);
+      --muted2:rgba(255,255,255,.55);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 22px;
+      --radius2: 16px;
+      --gap: 14px;
+      --accent:#3B82F6; /* bleu */
+      --good:#22C55E;
+      --warn:#F59E0B;
+      --bad:#EF4444;
+      --pink:#EC4899;
+      --cyan:#06B6D4;
+      --purple:#8B5CF6;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 15% 10%, rgba(59,130,246,.22), transparent 60%),
+        radial-gradient(900px 700px at 85% 15%, rgba(236,72,153,.18), transparent 55%),
+        radial-gradient(1100px 800px at 55% 90%, rgba(34,197,94,.14), transparent 60%),
+        linear-gradient(180deg, #070B14 0%, #050713 100%);
+      overflow:hidden;
+    }
+
+    /* Layout */
+    .app{
+      height:100%;
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:0;
+    }
+
+    @media (max-width: 980px){
+      body{overflow:auto}
+      .app{grid-template-columns: 1fr; overflow:auto}
+    }
+
+    /* Sidebar */
+    .sidebar{
+      position:relative;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%);
+      border-right:1px solid var(--stroke);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      height:100%;
+      overflow:auto;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 14px;
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.04);
+      box-shadow: var(--shadow);
+      margin-bottom:14px;
+    }
+
+    .brand-left{display:flex; gap:12px; align-items:center;}
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      background:
+        radial-gradient(14px 14px at 25% 30%, rgba(255,255,255,.55), transparent 55%),
+        radial-gradient(26px 20px at 75% 70%, rgba(255,255,255,.18), transparent 60%),
+        linear-gradient(135deg, rgba(59,130,246,.95), rgba(139,92,246,.85));
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .brand h1{font-size:14px; margin:0; letter-spacing:.08em; text-transform:uppercase}
+    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:12px;
+      user-select:none;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--good);
+      box-shadow: 0 0 0 5px rgba(34,197,94,.12);
+    }
+    .dot.locked{background:var(--warn); box-shadow:0 0 0 5px rgba(245,158,11,.12)}
+    .pill button{
+      all:unset; cursor:pointer; color:var(--text);
+      padding:2px 6px; border-radius:10px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .pill button:hover{background:rgba(255,255,255,.10)}
+
+    .nav{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:14px;
+    }
+    .navbtn{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      transition: transform .08s ease, background .12s ease;
+      user-select:none;
+    }
+    .navbtn:hover{background: rgba(255,255,255,.06)}
+    .navbtn:active{transform: scale(.99)}
+    .navbtn.active{
+      background: linear-gradient(135deg, rgba(59,130,246,.22), rgba(139,92,246,.12));
+      border-color: rgba(59,130,246,.35);
+    }
+    .icon{
+      width:34px; height:34px; border-radius: 14px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      font-family:var(--mono);
+      font-size:13px;
+      color:rgba(255,255,255,.85);
+    }
+    .navtxt{display:flex; flex-direction:column; gap:2px}
+    .navtxt .t{font-size:13px; font-weight:650}
+    .navtxt .s{font-size:12px; color:var(--muted)}
+    .kbd{
+      margin-left:auto;
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted2);
+      padding:4px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+    }
+
+    .side-card{
+      margin-top:14px;
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.03);
+      padding:12px;
+    }
+    .side-card h3{margin:0 0 8px; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted)}
+    .side-card .row{display:flex; gap:10px; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px solid rgba(255,255,255,.08)}
+    .side-card .row:first-of-type{border-top:none}
+    .side-card .row span{font-size:12px; color:var(--muted)}
+    .side-card .row strong{font-size:12px}
+    .side-card .btnrow{display:flex; gap:10px; margin-top:10px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+      user-select:none;
+      transition: background .12s ease, transform .08s ease;
+      font-size:12px;
+    }
+    .btn:hover{background: rgba(255,255,255,.08)}
+    .btn:active{transform: scale(.99)}
+    .btn.primary{
+      border-color: rgba(59,130,246,.40);
+      background: rgba(59,130,246,.18);
+    }
+    .btn.danger{
+      border-color: rgba(239,68,68,.35);
+      background: rgba(239,68,68,.12);
+    }
+
+    /* Main */
+    .main{
+      position:relative;
+      height:100%;
+      overflow:auto;
+      padding:18px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .search{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+    }
+    .search input{
+      all:unset;
+      flex:1;
+      font-size:13px;
+      color:var(--text);
+    }
+    .search .hint{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted2);
+      padding:4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media (min-width: 1180px){
+      .grid.cols2{grid-template-columns: 1.1fr .9fr;}
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel .ph{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:14px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+    .panel .ph h2{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.04em;
+    }
+    .panel .ph p{
+      margin:3px 0 0;
+      font-size:12px; color:var(--muted)
+    }
+    .panel .pb{padding:14px;}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      user-select:none;
+    }
+
+    /* Wizard */
+    .wizard{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .steps{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .step{
+      flex:1;
+      min-width: 120px;
+      padding:10px 10px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .step.active{
+      color: var(--text);
+      border-color: rgba(59,130,246,.35);
+      background: rgba(59,130,246,.10);
+    }
+    .step.done{
+      border-color: rgba(34,197,94,.35);
+      background: rgba(34,197,94,.10);
+      color: var(--text);
+    }
+    .q{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius);
+      padding:14px;
+    }
+    .q h3{margin:0 0 6px; font-size:14px}
+    .q p{margin:0 0 10px; color:var(--muted); font-size:12px; line-height:1.4}
+    .choices{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:10px;
+    }
+    @media (min-width: 900px){
+      .choices.cols3{grid-template-columns: repeat(3, minmax(0,1fr));}
+      .choices.cols4{grid-template-columns: repeat(4, minmax(0,1fr));}
+    }
+    .choice{
+      padding:12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+    }
+    .choice:hover{background: rgba(255,255,255,.06)}
+    .choice:active{transform: scale(.99)}
+    .choice.selected{
+      border-color: rgba(59,130,246,.45);
+      background: rgba(59,130,246,.14);
+    }
+    .choice .ct{font-weight:700; font-size:13px}
+    .choice .cs{font-size:12px; color:var(--muted); margin-top:4px; line-height:1.35}
+    .wz-actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:2px;
+    }
+    .wz-actions .left, .wz-actions .right{display:flex; gap:10px; align-items:center}
+    .mini{
+      font-size:11px;
+      color:var(--muted2);
+      font-family:var(--mono);
+    }
+
+    /* Result card */
+    .result{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(139,92,246,.10));
+      padding:14px;
+    }
+    .result h3{margin:0 0 8px; font-size:14px}
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size:12px;
+    }
+    .chip b{font-weight:800}
+    .two{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    @media (min-width: 1180px){
+      .two{grid-template-columns: 1fr 1fr}
+    }
+
+    textarea, select, input[type="number"], input[type="text"], input[type="password"]{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      font-size:13px;
+      outline:none;
+    }
+    textarea{min-height:96px; resize:vertical; line-height:1.4}
+    label{font-size:12px; color:var(--muted); display:block; margin:0 0 6px}
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform: translateX(-50%);
+      min-width: 280px;
+      max-width: 92vw;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(12,18,32,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 20px 80px rgba(0,0,0,.6);
+      display:none;
+      z-index:9999;
+    }
+    .toast.show{display:block; animation: pop .16s ease-out}
+    @keyframes pop{from{transform:translateX(-50%) translateY(8px); opacity:.2}to{transform:translateX(-50%) translateY(0); opacity:1}}
+    .toast .t{font-size:12px; color:var(--text)}
+    .toast .s{font-size:11px; color:var(--muted); margin-top:4px}
+
+    /* Modal */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      z-index:9998;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      padding:18px;
+      overflow:auto;
+    }
+    .modal.show{display:block}
+    .modal-card{
+      max-width: 640px;
+      margin: 40px auto;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(12,18,32,.92);
+      box-shadow: 0 20px 90px rgba(0,0,0,.7);
+      overflow:hidden;
+    }
+    .modal-h{
+      padding:14px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .modal-h h3{margin:0; font-size:14px}
+    .modal-b{padding:14px}
+    .xbtn{
+      all:unset; cursor:pointer;
+      padding:8px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size:12px;
+      color:var(--text);
+    }
+    .xbtn:hover{background: rgba(255,255,255,.08)}
+    .hr{height:1px; background: rgba(255,255,255,.10); margin:12px 0}
+    .muted{color:var(--muted); font-size:12px; line-height:1.45}
+    .small{font-size:11px; color:var(--muted2)}
+    .mono{font-family:var(--mono)}
+    .dangerText{color: rgba(239,68,68,.92)}
+    .goodText{color: rgba(34,197,94,.92)}
+    .warnText{color: rgba(245,158,11,.92)}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>STOOM</h1>
+          <p>Outil tablette • conseil & SAV</p>
+        </div>
+      </div>
+      <div class="pill" id="sellerPill">
+        <span class="dot locked" id="sellerDot"></span>
+        <span id="sellerLabel">Vendeur : verrouillé</span>
+        <button id="sellerBtn" title="Basculer mode vendeur">PIN</button>
+      </div>
+    </div>
+
+    <div class="nav" id="nav">
+      <div class="navbtn active" data-view="home" tabindex="0">
+        <div class="icon">01</div>
+        <div class="navtxt">
+          <div class="t">Accueil</div>
+          <div class="s">3 parcours simples</div>
+        </div>
+        <div class="kbd">H</div>
+      </div>
+
+      <div class="navbtn" data-view="client" tabindex="0">
+        <div class="icon">CL</div>
+        <div class="navtxt">
+          <div class="t">Parcours client</div>
+          <div class="s">Diagnostic + fiche</div>
+        </div>
+        <div class="kbd">C</div>
+      </div>
+
+      <div class="navbtn" data-view="sav" tabindex="0">
+        <div class="icon">SV</div>
+        <div class="navtxt">
+          <div class="t">SAV guidé</div>
+          <div class="s">Pannes fréquentes</div>
+        </div>
+        <div class="kbd">S</div>
+      </div>
+
+      <div class="navbtn" data-view="calc" tabindex="0">
+        <div class="icon">€</div>
+        <div class="navtxt">
+          <div class="t">Calculatrices</div>
+          <div class="s">Conso, économies</div>
+        </div>
+        <div class="kbd">K</div>
+      </div>
+
+      <div class="navbtn" data-view="seller" tabindex="0" id="sellerNav">
+        <div class="icon">VD</div>
+        <div class="navtxt">
+          <div class="t">Mode vendeur</div>
+          <div class="s">Trame + anti-erreurs</div>
+        </div>
+        <div class="kbd">V</div>
+      </div>
+
+      <div class="navbtn" data-view="notes" tabindex="0">
+        <div class="icon">📝</div>
+        <div class="navtxt">
+          <div class="t">Notes client</div>
+          <div class="s">Suivi & rappel</div>
+        </div>
+        <div class="kbd">N</div>
+      </div>
+    </div>
+
+    <div class="side-card">
+      <h3>Session</h3>
+      <div class="row"><span>Date</span> <strong id="today"></strong></div>
+      <div class="row"><span>Profil en cours</span> <strong id="profileMini">—</strong></div>
+      <div class="row"><span>Fiche</span> <strong id="sheetMini">—</strong></div>
+
+      <div class="btnrow">
+        <button class="btn primary" id="printBtn">Imprimer fiche</button>
+        <button class="btn" id="exportBtn">Exporter JSON</button>
+      </div>
+      <div class="btnrow">
+        <button class="btn danger" id="resetBtn">Réinitialiser</button>
+        <button class="btn" id="helpBtn">Aide</button>
+      </div>
+      <div class="small" style="margin-top:10px">
+        Offline : OK (données stockées sur l’appareil).<br/>
+        Raccourcis : H C S K V N • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">Esc</span>.
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <div class="topbar">
+      <div class="search">
+        <span style="opacity:.8">🔎</span>
+        <input id="searchInput" type="text" placeholder="Rechercher (ex: fuite, 10mg sel, MTL, résistance...)" />
+        <span class="hint">/</span>
+      </div>
+      <button class="btn" id="quickNew">Nouveau client</button>
+    </div>
+
+    <div id="view-home" class="view">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Accueil</h2>
+              <p>Un outil vendeur-client, pensé pour la tablette.</p>
+            </div>
+            <span class="badge">Ultra rapide • Sans blabla</span>
+          </div>
+          <div class="pb">
+            <div class="two">
+              <div class="result">
+                <h3>✅ 3 parcours (recommandé)</h3>
+                <div class="chips">
+                  <span class="chip"><b>Client</b> → Diagnostic</span>
+                  <span class="chip"><b>SAV</b> → Guidage</span>
+                  <span class="chip"><b>Calcul</b> → Économies</span>
+                </div>
+                <p class="muted" style="margin-top:10px">
+                  L’objectif : une recommandation claire, cohérente avec le sevrage, et une fiche imprimable.
+                </p>
+                <div class="btnrow" style="margin-top:10px">
+                  <button class="btn primary" onclick="go('client')">Démarrer diagnostic client</button>
+                  <button class="btn" onclick="go('sav')">Démarrer SAV guidé</button>
+                </div>
+              </div>
+
+              <div class="q">
+                <h3>💡 Le “truc” qui fait la différence</h3>
+                <p>On ne vend pas un matériel. On vend une <b>solution stable</b> qui évite la rechute.</p>
+                <div class="choices cols2">
+                  <div class="choice" onclick="toast('Conseil', 'Nicotine élevée = matériel peu puissant (MTL). Objectif : confort + stabilité.')">
+                    <div class="ct">Repère nicotine / puissance</div>
+                    <div class="cs">Éviter irritations, hit trop fort, surdosage.</div>
+                  </div>
+                  <div class="choice" onclick="toast('Repère conso', 'En boutique, on peut rappeler : 10 flacons de 10ml ≈ conso moyenne d’un fumeur de ~20 cig/j (à ajuster).')">
+                    <div class="ct">Repère 10ml</div>
+                    <div class="cs">Simple à expliquer au client.</div>
+                  </div>
+                  <div class="choice" onclick="toast('Offres', 'Proposer systématiquement : Flavour Power 10+1 offert et 15+2 offert (si applicable en magasin).')">
+                    <div class="ct">Offres FP 10ml</div>
+                    <div class="cs">10+1 / 15+2</div>
+                  </div>
+                  <div class="choice" onclick="toast('Phrase', '“On vise d’abord zéro cigarette. La baisse de nicotine vient quand c’est stable.”')">
+                    <div class="ct">Phrase anti-rechute</div>
+                    <div class="cs">Rassure, cadre, fidélise.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Dernière fiche</h2>
+              <p>Récupère une session précédente automatiquement.</p>
+            </div>
+            <span class="badge">Auto-save</span>
+          </div>
+          <div class="pb">
+            <div id="lastSheetBox" class="q">
+              <h3>—</h3>
+              <p class="muted">Aucune fiche enregistrée pour le moment.</p>
+              <div class="btnrow">
+                <button class="btn" onclick="go('client')">Créer une fiche</button>
+              </div>
+            </div>
+            <div class="hr"></div>
+            <div class="q">
+              <h3>⚙️ Réglages rapides</h3>
+              <p class="muted">Personnalise le PIN vendeur et quelques defaults.</p>
+              <div class="two">
+                <div>
+                  <label>PIN vendeur</label>
+                  <input type="password" id="pinInput" placeholder="Ex: 2468" inputmode="numeric" />
+                  <div class="small" style="margin-top:8px">Stocké sur l’appareil (localStorage). Change-le si besoin.</div>
+                </div>
+                <div>
+                  <label>Nom boutique (affiché sur la fiche)</label>
+                  <input type="text" id="shopNameInput" placeholder="Ex: STOOM Clermont-Ferrand" />
+                </div>
+              </div>
+              <div class="btnrow" style="margin-top:10px">
+                <button class="btn primary" onclick="saveSettings()">Enregistrer</button>
+                <button class="btn" onclick="loadSettings(true)">Recharger</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-client" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Parcours client</h2>
+              <p>5 questions. Une fiche claire. Zéro prise de tête.</p>
+            </div>
+            <span class="badge">Wizard</span>
+          </div>
+          <div class="pb">
+            <div class="wizard">
+              <div class="steps" id="clientSteps"></div>
+
+              <div class="q" id="clientQuestionBox">
+                <!-- injected -->
+              </div>
+
+              <div class="wz-actions">
+                <div class="left">
+                  <button class="btn" id="clientPrev">Précédent</button>
+                  <span class="mini" id="clientTip">Astuce : appuie sur 1/2/3/4 pour répondre vite.</span>
+                </div>
+                <div class="right">
+                  <button class="btn" onclick="clientReset()">Recommencer</button>
+                  <button class="btn primary" id="clientNext">Suivant</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Fiche recommandation</h2>
+              <p>Auto-générée. Imprimable. Partageable.</p>
+            </div>
+            <span class="badge">Fiche</span>
+          </div>
+          <div class="pb">
+            <div class="result" id="sheetBox">
+              <h3>En attente…</h3>
+              <p class="muted">Réponds aux questions à gauche pour générer la fiche.</p>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="q">
+              <h3>🗣️ Message prêt à dire</h3>
+              <p class="muted" id="salesLine">—</p>
+              <div class="btnrow">
+                <button class="btn" onclick="copySalesLine()">Copier</button>
+                <button class="btn" onclick="toast('Pro tip', 'Dis la phrase calmement + regarde le client : tu installes la confiance.')">Tip vendeur</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-sav" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>SAV guidé</h2>
+              <p>Diagnostic rapide des problèmes fréquents.</p>
+            </div>
+            <span class="badge">Check</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <h3>Quel problème principal ?</h3>
+              <p class="muted">Choisis le symptôme dominant. L’outil propose les causes + actions.</p>
+              <div class="choices cols3" id="savChoices"></div>
+            </div>
+
+            <div class="q" id="savResult" style="margin-top:12px">
+              <h3>En attente…</h3>
+              <p class="muted">Sélectionne un symptôme ci-dessus.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Checklist SAV (vendeur)</h2>
+              <p>Une trame simple pour éviter l’oubli.</p>
+            </div>
+            <span class="badge">Pro</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <h3>Questions à poser (60 secondes)</h3>
+              <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+                <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
+                <li>Liquide : taux / ratio / marque / nouveauté ?</li>
+                <li>Résistance : neuve ? amorçage ? puissance ?</li>
+                <li>Airflow : trop ouvert ? tirage trop fort ?</li>
+                <li>Le matériel a subi un choc / chaleur ?</li>
+              </ul>
+              <div class="hr"></div>
+              <h3>Conclusion simple</h3>
+              <p class="muted">
+                “On fait 1 changement à la fois : résistance + réglage, puis on valide. Le but : retrouver un usage stable.”
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-calc" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Calculateur conso</h2>
+              <p>Estimation flacons 10ml (simple à expliquer).</p>
+            </div>
+            <span class="badge">10ml</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <div class="two">
+                <div>
+                  <label>Cigarettes / jour</label>
+                  <input id="cigsPerDay" type="number" min="0" step="1" placeholder="Ex: 20" />
+                </div>
+                <div>
+                  <label>Durée (jours)</label>
+                  <input id="days" type="number" min="1" step="1" value="30" />
+                </div>
+              </div>
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Hypothèse (modifiable)</label>
+                  <select id="mlPerDayAt20">
+                    <option value="3">20 cig/j ≈ 3 ml/j</option>
+                    <option value="4" selected>20 cig/j ≈ 4 ml/j</option>
+                    <option value="5">20 cig/j ≈ 5 ml/j</option>
+                  </select>
+                  <div class="small" style="margin-top:8px">C’est une estimation. Tu peux ajuster selon ton expérience boutique.</div>
+                </div>
+                <div>
+                  <label>Prix flacon 10ml (€)</label>
+                  <input id="price10ml" type="number" min="0" step="0.1" placeholder="Ex: 5.9" />
+                </div>
+              </div>
+
+              <div class="btnrow" style="margin-top:12px">
+                <button class="btn primary" onclick="calcBottles()">Calculer</button>
+                <button class="btn" onclick="fillExample()">Exemple (20 cig/j)</button>
+              </div>
+
+              <div class="hr"></div>
+              <div class="result" id="bottleResult">
+                <h3>Résultat</h3>
+                <p class="muted">Entre tes chiffres et clique “Calculer”.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Comparatif économies</h2>
+              <p>Tabac vs vape (argument clair).</p>
+            </div>
+            <span class="badge">€</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <div class="two">
+                <div>
+                  <label>Prix paquet (€)</label>
+                  <input id="packPrice" type="number" min="0" step="0.1" placeholder="Ex: 12.5" />
+                </div>
+                <div>
+                  <label>Paquets / jour</label>
+                  <input id="packsPerDay" type="number" min="0" step="0.1" placeholder="Ex: 1" />
+                </div>
+              </div>
+
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Budget vape / mois (€)</label>
+                  <input id="vapeMonthly" type="number" min="0" step="1" placeholder="Ex: 60" />
+                </div>
+                <div>
+                  <label>Durée (mois)</label>
+                  <input id="months" type="number" min="1" step="1" value="12" />
+                </div>
+              </div>
+
+              <div class="btnrow" style="margin-top:12px">
+                <button class="btn primary" onclick="calcSavings()">Calculer</button>
+                <button class="btn" onclick="toast('Tip', 'Même si les prix montent, l’écart avec le tabac reste généralement important. Garde l’argument simple.')">Tip</button>
+              </div>
+
+              <div class="hr"></div>
+              <div class="result" id="savingsResult">
+                <h3>Résultat</h3>
+                <p class="muted">Renseigne les champs puis clique “Calculer”.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-seller" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Mode vendeur (interne)</h2>
+              <p>Trame, repères, anti-erreurs.</p>
+            </div>
+            <span class="badge">PIN requis</span>
+          </div>
+          <div class="pb">
+            <div class="q" id="sellerGate">
+              <h3>Verrouillé</h3>
+              <p class="muted">Active le mode vendeur avec le PIN (bouton “PIN” en haut à gauche).</p>
+              <button class="btn primary" onclick="openPinModal()">Entrer PIN</button>
+            </div>
+
+            <div class="q" id="sellerContent" style="display:none">
+              <h3>Trame de vente (30 secondes)</h3>
+              <ol class="muted" style="margin:10px 0 0; padding-left:18px">
+                <li><b>Rassurer</b> : “On va chercher une solution stable, pas parfaite du premier coup.”</li>
+                <li><b>Diagnostiquer</b> : conso, moments clés, type de cigarette, contraintes.</li>
+                <li><b>Décider</b> : tirage + taux + matériel + explication simple.</li>
+              </ol>
+              <div class="hr"></div>
+              <h3>Anti-erreurs (les 5 classiques)</h3>
+              <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+                <li><span class="dangerText">Taux élevé + matériel puissant</span> → hit trop fort, irritations, risque d’arrêt.</li>
+                <li><span class="warnText">Passage trop rapide en 0 mg</span> → frustration → rechute.</li>
+                <li><span class="warnText">Trop d’infos</span> → client perdu. 1 message simple.</li>
+                <li><span class="warnText">Changer 3 choses à la fois</span> (liquide, résistance, réglage) → impossible de comprendre.</li>
+                <li><span class="warnText">Oublier la sécurité</span> : batteries, chargeurs, manipulations.</li>
+              </ul>
+              <div class="hr"></div>
+              <h3>Repères nicotine (Stoom)</h3>
+              <div class="chips">
+                <span class="chip"><b>5–10</b> cig/j → 3 ou 6 mg</span>
+                <span class="chip"><b>10–15</b> cig/j → 6 ou 12 mg</span>
+                <span class="chip"><b>15–20</b> cig/j → 10 mg sel</span>
+                <span class="chip"><b>25+</b> cig/j → 20 mg sel</span>
+              </div>
+              <p class="muted" style="margin-top:10px">
+                Rappel : nicotine élevée = matériel peu puissant (MTL). Objectif : confort + éviter la rechute.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Scripts (phrases prêtes)</h2>
+              <p>À lire mot pour mot si besoin.</p>
+            </div>
+            <span class="badge">Copy</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <h3>Stabilité d’abord</h3>
+              <p class="muted mono" id="script1">“On vise d’abord zéro cigarette. La baisse de nicotine vient quand c’est stable et confortable.”</p>
+              <div class="btnrow">
+                <button class="btn" onclick="copyText('#script1')">Copier</button>
+              </div>
+            </div>
+            <div class="q" style="margin-top:12px">
+              <h3>Client qui veut 0 mg trop vite</h3>
+              <p class="muted mono" id="script2">“Passer trop vite à 0 mg, c’est souvent ce qui fait rechuter. On peut baisser progressivement, ou alterner, pour que ça reste facile.”</p>
+              <div class="btnrow">
+                <button class="btn" onclick="copyText('#script2')">Copier</button>
+              </div>
+            </div>
+            <div class="q" style="margin-top:12px">
+              <h3>Ventes additionnelles “éthiques”</h3>
+              <p class="muted mono" id="script3">“Je te mets une résistance de secours / une cartouche de rechange : ça évite la panne et donc la clope.”</p>
+              <div class="btnrow">
+                <button class="btn" onclick="copyText('#script3')">Copier</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="view-notes" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Notes client</h2>
+              <p>Suivi rapide (local, offline).</p>
+            </div>
+            <span class="badge">CRM light</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <div class="two">
+                <div>
+                  <label>Nom / pseudo client</label>
+                  <input id="noteName" type="text" placeholder="Ex: M. Dupont" />
+                </div>
+                <div>
+                  <label>Téléphone (optionnel)</label>
+                  <input id="notePhone" type="text" placeholder="Ex: 06..." />
+                </div>
+              </div>
+              <div style="margin-top:10px">
+                <label>Note</label>
+                <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible à la gorge → baisser puissance. Revoir dans 2 semaines."></textarea>
+              </div>
+              <div class="btnrow" style="margin-top:10px">
+                <button class="btn primary" onclick="saveNote()">Enregistrer</button>
+                <button class="btn" onclick="clearNoteForm()">Effacer</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Historique</h2>
+              <p>Recherche instantanée + suppression.</p>
+            </div>
+            <span class="badge">Local</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <label>Filtrer</label>
+              <input id="noteFilter" type="text" placeholder="Tape un nom, un mot, un numéro..." />
+              <div class="hr"></div>
+              <div id="notesList"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="t" id="toastT">—</div>
+  <div class="s" id="toastS">—</div>
+</div>
+
+<!-- PIN Modal -->
+<div class="modal" id="pinModal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-h">
+      <h3>Mode vendeur</h3>
+      <button class="xbtn" onclick="closeModal()">Fermer</button>
+    </div>
+    <div class="modal-b">
+      <p class="muted">Entre le PIN pour activer le mode vendeur sur cet appareil.</p>
+      <label>PIN</label>
+      <input type="password" id="pinField" placeholder="••••" inputmode="numeric" />
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn primary" onclick="unlockSeller()">Déverrouiller</button>
+        <button class="btn" onclick="lockSeller()">Verrouiller</button>
+      </div>
+      <div class="hr"></div>
+      <p class="small">
+        Astuce : tu peux changer le PIN dans Accueil → Réglages rapides.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Help Modal -->
+<div class="modal" id="helpModal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-h">
+      <h3>Aide rapide</h3>
+      <button class="xbtn" onclick="closeHelp()">Fermer</button>
+    </div>
+    <div class="modal-b">
+      <p class="muted">
+        Cet outil est conçu pour une utilisation boutique sur tablette :
+      </p>
+      <ul class="muted" style="padding-left:18px; margin:10px 0 0">
+        <li><b>Parcours client</b> : 5 questions → fiche imprimable.</li>
+        <li><b>SAV</b> : 1 symptôme → actions simples.</li>
+        <li><b>Mode vendeur</b> : trames + scripts (PIN).</li>
+        <li><b>Données</b> : tout est stocké sur l’appareil (localStorage).</li>
+      </ul>
+      <div class="hr"></div>
+      <p class="muted">
+        Raccourcis : <span class="mono">H</span> Accueil • <span class="mono">C</span> Client • <span class="mono">S</span> SAV •
+        <span class="mono">K</span> Calcul • <span class="mono">V</span> Vendeur • <span class="mono">N</span> Notes •
+        <span class="mono">/</span> Rechercher • <span class="mono">Esc</span> fermer les fenêtres.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   STOOM • Outil Tablette
+   Single-file app (offline, localStorage)
+   ========================= */
+
+const LS = {
+  settings: "stoom_settings_v1",
+  seller: "stoom_seller_unlocked_v1",
+  session: "stoom_session_v1",
+  notes: "stoom_notes_v1",
+};
+
+const DEFAULTS = {
+  pin: "2468",
+  shopName: "STOOM",
+};
+
+const state = {
+  view: "home",
+  sellerUnlocked: false,
+  settings: {...DEFAULTS},
+  client: {
+    step: 0,
+    answers: {
+      cigs: null,
+      cigType: null,
+      moments: null,
+      goal: null,
+      tried: null
+    },
+    sheet: null
+  },
+  sav: { symptom: null },
+  notes: []
+};
+
+// ---------- Utils ----------
+function $(q){ return document.querySelector(q); }
+function $all(q){ return Array.from(document.querySelectorAll(q)); }
+
+function formatDateFR(d){
+  try{
+    return new Intl.DateTimeFormat('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric'}).format(d);
+  }catch(e){
+    return d.toLocaleDateString('fr-FR');
+  }
+}
+
+function safeJsonParse(str, fallback){
+  try{ return JSON.parse(str); }catch(e){ return fallback; }
+}
+
+function toast(t, s){
+  const el = $("#toast");
+  $("#toastT").textContent = t || "Info";
+  $("#toastS").textContent = s || "";
+  el.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=> el.classList.remove("show"), 3200);
+}
+
+function copyText(sel){
+  const text = (typeof sel === "string") ? $(sel)?.textContent : sel;
+  if(!text) return toast("Copie", "Rien à copier.");
+  navigator.clipboard?.writeText(text).then(
+    ()=> toast("Copié", "Texte copié dans le presse-papiers."),
+    ()=> toast("Copie", "Impossible de copier (permissions navigateur).")
+  );
+}
+
+function printHtml(html){
+  const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée. Autorise les pop-ups puis réessaie."); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+function download(filename, text){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type:"application/json"}));
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(a.href), 1000);
+}
+
+// ---------- Persistence ----------
+function saveAll(){
+  localStorage.setItem(LS.settings, JSON.stringify(state.settings));
+  localStorage.setItem(LS.seller, JSON.stringify({unlocked: state.sellerUnlocked}));
+  localStorage.setItem(LS.session, JSON.stringify({
+    client: state.client,
+    savedAt: Date.now()
+  }));
+  localStorage.setItem(LS.notes, JSON.stringify(state.notes));
+  refreshSidebarMini();
+  refreshHomeLastSheet();
+}
+
+function loadAll(){
+  state.settings = {...DEFAULTS, ...(safeJsonParse(localStorage.getItem(LS.settings), {})||{})};
+  const seller = safeJsonParse(localStorage.getItem(LS.seller), {unlocked:false});
+  state.sellerUnlocked = !!seller.unlocked;
+  const session = safeJsonParse(localStorage.getItem(LS.session), null);
+  if(session?.client){
+    state.client = session.client;
+  }
+  state.notes = safeJsonParse(localStorage.getItem(LS.notes), []);
+  applySellerUI();
+}
+
+// ---------- Navigation ----------
+function go(view){
+  // seller view: gate
+  if(view === "seller" && !state.sellerUnlocked){
+    toast("Mode vendeur", "Verrouillé. Entre le PIN.");
+  }
+  state.view = view;
+  $all(".view").forEach(v => v.style.display = "none");
+  $("#view-"+view).style.display = "block";
+  $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  // view-specific refresh
+  if(view === "client") renderClient();
+  if(view === "sav") renderSav();
+  if(view === "calc") {/* no-op */}
+  if(view === "seller") renderSeller();
+  if(view === "notes") renderNotes();
+  saveAll();
+}
+
+function bindNav(){
+  $("#nav").addEventListener("click", (e)=>{
+    const btn = e.target.closest(".navbtn");
+    if(!btn) return;
+    go(btn.dataset.view);
+  });
+}
+
+// ---------- Settings ----------
+function loadSettings(pushToInputs=false){
+  $("#pinInput").value = state.settings.pin || DEFAULTS.pin;
+  $("#shopNameInput").value = state.settings.shopName || DEFAULTS.shopName;
+  if(pushToInputs) toast("Réglages", "Champs rechargés.");
+}
+function saveSettings(){
+  const pin = ($("#pinInput").value || "").trim();
+  const shopName = ($("#shopNameInput").value || "").trim();
+  if(pin && pin.length < 4){
+    toast("PIN", "Choisis un PIN d'au moins 4 chiffres.");
+    return;
+  }
+  state.settings.pin = pin || DEFAULTS.pin;
+  state.settings.shopName = shopName || DEFAULTS.shopName;
+  saveAll();
+  toast("Enregistré", "Réglages mis à jour.");
+}
+
+// ---------- Seller lock ----------
+function applySellerUI(){
+  const dot = $("#sellerDot");
+  const label = $("#sellerLabel");
+  if(state.sellerUnlocked){
+    dot.classList.remove("locked");
+    label.textContent = "Vendeur : actif";
+    $("#sellerNav").style.opacity = "1";
+  }else{
+    dot.classList.add("locked");
+    label.textContent = "Vendeur : verrouillé";
+    $("#sellerNav").style.opacity = "1";
+  }
+  renderSeller();
+}
+
+function openPinModal(){
+  $("#pinField").value = "";
+  $("#pinModal").classList.add("show");
+  setTimeout(()=> $("#pinField").focus(), 50);
+}
+function closeModal(){
+  $("#pinModal").classList.remove("show");
+}
+function unlockSeller(){
+  const pin = ($("#pinField").value || "").trim();
+  if(pin === (state.settings.pin || DEFAULTS.pin)){
+    state.sellerUnlocked = true;
+    applySellerUI();
+    saveAll();
+    closeModal();
+    toast("OK", "Mode vendeur activé.");
+    if(state.view === "seller") renderSeller();
+  }else{
+    toast("PIN incorrect", "Réessaie.");
+  }
+}
+function lockSeller(){
+  state.sellerUnlocked = false;
+  applySellerUI();
+  saveAll();
+  toast("OK", "Mode vendeur verrouillé.");
+  closeModal();
+}
+
+// ---------- Client Wizard ----------
+const clientSteps = [
+  { key:"cigs", label:"Conso", desc:"cig/j" },
+  { key:"cigType", label:"Cigarette", desc:"type" },
+  { key:"moments", label:"Moments", desc:"déclencheurs" },
+  { key:"goal", label:"Objectif", desc:"intention" },
+  { key:"tried", label:"Expérience", desc:"déjà essayé" },
+];
+
+const clientQuestions = [
+  {
+    key:"cigs",
+    title:"Combien de cigarettes par jour ?",
+    subtitle:"On choisit d’abord un taux cohérent (stabilité).",
+    cols:"cols4",
+    choices:[
+      {v:"5-10", t:"5–10 /j", s:"Souvent 3 ou 6 mg"},
+      {v:"10-15", t:"10–15 /j", s:"Souvent 6 ou 12 mg"},
+      {v:"15-20", t:"15–20 /j", s:"Souvent 10 mg sel"},
+      {v:"25+", t:"25+ /j", s:"Souvent 20 mg sel"},
+    ]
+  },
+  {
+    key:"cigType",
+    title:"Type de cigarette ?",
+    subtitle:"Ça aide à choisir les sensations & saveurs.",
+    cols:"cols3",
+    choices:[
+      {v:"blonde", t:"Blonde", s:"Classique / light"},
+      {v:"menthol", t:"Menthol", s:"Fraîcheur douce"},
+      {v:"roulee", t:"Roulée", s:"Plus aromatique / puissant"},
+    ]
+  },
+  {
+    key:"moments",
+    title:"Moments “difficiles” ?",
+    subtitle:"On sécurise ces moments-là en priorité.",
+    cols:"cols3",
+    choices:[
+      {v:"stress", t:"Stress", s:"Nerfs / pression"},
+      {v:"cafe", t:"Café", s:"Habitude ancrée"},
+      {v:"soir", t:"Soir", s:"Détente / fin de journée"},
+      {v:"journee", t:"Toute la journée", s:"Usage fréquent"},
+      {v:"apresRepas", t:"Après repas", s:"Rituel"},
+      {v:"matin", t:"Matin", s:"Démarrage"},
+    ]
+  },
+  {
+    key:"goal",
+    title:"Objectif du client ?",
+    subtitle:"On adapte le rythme : l’objectif n°1 = ne pas rechuter.",
+    cols:"cols3",
+    choices:[
+      {v:"arreter", t:"Arrêter", s:"Objectif clair"},
+      {v:"reduire", t:"Réduire", s:"Étape intermédiaire"},
+      {v:"remplacer", t:"Remplacer", s:"Sans pression"},
+    ]
+  },
+  {
+    key:"tried",
+    title:"Déjà essayé la vape ?",
+    subtitle:"On corrige ce qui a bloqué la dernière fois.",
+    cols:"cols3",
+    choices:[
+      {v:"non", t:"Non", s:"Découverte"},
+      {v:"echec", t:"Oui (échec)", s:"On sécurise"},
+      {v:"ok", t:"Oui (ça marchait)", s:"On réplique le succès"},
+    ]
+  },
+];
+
+function clientReset(){
+  state.client.step = 0;
+  state.client.answers = { cigs:null, cigType:null, moments:null, goal:null, tried:null };
+  state.client.sheet = null;
+  renderClient();
+  saveAll();
+  toast("Reset", "Parcours client réinitialisé.");
+}
+
+function setAnswer(key, value){
+  state.client.answers[key] = value;
+  // auto-next for single-choice questions
+  const idx = clientQuestions.findIndex(q => q.key === key);
+  if(idx === state.client.step && idx < clientQuestions.length-1){
+    // keep moments multi? Here we allow only one selection for speed.
+    setTimeout(()=> nextClient(), 80);
+  }else{
+    renderClient();
+  }
+  saveAll();
+}
+
+function prevClient(){
+  state.client.step = Math.max(0, state.client.step - 1);
+  renderClient();
+  saveAll();
+}
+function nextClient(){
+  // must answer current
+  const q = clientQuestions[state.client.step];
+  if(!state.client.answers[q.key]){
+    toast("Réponse manquante", "Choisis une option pour continuer.");
+    return;
+  }
+  if(state.client.step < clientQuestions.length-1){
+    state.client.step += 1;
+    renderClient();
+  }else{
+    // generate sheet
+    state.client.sheet = buildSheet(state.client.answers);
+    renderSheet();
+    toast("Fiche", "Recommandation générée.");
+  }
+  saveAll();
+}
+
+function renderClientSteps(){
+  const el = $("#clientSteps");
+  el.innerHTML = "";
+  clientSteps.forEach((s, i)=>{
+    const div = document.createElement("div");
+    div.className = "step";
+    if(i === state.client.step) div.classList.add("active");
+    if(state.client.answers[s.key]) div.classList.add("done");
+    div.innerHTML = `<span>${i+1}. ${s.label}</span><span class="mini">${s.desc}</span>`;
+    div.onclick = ()=> { state.client.step = i; renderClient(); saveAll(); };
+    el.appendChild(div);
+  });
+}
+
+function renderClientQuestion(){
+  const box = $("#clientQuestionBox");
+  const q = clientQuestions[state.client.step];
+  const current = state.client.answers[q.key];
+  box.innerHTML = `
+    <h3>${q.title}</h3>
+    <p class="muted">${q.subtitle}</p>
+    <div class="choices ${q.cols || ""}" id="qChoices"></div>
+  `;
+  const ch = $("#qChoices");
+  q.choices.forEach((c)=>{
+    const d = document.createElement("div");
+    d.className = "choice" + (current === c.v ? " selected":"");
+    d.innerHTML = `<div class="ct">${c.t}</div><div class="cs">${c.s||""}</div>`;
+    d.onclick = ()=> setAnswer(q.key, c.v);
+    ch.appendChild(d);
+  });
+}
+
+function renderSheet(){
+  const box = $("#sheetBox");
+  if(!state.client.sheet){
+    box.innerHTML = `<h3>En attente…</h3><p class="muted">Réponds aux questions à gauche pour générer la fiche.</p>`;
+    $("#salesLine").textContent = "—";
+    refreshSidebarMini();
+    return;
+  }
+  const sh = state.client.sheet;
+  box.innerHTML = `
+    <h3>${sh.title}</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tirage</b> ${sh.tirage}</span>
+      <span class="chip"><b>Nicotine</b> ${sh.nicotine}</span>
+      <span class="chip"><b>Puissance</b> ${sh.power}</span>
+      <span class="chip"><b>Matériel</b> ${sh.hardware}</span>
+    </div>
+    <p class="muted">${sh.explain}</p>
+    <div class="hr"></div>
+    <div class="chips">
+      ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${a}</span>`).join("")}
+    </div>
+    <p class="small" style="margin-top:10px">Boutique : <span class="mono">${escapeHtml(state.settings.shopName||DEFAULTS.shopName)}</span> • Généré le ${formatDateFR(new Date())}</p>
+  `;
+  $("#salesLine").textContent = sh.salesLine;
+  refreshSidebarMini();
+  refreshHomeLastSheet();
+}
+
+function renderClient(){
+  renderClientSteps();
+  renderClientQuestion();
+  $("#clientPrev").onclick = prevClient;
+  $("#clientNext").onclick = nextClient;
+  $("#clientPrev").disabled = state.client.step === 0;
+  // If last step answered, allow generate
+  renderSheet();
+}
+
+function copySalesLine(){
+  const line = $("#salesLine").textContent;
+  if(!line || line === "—") return toast("Copie", "Aucune phrase pour le moment.");
+  navigator.clipboard?.writeText(line).then(()=> toast("Copié", "Phrase copiée."), ()=> toast("Copie", "Impossible de copier."));
+}
+
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+}
+
+function buildSheet(a){
+  // Nicotine mapping from your shop rules
+  let nicotine = "—";
+  let tirage = "MTL (serré)";
+  let power = "Faible à modérée";
+  let hardware = "Pod/kit MTL fiable";
+  let warn = "";
+
+  if(a.cigs === "5-10") nicotine = "3–6 mg";
+  if(a.cigs === "10-15") nicotine = "6–12 mg";
+  if(a.cigs === "15-20") nicotine = "10 mg (sels)";
+  if(a.cigs === "25+") nicotine = "20 mg (sels)";
+
+  // If nicotine high, keep power low
+  if(a.cigs === "15-20" || a.cigs === "25+"){
+    tirage = "MTL (serré, régulier)";
+    power = "Faible (confort)";
+    hardware = "Pod MTL / tirage serré";
+    warn = "⚠️ Éviter les matériels trop puissants avec un dosage élevé (hit trop fort, irritations).";
+  } else {
+    tirage = "MTL (serré à semi-serré)";
+    power = "Modérée";
+    hardware = "Pod MTL / kit simple";
+  }
+
+  // Cig type flavor suggestion
+  let flavor = "Saveurs au choix";
+  if(a.cigType === "blonde") flavor = "Classiques (blond) ou légèrement gourmands";
+  if(a.cigType === "menthol") flavor = "Menthol doux / frais";
+  if(a.cigType === "roulee") flavor = "Classiques plus aromatiques (puissants)";
+
+  // Goal influences messaging
+  let goalLine = "On vise d’abord la stabilité et zéro cigarette.";
+  if(a.goal === "reduire") goalLine = "On sécurise le quotidien, puis on réduit doucement si c’est stable.";
+  if(a.goal === "remplacer") goalLine = "On remplace sans pression : confort + habitudes sécurisées.";
+
+  // Tried influences reassurance
+  let reassurance = "On ajuste si besoin, sans se précipiter.";
+  if(a.tried === "echec") reassurance = "Si ça a déjà échoué, c’est souvent un mauvais couple taux/matériel. On sécurise.";
+  if(a.tried === "ok") reassurance = "Si ça marchait, on réplique ce qui était confortable et stable.";
+
+  // Moments add-on
+  let momentTip = "On sécurise les moments clés (stress/café/soir) avec le bon dosage et un tirage simple.";
+  if(a.moments === "stress") momentTip = "Stress : privilégier un tirage stable + dosage cohérent pour éviter la “frustration”.";
+  if(a.moments === "cafe") momentTip = "Café : prévoir une routine (même liquide, même tirage) pour remplacer le rituel.";
+  if(a.moments === "soir") momentTip = "Soir : éviter la baisse trop rapide, garder le confort.";
+  if(a.moments === "journee") momentTip = "Toute la journée : autonomie + fiabilité + simplicité.";
+  if(a.moments === "apresRepas") momentTip = "Après repas : un setup prêt, simple, toujours dispo.";
+  if(a.moments === "matin") momentTip = "Matin : doser juste, pas trop faible, sinon manque immédiat.";
+
+  const addons = [
+    "Résistance/cartouche de secours",
+    "Conseil réglage puissance (confort)",
+    "Rappel : baisser la nicotine quand c’est stable",
+  ];
+
+  const salesLine = `“Je te propose ${tirage} avec ${nicotine}. L’objectif, c’est ${goalLine.toLowerCase()} On ajuste ensuite si besoin.”`;
+
+  return {
+    title: "Recommandation STOOM (profil client)",
+    tirage,
+    nicotine,
+    power,
+    hardware,
+    explain: `${warn ? warn+" " : ""}${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
+    addons,
+    salesLine
+  };
+}
+
+// ---------- SAV ----------
+const savMap = [
+  {
+    id:"fuite",
+    t:"Fuite",
+    s:"liquide partout / glouglou",
+    causes:[
+      "Résistance en fin de vie ou mal amorcée",
+      "Airflow trop ouvert + aspiration trop forte",
+      "Liquide trop fluide (ratio PG/VG) / chaleur",
+      "Cartouche usée / joint abîmé"
+    ],
+    actions:[
+      "Changer résistance + amorcer (quelques gouttes + attente 5–10 min)",
+      "Baisser puissance / fermer un peu l’airflow",
+      "Nettoyer, vérifier joints, resserrer correctement",
+      "Si persiste : tester autre cartouche / autre liquide"
+    ],
+    tip:"Règle d’or : 1 changement à la fois, puis on valide."
+  },
+  {
+    id:"goutBrule",
+    t:"Goût brûlé",
+    s:"dry hit / brûlé",
+    causes:[
+      "Résistance cramée ou pas assez imbibée",
+      "Puissance trop haute",
+      "Chaînes de bouffées sans pause"
+    ],
+    actions:[
+      "Changer résistance + amorçage",
+      "Baisser la puissance (W) et tester",
+      "Faire des pauses entre bouffées",
+    ],
+    tip:"Si goût brûlé permanent : résistance à remplacer."
+  },
+  {
+    id:"toux",
+    t:"Toux / gorge irritée",
+    s:"inconfort, hit trop fort",
+    causes:[
+      "Taux nicotine trop élevé pour le matériel",
+      "Puissance trop haute / tirage trop aérien",
+      "Liquide trop “sec” (PG) / arôme agressif"
+    ],
+    actions:[
+      "Adapter matériel au taux (MTL + puissance basse)",
+      "Ou baisser progressivement le taux si le client veut plus puissant",
+      "Tester un liquide plus doux / plus VG / autre arôme"
+    ],
+    tip:"Objectif : confort → sinon abandon → rechute."
+  },
+  {
+    id:"pasDeVapeur",
+    t:"Pas de vapeur",
+    s:"ne s’allume pas / rien",
+    causes:[
+      "Batterie vide / mauvais contact",
+      "Cartouche mal enclenchée",
+      "Pod verrouillé / défaut coil"
+    ],
+    actions:[
+      "Charger / vérifier câble / nettoyer contacts",
+      "Retirer-remettre la cartouche, vérifier aimants",
+      "Tester une autre cartouche / résistance"
+    ],
+    tip:"Toujours commencer par contacts + charge."
+  },
+  {
+    id:"glouglou",
+    t:"Glouglou",
+    s:"bruit, remontées",
+    causes:[
+      "Sur-alimentation / condensation",
+      "Aspiration trop forte",
+      "Résistance noyée"
+    ],
+    actions:[
+      "Souffler doucement dans le drip tip (papier dessous)",
+      "Nettoyer cheminée / base",
+      "Réduire aspiration, fermer un peu l’airflow"
+    ],
+    tip:"Glouglou = trop de liquide dans la cheminée."
+  },
+];
+
+function renderSav(){
+  const box = $("#savChoices");
+  box.innerHTML = "";
+  savMap.forEach(it=>{
+    const d = document.createElement("div");
+    d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
+    d.innerHTML = `<div class="ct">${it.t}</div><div class="cs">${it.s}</div>`;
+    d.onclick = ()=> { state.sav.symptom = it.id; renderSavResult(); saveAll(); };
+    box.appendChild(d);
+  });
+  renderSavResult();
+}
+
+function renderSavResult(){
+  const r = $("#savResult");
+  const it = savMap.find(x=>x.id===state.sav.symptom);
+  if(!it){
+    r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme ci-dessus.</p>`;
+    return;
+  }
+  r.innerHTML = `
+    <h3>✅ ${it.t}</h3>
+    <p class="muted">${it.tip}</p>
+    <div class="hr"></div>
+    <div class="two">
+      <div>
+        <h3>Causes probables</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.causes.map(c=>`<li>${c}</li>`).join("")}
+        </ul>
+      </div>
+      <div>
+        <h3>Actions recommandées</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.actions.map(a=>`<li>${a}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
+    <div class="btnrow" style="margin-top:12px">
+      <button class="btn" onclick="toast('SAV', 'Noter le cas dans Notes client si nécessaire.')">Conseil</button>
+      <button class="btn primary" onclick="go('notes')">Ouvrir Notes client</button>
+    </div>
+  `;
+}
+
+// ---------- Seller view ----------
+function renderSeller(){
+  const gate = $("#sellerGate");
+  const content = $("#sellerContent");
+  if(state.sellerUnlocked){
+    gate.style.display = "none";
+    content.style.display = "block";
+  } else {
+    gate.style.display = "block";
+    content.style.display = "none";
+  }
+}
+
+// ---------- Calculators ----------
+function fillExample(){
+  $("#cigsPerDay").value = 20;
+  $("#days").value = 30;
+  $("#mlPerDayAt20").value = 4;
+  $("#price10ml").value = 5.9;
+  toast("Exemple", "Valeurs remplies.");
+}
+
+function calcBottles(){
+  const cigs = Number($("#cigsPerDay").value||0);
+  const days = Number($("#days").value||0);
+  const mlAt20 = Number($("#mlPerDayAt20").value||4);
+  const price = Number($("#price10ml").value||0);
+
+  if(days <= 0){ toast("Erreur", "Durée invalide."); return; }
+
+  // simple proportional model: (cigs/20) * mlAt20
+  const mlPerDay = (cigs/20) * mlAt20;
+  const totalMl = mlPerDay * days;
+  const bottles = totalMl / 10;
+
+  const bottlesCeil = Math.max(0, Math.ceil(bottles));
+  const bottlesRound = Math.max(0, Math.round(bottles*10)/10);
+
+  let cost = null;
+  if(price>0) cost = bottlesCeil * price;
+
+  const offerText = (bottlesCeil >= 15) ? "Astuce : propose 15+2 offert (si applicable)." :
+                    (bottlesCeil >= 10) ? "Astuce : propose 10+1 offert (si applicable)." :
+                    "Astuce : proposer une marge de sécurité (1 flacon de plus).";
+
+  $("#bottleResult").innerHTML = `
+    <h3>Résultat (estimation)</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>ml/j</b> ${mlPerDay.toFixed(1)}</span>
+      <span class="chip"><b>Total</b> ${totalMl.toFixed(0)} ml</span>
+      <span class="chip"><b>Flacons</b> ~${bottlesRound} (10ml)</span>
+      <span class="chip"><b>À prévoir</b> ${bottlesCeil} flacons</span>
+    </div>
+    <p class="muted">${offerText}</p>
+    ${cost !== null ? `<p class="muted"><b>Budget indicatif :</b> ~${cost.toFixed(2)} € (selon prix flacon).</p>` : ``}
+    <p class="small">Modèle simple : proportionnel à 20 cig/j. Ajuste selon ton expérience boutique.</p>
+  `;
+}
+
+function calcSavings(){
+  const packPrice = Number($("#packPrice").value||0);
+  const packsPerDay = Number($("#packsPerDay").value||0);
+  const vapeMonthly = Number($("#vapeMonthly").value||0);
+  const months = Number($("#months").value||0);
+
+  if(months <= 0){ toast("Erreur", "Durée invalide."); return; }
+  const tobaccoMonthly = packPrice * packsPerDay * 30;
+  const tobaccoTotal = tobaccoMonthly * months;
+  const vapeTotal = vapeMonthly * months;
+  const save = tobaccoTotal - vapeTotal;
+
+  $("#savingsResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tabac/mois</b> ${tobaccoMonthly.toFixed(2)} €</span>
+      <span class="chip"><b>Tabac</b> ${tobaccoTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
+    </div>
+    <p class="muted">${save >= 0 ? "✅ La vape reste gagnante financièrement sur cette hypothèse." : "⚠️ Selon ces chiffres, c’est défavorable : vérifier les entrées (paquets/j, budget vape)."} </p>
+    <p class="small">C’est un argument simple : “même si ça monte, l’écart avec le tabac reste souvent important”.</p>
+  `;
+}
+
+// ---------- Notes ----------
+function renderNotes(){
+  const list = $("#notesList");
+  const filter = ($("#noteFilter").value||"").toLowerCase().trim();
+  const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
+    if(!filter) return true;
+    return (n.name||"").toLowerCase().includes(filter)
+      || (n.phone||"").toLowerCase().includes(filter)
+      || (n.text||"").toLowerCase().includes(filter);
+  });
+
+  if(items.length === 0){
+    list.innerHTML = `<p class="muted">Aucune note.</p>`;
+    return;
+  }
+
+  list.innerHTML = items.map(n=>{
+    const d = new Date(n.createdAt);
+    return `
+      <div class="q" style="margin-top:12px">
+        <h3>${escapeHtml(n.name||"Sans nom")} <span class="small">• ${escapeHtml(n.phone||"")}</span></h3>
+        <p class="muted">${escapeHtml(n.text||"")}</p>
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="prefillNote('${n.id}')">Modifier</button>
+          <button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>
+          <span class="small" style="margin-left:auto">Créé le ${formatDateFR(d)}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function saveNote(){
+  const name = ($("#noteName").value||"").trim();
+  const phone = ($("#notePhone").value||"").trim();
+  const text = ($("#noteText").value||"").trim();
+  if(!name && !phone && !text){
+    toast("Note", "Rien à enregistrer.");
+    return;
+  }
+  const id = crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+  state.notes.push({ id, name, phone, text, createdAt: Date.now() });
+  saveAll();
+  clearNoteForm();
+  renderNotes();
+  toast("OK", "Note enregistrée.");
+}
+
+function prefillNote(id){
+  const n = state.notes.find(x=>x.id===id);
+  if(!n) return;
+  $("#noteName").value = n.name||"";
+  $("#notePhone").value = n.phone||"";
+  $("#noteText").value = n.text||"";
+  toast("Note", "Modifie puis enregistre (ça créera une nouvelle note).");
+}
+
+function deleteNote(id){
+  state.notes = state.notes.filter(x=>x.id!==id);
+  saveAll();
+  renderNotes();
+  toast("Supprimé", "Note supprimée.");
+}
+
+function clearNoteForm(){
+  $("#noteName").value = "";
+  $("#notePhone").value = "";
+  $("#noteText").value = "";
+}
+
+function clearAll(){
+  if(!confirm("Réinitialiser l’outil (session + notes + réglages) ?")) return;
+  localStorage.removeItem(LS.settings);
+  localStorage.removeItem(LS.seller);
+  localStorage.removeItem(LS.session);
+  localStorage.removeItem(LS.notes);
+  location.reload();
+}
+
+// ---------- Printing / Export ----------
+function getExportPayload(){
+  return {
+    exportedAt: new Date().toISOString(),
+    settings: state.settings,
+    sellerUnlocked: state.sellerUnlocked,
+    client: state.client,
+    sav: state.sav,
+    notes: state.notes
+  };
+}
+
+function exportJson(){
+  const payload = JSON.stringify(getExportPayload(), null, 2);
+  const name = `stoom-export-${new Date().toISOString().slice(0,10)}.json`;
+  download(name, payload);
+  toast("Export", "Fichier JSON téléchargé.");
+}
+
+function printSheet(){
+  if(!state.client.sheet){
+    toast("Impression", "Aucune fiche à imprimer.");
+    return;
+  }
+  const sh = state.client.sheet;
+  const a = state.client.answers;
+  const html = `
+    <!doctype html>
+    <html><head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Fiche STOOM</title>
+    <style>
+      body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
+      h1{margin:0 0 6px; font-size:18px}
+      .sub{color:#334155; margin:0 0 16px; font-size:12px}
+      .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
+      .chips{display:flex; flex-wrap:wrap; gap:8px}
+      .chip{border:1px solid #e2e8f0; border-radius:999px; padding:6px 10px; font-size:12px}
+      .muted{color:#475569; font-size:12px; line-height:1.45}
+      .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+      .hr{height:1px; background:#e2e8f0; margin:12px 0}
+      @media print{button{display:none}}
+    </style></head>
+    <body>
+      <h1>${escapeHtml(state.settings.shopName||DEFAULTS.shopName)} • Fiche recommandation</h1>
+      <p class="sub">Généré le ${escapeHtml(formatDateFR(new Date()))}</p>
+
+      <div class="card">
+        <div class="chips">
+          <span class="chip"><b>Tirage</b> ${escapeHtml(sh.tirage)}</span>
+          <span class="chip"><b>Nicotine</b> ${escapeHtml(sh.nicotine)}</span>
+          <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
+          <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
+        </div>
+        <div class="hr"></div>
+        <p class="muted">${escapeHtml(sh.explain)}</p>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:14px; margin:0 0 8px">Profil (résumé)</h2>
+        <p class="muted mono" style="margin:0">
+          Conso: ${escapeHtml(a.cigs||"—")} • Type: ${escapeHtml(a.cigType||"—")} • Moment: ${escapeHtml(a.moments||"—")} • Objectif: ${escapeHtml(a.goal||"—")} • Déjà essayé: ${escapeHtml(a.tried||"—")}
+        </p>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:14px; margin:0 0 8px">Phrase prête à dire</h2>
+        <p class="muted mono" style="margin:0">${escapeHtml(sh.salesLine)}</p>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:14px; margin:0 0 8px">À proposer (anti-panne)</h2>
+        <ul class="muted" style="margin:0; padding-left:18px">
+          ${sh.addons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}
+        </ul>
+      </div>
+    </body></html>
+  `;
+  printHtml(html);
+}
+
+// ---------- Sidebar mini + home last sheet ----------
+function refreshSidebarMini(){
+  const a = state.client.answers || {};
+  const mini = [];
+  if(a.cigs) mini.push(a.cigs);
+  if(a.cigType) mini.push(a.cigType);
+  $("#profileMini").textContent = mini.length ? mini.join(" • ") : "—";
+  $("#sheetMini").textContent = state.client.sheet ? "OK" : "—";
+}
+
+function refreshHomeLastSheet(){
+  const box = $("#lastSheetBox");
+  if(!state.client.sheet){
+    box.innerHTML = `<h3>—</h3><p class="muted">Aucune fiche enregistrée pour le moment.</p>
+      <div class="btnrow"><button class="btn" onclick="go('client')">Créer une fiche</button></div>`;
+    return;
+  }
+  const sh = state.client.sheet;
+  box.innerHTML = `
+    <h3>${sh.title}</h3>
+    <p class="muted">${sh.tirage} • ${sh.nicotine} • ${sh.hardware}</p>
+    <div class="btnrow">
+      <button class="btn primary" onclick="go('client')">Voir</button>
+      <button class="btn" onclick="printSheet()">Imprimer</button>
+    </div>
+  `;
+}
+
+// ---------- Search ----------
+function runSearch(q){
+  const query = (q||"").toLowerCase().trim();
+  if(!query){
+    toast("Recherche", "Tape un mot-clé (ex: fuite, brûlé, sel, MTL).");
+    return;
+  }
+
+  // lightweight "smart routing"
+  const savKeywords = ["fuite","glouglou","brûlé","brule","toux","gorge","vapeur","allume","panne","condensation"];
+  const clientKeywords = ["nicotine","sel","mtl","rdl","cig","sevrage","0mg","dosage"];
+  const noteKeywords = ["dupont","client","tel","rappel"];
+
+  const hitSav = savKeywords.some(k=> query.includes(k));
+  const hitClient = clientKeywords.some(k=> query.includes(k));
+  const hitNotes = noteKeywords.some(k=> query.includes(k));
+
+  if(hitSav){
+    go("sav");
+    // auto-select symptom if match
+    if(query.includes("fuite")) state.sav.symptom="fuite";
+    else if(query.includes("glouglou")) state.sav.symptom="glouglou";
+    else if(query.includes("brûl") || query.includes("brul")) state.sav.symptom="goutBrule";
+    else if(query.includes("toux") || query.includes("gorge")) state.sav.symptom="toux";
+    else if(query.includes("vapeur") || query.includes("allume") || query.includes("panne")) state.sav.symptom="pasDeVapeur";
+    renderSav();
+    toast("Recherche", "SAV ouvert.");
+    return;
+  }
+
+  if(hitClient){
+    go("client");
+    toast("Recherche", "Parcours client ouvert.");
+    return;
+  }
+
+  if(hitNotes){
+    go("notes");
+    $("#noteFilter").value = q;
+    renderNotes();
+    toast("Recherche", "Notes ouvertes.");
+    return;
+  }
+
+  toast("Recherche", "Aucun raccourci trouvé. Essaie 'fuite', 'brûlé', 'MTL', 'sel', etc.");
+}
+
+// ---------- Keyboard shortcuts ----------
+function bindKeys(){
+  window.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape"){
+      closeModal(); closeHelp();
+      return;
+    }
+
+    // / to focus search
+    if(e.key === "/" && !e.metaKey && !e.ctrlKey){
+      e.preventDefault();
+      $("#searchInput").focus();
+      return;
+    }
+
+    // quick nav (avoid while typing)
+    const tag = (document.activeElement?.tagName || "").toLowerCase();
+    const typing = ["input","textarea","select"].includes(tag);
+    if(typing) {
+      // numeric quick answer in wizard
+      if(state.view === "client"){
+        const n = Number(e.key);
+        if(n>=1 && n<=4){
+          const q = clientQuestions[state.client.step];
+          const opt = q.choices[n-1];
+          if(opt){ setAnswer(q.key, opt.v); }
+        }
+      }
+      return;
+    }
+
+    const k = e.key.toLowerCase();
+    if(k==="h") go("home");
+    if(k==="c") go("client");
+    if(k==="s") go("sav");
+    if(k==="k") go("calc");
+    if(k==="v") go("seller");
+    if(k==="n") go("notes");
+
+    // Print
+    if((e.ctrlKey || e.metaKey) && k==="p"){
+      e.preventDefault();
+      printSheet();
+    }
+  });
+}
+
+// ---------- Modals ----------
+function openHelp(){ $("#helpModal").classList.add("show"); }
+function closeHelp(){ $("#helpModal").classList.remove("show"); }
+
+// ---------- Buttons ----------
+function bindButtons(){
+  $("#sellerBtn").addEventListener("click", openPinModal);
+  $("#helpBtn").addEventListener("click", openHelp);
+  $("#resetBtn").addEventListener("click", clearAll);
+  $("#exportBtn").addEventListener("click", exportJson);
+  $("#printBtn").addEventListener("click", printSheet);
+
+  $("#quickNew").addEventListener("click", ()=>{
+    clientReset();
+    go("client");
+  });
+
+  $("#noteFilter").addEventListener("input", renderNotes);
+
+  $("#searchInput").addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){
+      runSearch(e.target.value);
+    }
+  });
+
+  $("#searchInput").addEventListener("blur", ()=>{/* noop */});
+
+  // click outside modals
+  $("#pinModal").addEventListener("click", (e)=>{ if(e.target.id==="pinModal") closeModal(); });
+  $("#helpModal").addEventListener("click", (e)=>{ if(e.target.id==="helpModal") closeHelp(); });
+}
+
+// ---------- Init ----------
+function init(){
+  $("#today").textContent = formatDateFR(new Date());
+  bindNav();
+  bindButtons();
+  bindKeys();
+  loadAll();
+  loadSettings(true);
+  applySellerUI();
+  refreshSidebarMini();
+  refreshHomeLastSheet();
+  go(state.view || "home");
+}
+
+init();
+</script>
+</body>
+    </html>
