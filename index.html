@@ -38,12 +38,9 @@
         linear-gradient(180deg, #070B14 0%, #050713 100%);
       overflow:hidden;
     }
-
-    /* Layout */
     .app{height:100%; display:grid; grid-template-columns: 380px 1fr;}
     @media (max-width: 980px){body{overflow:auto}.app{grid-template-columns:1fr}}
 
-    /* Sidebar */
     .sidebar{
       padding:18px;
       background: linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.02) 100%);
@@ -164,8 +161,8 @@
     .btn.primary{border-color: rgba(59,130,246,.40); background: rgba(59,130,246,.18);}
     .btn.danger{border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.12);}
     .btn.warn{border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.12);}
+    .btn[disabled]{opacity:.45; cursor:not-allowed}
 
-    /* Main */
     .main{height:100%; overflow:auto; padding:18px;}
     .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
     .search{
@@ -252,7 +249,7 @@
     .choice .ct{font-weight:800;font-size:13px}
     .choice .cs{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.35}
 
-    textarea, select, input[type="number"], input[type="text"], input[type="password"]{
+    textarea, select, input[type="number"], input[type="text"], input[type="password"], input[type="date"]{
       width:100%;
       padding:12px;
       border-radius: 16px;
@@ -268,7 +265,6 @@
     .small{font-size:11px; color:var(--muted2)}
     .hr{height:1px;background: rgba(255,255,255,.10); margin:12px 0}
 
-    /* Steps */
     .steps{display:flex; gap:8px; flex-wrap:wrap;}
     .step{
       flex:1; min-width:120px;
@@ -309,7 +305,6 @@
     }
     .chip b{font-weight:900}
 
-    /* Toast */
     .toast{
       position:fixed; left:50%; bottom:18px;
       transform: translateX(-50%);
@@ -328,7 +323,6 @@
     .toast .t{font-size:12px;color:var(--text)}
     .toast .s{font-size:11px;color:var(--muted); margin-top:4px}
 
-    /* Modal */
     .modal{
       position:fixed; inset:0;
       display:none; z-index:9998;
@@ -339,7 +333,7 @@
     }
     .modal.show{display:block}
     .modal-card{
-      max-width: 720px;
+      max-width: 820px;
       margin: 40px auto;
       border-radius: var(--radius);
       border:1px solid rgba(255,255,255,.14);
@@ -365,7 +359,6 @@
     }
     .xbtn:hover{background: rgba(255,255,255,.08)}
 
-    /* Table-ish list */
     .list{display:flex; flex-direction:column; gap:10px;}
     .item{
       border:1px solid rgba(255,255,255,.10);
@@ -377,7 +370,6 @@
     .item .top strong{font-size:13px}
     .item .top span{font-size:11px;color:var(--muted2);font-family:var(--mono)}
     .item p{margin:8px 0 0; color:var(--muted); font-size:12px; line-height:1.4}
-    .right{margin-left:auto}
 
     .dangerText{color: rgba(239,68,68,.92)}
     .goodText{color: rgba(34,197,94,.92)}
@@ -386,14 +378,13 @@
 </head>
 <body>
 <div class="app">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-left">
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>STOOM</h1>
-          <p>Outil tablette • PRO (audit + règles)</p>
+          <p>Tablette PRO • audit + SAV imprimable</p>
         </div>
       </div>
       <div class="pill" id="authPill" title="Connexion vendeur obligatoire">
@@ -406,37 +397,37 @@
     <div class="nav" id="nav">
       <div class="navbtn active" data-view="home" tabindex="0">
         <div class="icon">01</div>
-        <div class="navtxt"><div class="t">Accueil</div><div class="s">3 parcours + règles</div></div>
+        <div class="navtxt"><div class="t">Accueil</div><div class="s">parcours + SAV + audit</div></div>
         <div class="kbd">H</div>
       </div>
 
       <div class="navbtn" data-view="client" tabindex="0">
         <div class="icon">CL</div>
-        <div class="navtxt"><div class="t">Parcours client</div><div class="s">Diagnostic + fiche</div></div>
+        <div class="navtxt"><div class="t">Parcours client</div><div class="s">diagnostic + fiche</div></div>
         <div class="kbd">C</div>
       </div>
 
       <div class="navbtn" data-view="sav" tabindex="0">
         <div class="icon">SV</div>
-        <div class="navtxt"><div class="t">SAV guidé</div><div class="s">Pannes fréquentes</div></div>
+        <div class="navtxt"><div class="t">SAV</div><div class="s">guidé + fiche A4</div></div>
         <div class="kbd">S</div>
       </div>
 
       <div class="navbtn" data-view="calc" tabindex="0">
         <div class="icon">€</div>
-        <div class="navtxt"><div class="t">Calculatrices</div><div class="s">Conso & économies</div></div>
+        <div class="navtxt"><div class="t">Calculs</div><div class="s">conso & économies</div></div>
         <div class="kbd">K</div>
       </div>
 
       <div class="navbtn" data-view="notes" tabindex="0">
         <div class="icon">📝</div>
-        <div class="navtxt"><div class="t">Notes client</div><div class="s">Suivi (protégé)</div></div>
+        <div class="navtxt"><div class="t">Notes client</div><div class="s">suivi (protégé)</div></div>
         <div class="kbd">N</div>
       </div>
 
       <div class="navbtn" data-view="manager" tabindex="0" id="managerNav" style="display:none">
         <div class="icon">AD</div>
-        <div class="navtxt"><div class="t">Espace responsable</div><div class="s">Audit + règles + users</div></div>
+        <div class="navtxt"><div class="t">Responsable</div><div class="s">règles + audit + users</div></div>
         <div class="kbd">A</div>
       </div>
     </div>
@@ -449,26 +440,27 @@
       <div class="row"><span>Dernière fiche</span> <strong id="sheetMini">—</strong></div>
 
       <div class="btnrow">
-        <button class="btn primary" id="printBtn">Imprimer fiche</button>
+        <button class="btn primary" id="printBtn">Imprimer fiche client</button>
         <button class="btn" id="exportStateBtn">Exporter</button>
       </div>
       <div class="btnrow">
         <button class="btn" id="importStateBtn">Importer</button>
         <button class="btn danger" id="resetBtn">Réinitialiser</button>
       </div>
+
       <div class="small" style="margin-top:10px">
-        Offline : OK (données stockées sur l’appareil).<br/>
+        ⚠️ Export/Import/Reset : <b>Responsable uniquement</b>.<br/>
+        Offline : OK (stockage appareil).<br/>
         Raccourcis : H C S K N A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
       </div>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
     <div class="topbar">
       <div class="search">
         <span style="opacity:.8">🔎</span>
-        <input id="searchInput" type="text" placeholder="Rechercher (ex: fuite, brûlé, 10mg sel, MTL, règle...)" />
+        <input id="searchInput" type="text" placeholder="Rechercher (ex: fuite, brûlé, MTL, sel, audit...)" />
         <span class="hint">/</span>
       </div>
       <button class="btn" id="quickNew">Nouveau client</button>
@@ -482,26 +474,26 @@
           <div class="ph">
             <div>
               <h2>Accueil</h2>
-              <p>Outil tablette pro : diagnostic + SAV + traçabilité.</p>
+              <p>Parcours client + SAV + traçabilité.</p>
             </div>
-            <span class="badge">Vendeur • Responsable</span>
+            <span class="badge">Pro</span>
           </div>
           <div class="pb">
             <div class="two">
               <div class="result">
-                <h3>✅ Les 3 parcours</h3>
+                <h3>✅ Raccourcis</h3>
                 <div class="chips">
                   <span class="chip"><b>Client</b> → Diagnostic</span>
-                  <span class="chip"><b>SAV</b> → Guidage</span>
+                  <span class="chip"><b>SAV</b> → Fiche A4</span>
                   <span class="chip"><b>Notes</b> → Suivi</span>
                 </div>
                 <p class="small" style="margin-top:10px">
-                  Objectif : une recommandation stable, sans erreurs, et une trace d’utilisation.
+                  Objectif : recommandation stable + preuve d’utilisation (audit).
                 </p>
                 <div class="btnrow">
                   <button class="btn primary" onclick="go('client')">Démarrer diagnostic</button>
                   <button class="btn" onclick="go('sav')">Démarrer SAV</button>
-                  <button class="btn" onclick="go('notes')">Ouvrir Notes</button>
+                  <button class="btn" onclick="go('notes')">Notes</button>
                 </div>
               </div>
 
@@ -509,7 +501,7 @@
                 <h3>⚙️ Règles actives (résumé)</h3>
                 <p class="muted" id="rulesSummary">—</p>
                 <div class="btnrow">
-                  <button class="btn" onclick="toast('Info', 'Les règles modifient automatiquement tirage/puissance/matériel/nicotine selon les réponses.')">Comprendre</button>
+                  <button class="btn" onclick="toast('Info', 'Les règles modifient tirage/puissance/matériel/nicotine selon les réponses.')">Comprendre</button>
                   <button class="btn primary" id="goManagerBtn" style="display:none" onclick="go('manager')">Modifier (responsable)</button>
                 </div>
                 <div class="hr"></div>
@@ -519,14 +511,23 @@
                 </p>
               </div>
             </div>
+
+            <div class="hr"></div>
+
+            <div class="q">
+              <h3>🧾 Audit (aperçu)</h3>
+              <p class="muted">Aperçu 5 dernières actions. (Audit complet : responsable uniquement.)</p>
+              <div id="auditPeek" class="list"></div>
+            </div>
+
           </div>
         </section>
 
         <section class="panel">
           <div class="ph">
             <div>
-              <h2>Dernière fiche</h2>
-              <p>Reprise automatique (auto-save).</p>
+              <h2>Dernière fiche client</h2>
+              <p>Reprise auto.</p>
             </div>
             <span class="badge">Auto</span>
           </div>
@@ -540,14 +541,13 @@
             <div class="hr"></div>
 
             <div class="q">
-              <h3>🧾 Audit (aperçu)</h3>
-              <p class="muted">Dernières actions enregistrées (responsable : vue complète + export).</p>
-              <div id="auditPeek" class="list"></div>
+              <h3>Dernière fiche SAV</h3>
+              <p class="muted">Si tu viens de traiter un SAV, tu peux ré-imprimer.</p>
               <div class="btnrow">
-                <button class="btn" onclick="toast('Audit', 'Tout est horodaté et lié au vendeur connecté.')">Pourquoi c’est utile</button>
+                <button class="btn" onclick="reprintLastSav()">Ré-imprimer SAV</button>
               </div>
+              <div class="small">L’info SAV est stockée localement sur la tablette.</div>
             </div>
-
           </div>
         </section>
       </div>
@@ -560,7 +560,7 @@
           <div class="ph">
             <div>
               <h2>Parcours client</h2>
-              <p>5 questions → fiche claire (imprimable).</p>
+              <p>5 questions → fiche claire.</p>
             </div>
             <span class="badge">Wizard</span>
           </div>
@@ -601,7 +601,6 @@
               <p class="muted mono" id="salesLine">—</p>
               <div class="btnrow">
                 <button class="btn" onclick="copySalesLine()">Copier</button>
-                <button class="btn" onclick="toast('Tip', 'Une phrase courte + une explication simple = confiance.')">Tip</button>
               </div>
             </div>
           </div>
@@ -616,9 +615,9 @@
           <div class="ph">
             <div>
               <h2>SAV guidé</h2>
-              <p>Symptôme → causes → actions.</p>
+              <p>Symptôme → causes → actions → fiche imprimable.</p>
             </div>
-            <span class="badge">Check</span>
+            <span class="badge">SAV</span>
           </div>
           <div class="pb">
             <div class="q">
@@ -626,6 +625,18 @@
               <p class="muted">Choisis le symptôme dominant.</p>
               <div class="choices cols3" id="savChoices"></div>
             </div>
+
+            <div class="q" style="margin-top:12px">
+              <h3>Problème constaté (par le vendeur)</h3>
+              <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
+              <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
+              <div class="btnrow" style="margin-top:10px">
+                <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
+                <button class="btn" onclick="clearSavProblem()">Effacer</button>
+              </div>
+              <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
+            </div>
+
             <div class="q" id="savResult" style="margin-top:12px">
               <h3>En attente…</h3>
               <p class="muted">Sélectionne un symptôme.</p>
@@ -692,7 +703,6 @@
                     <option value="4" selected>20 cig/j ≈ 4 ml/j</option>
                     <option value="5">20 cig/j ≈ 5 ml/j</option>
                   </select>
-                  <div class="small" style="margin-top:8px">Estimation ajustable selon l’expérience boutique.</div>
                 </div>
                 <div>
                   <label>Prix flacon 10ml (€)</label>
@@ -748,7 +758,6 @@
 
               <div class="btnrow">
                 <button class="btn primary" onclick="calcSavings()">Calculer</button>
-                <button class="btn" onclick="toast('Tip', 'Même si les prix montent, l’écart avec le tabac reste souvent très net.')">Tip</button>
               </div>
 
               <div class="hr"></div>
@@ -769,9 +778,9 @@
           <div class="ph">
             <div>
               <h2>Notes client</h2>
-              <p>Suivi local (protégé par connexion vendeur).</p>
+              <p>Suivi local (protégé).</p>
             </div>
-            <span class="badge">CRM light</span>
+            <span class="badge">Local</span>
           </div>
           <div class="pb">
             <div class="q">
@@ -788,7 +797,7 @@
 
               <div style="margin-top:10px">
                 <label>Note</label>
-                <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible à la gorge → baisser puissance. Revoir dans 2 semaines."></textarea>
+                <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible → baisser puissance."></textarea>
               </div>
 
               <div class="btnrow">
@@ -798,7 +807,7 @@
               </div>
 
               <div class="small" style="margin-top:10px">
-                Conseil RGPD : évite de stocker plus que nécessaire, et purge régulièrement.
+                Conseil RGPD : éviter de stocker plus que nécessaire.
               </div>
             </div>
           </div>
@@ -808,9 +817,9 @@
           <div class="ph">
             <div>
               <h2>Historique</h2>
-              <p>Recherche + suppression.</p>
+              <p>Recherche + suppression (responsable).</p>
             </div>
-            <span class="badge">Local</span>
+            <span class="badge">CRM light</span>
           </div>
           <div class="pb">
             <div class="q">
@@ -837,47 +846,12 @@
           </div>
           <div class="pb">
             <div class="q">
-              <h3>1) Règles de recommandation (modifiables)</h3>
-              <p class="muted">Tu peux ajuster : <b>nicotine / tirage / puissance / matériel</b> pour chaque tranche de conso.</p>
+              <h3>Règles de recommandation</h3>
+              <p class="muted">Modifiable par responsable.</p>
               <div id="rulesEditor"></div>
               <div class="btnrow">
                 <button class="btn primary" onclick="saveRulesFromUI()">Enregistrer règles</button>
                 <button class="btn" onclick="resetRules()">Réinitialiser règles</button>
-              </div>
-              <div class="small" style="margin-top:10px">Les modifications s’appliquent immédiatement aux nouvelles fiches.</div>
-            </div>
-
-            <div class="q" style="margin-top:12px">
-              <h3>2) Politique RDL/DL</h3>
-              <p class="muted">On garde l’outil “sevrage-first”. Le RDL est proposé uniquement selon les règles ci-dessous.</p>
-              <div class="two">
-                <div>
-                  <label>RDL activé</label>
-                  <select id="rdlEnabled">
-                    <option value="true">Oui</option>
-                    <option value="false">Non</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Nicotine max (mg) pour proposer RDL</label>
-                  <input id="rdlMaxNic" type="number" min="0" step="1" />
-                </div>
-              </div>
-              <div class="two" style="margin-top:10px">
-                <div>
-                  <label>Exiger que l’objectif ≠ “Arrêter”</label>
-                  <select id="rdlRequireGoalNotArreter">
-                    <option value="true">Oui</option>
-                    <option value="false">Non</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Texte “matériel RDL” (fiche)</label>
-                  <input id="rdlHardwareText" type="text" placeholder="Ex: Kit RDL doux (si stable)" />
-                </div>
-              </div>
-              <div class="btnrow">
-                <button class="btn primary" onclick="saveRdlPolicyFromUI()">Enregistrer politique</button>
               </div>
             </div>
           </div>
@@ -893,7 +867,7 @@
           </div>
           <div class="pb">
             <div class="q">
-              <h3>3) Gestion utilisateurs</h3>
+              <h3>Gestion utilisateurs</h3>
               <div id="usersList" class="list"></div>
 
               <div class="hr"></div>
@@ -928,15 +902,15 @@
             </div>
 
             <div class="q" style="margin-top:12px">
-              <h3>4) Audit (journal d’utilisation)</h3>
-              <p class="muted">Qui a fait quoi, quand. Filtrable + export.</p>
+              <h3>Audit (journal d’utilisation)</h3>
+              <p class="muted">Filtrable + export.</p>
               <div class="two">
                 <div>
-                  <label>Filtrer (nom / action / mot)</label>
+                  <label>Filtrer</label>
                   <input id="auditFilter" type="text" placeholder="Ex: Evan, FICHE, NOTE..." />
                 </div>
                 <div>
-                  <label>Limiter aux derniers (lignes)</label>
+                  <label>Limiter (lignes)</label>
                   <select id="auditLimit">
                     <option value="50">50</option>
                     <option value="200" selected>200</option>
@@ -946,7 +920,7 @@
                 </div>
               </div>
               <div class="btnrow">
-                <button class="btn" onclick="renderAudit()">Appliquer filtre</button>
+                <button class="btn" onclick="renderAudit()">Appliquer</button>
                 <button class="btn primary" onclick="exportAuditJSON()">Exporter JSON</button>
                 <button class="btn" onclick="exportAuditCSV()">Exporter CSV</button>
                 <button class="btn danger" onclick="clearAudit()">Vider audit</button>
@@ -963,7 +937,6 @@
   </main>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast">
   <div class="t" id="toastT">—</div>
   <div class="s" id="toastS">—</div>
@@ -977,7 +950,7 @@
       <button class="xbtn" onclick="closeAuthModal()">Fermer</button>
     </div>
     <div class="modal-b">
-      <p class="muted">Sélectionne ton nom puis entre ton PIN. (Tout est tracé.)</p>
+      <p class="muted">Sélectionne ton nom puis entre ton PIN.</p>
       <label>Utilisateur</label>
       <select id="authUserSelect"></select>
 
@@ -993,13 +966,13 @@
 
       <div class="hr"></div>
       <p class="small mono">
-        Astuce : responsable = accès audit + règles + utilisateurs.
+        Responsable = accès règles + audit + export/import.
       </p>
     </div>
   </div>
 </div>
 
-<!-- IMPORT MODAL -->
+<!-- IMPORT MODAL (manager only) -->
 <div class="modal" id="importModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <div class="modal-h">
@@ -1017,19 +990,94 @@
   </div>
 </div>
 
+<!-- SAV FORM MODAL -->
+<div class="modal" id="savModal" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-h">
+      <h3>Fiche SAV</h3>
+      <button class="xbtn" onclick="closeSavModal()">Fermer</button>
+    </div>
+    <div class="modal-b">
+      <p class="muted">Cette fiche est imprimable et sert d’appui vendeur (acceptation/refus de garantie).</p>
+
+      <div class="two">
+        <div>
+          <label>Nom & prénom client</label>
+          <input id="savClientName" type="text" placeholder="Ex: DUPONT Jean" />
+        </div>
+        <div>
+          <label>Date d’achat</label>
+          <input id="savPurchaseDate" type="date" />
+        </div>
+      </div>
+
+      <div class="two" style="margin-top:10px">
+        <div>
+          <label>Produit en bon état (pas de chute / casse) ?</label>
+          <select id="savGoodState">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+        <div>
+          <label>Port de charge intact ?</label>
+          <select id="savPortOk">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two" style="margin-top:10px">
+        <div>
+          <label>Boîte produit présente ?</label>
+          <select id="savBoxPresent">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+        <div>
+          <label>Câble de charge présent ?</label>
+          <select id="savCablePresent">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <label>Problème constaté (repris SAV)</label>
+        <textarea id="savProblemText" placeholder="(repris automatiquement, modifiable si besoin)"></textarea>
+        <div class="small" style="margin-top:6px">
+          Symptôme sélectionné : <span class="mono" id="savSymptomLabel">—</span>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="btnrow">
+        <button class="btn primary" onclick="validateSavAndPrint()">Valider & Imprimer fiche SAV</button>
+        <button class="btn" onclick="previewSavEligibility()">Voir décision</button>
+      </div>
+
+      <div class="q" style="margin-top:12px">
+        <h3>Décision</h3>
+        <p class="muted" id="savDecisionBox">—</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <script>
 /* =========================
-   STOOM • Outil Tablette PRO
-   - Auth PIN par vendeur
-   - Roles seller/manager
-   - Audit log (qui/quoi/quand)
-   - Rules editor (manager)
-   - Offline (localStorage)
+   STOOM • Tablette PRO (v2)
+   - PIN / rôles
+   - export/import BLOQUÉS vendeurs
+   - audit complet: responsable seulement
+   - SAV: fiche imprimable A4 accept/refus + raisons
    ========================= */
 
-const LS = {
-  state: "stoom_pro_state_v1",
-};
+const LS = { state: "stoom_tablette_v2_state" };
 
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
@@ -1038,10 +1086,15 @@ const DEFAULT_STATE = {
     { id:"evan",   name:"Evan",   pin:"1517", role:"seller"  },
     { id:"lea",    name:"Léa",    pin:"2109", role:"seller"  },
   ],
-  currentUser: null, // {id,name,role}
+  currentUser: null,
+  view: "home",
   audit: [],
   notes: [],
-  sav: { symptom: null },
+  sav: {
+    symptom: null,
+    vendorProblem: "",
+    lastSavSheet: null
+  },
   client: {
     step: 0,
     answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
@@ -1053,12 +1106,6 @@ const DEFAULT_STATE = {
       "10-15": { nicotine:"6–12 mg",       tirage:"MTL (serré)",             power:"Modérée",  hardware:"Pod/kit MTL fiable" },
       "15-20": { nicotine:"10 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" },
       "25+":   { nicotine:"20 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" }
-    },
-    rdlPolicy: {
-      enabled: true,
-      maxNicotineMg: 6,
-      requireGoalNotArreter: true,
-      rdlHardwareText: "Kit RDL doux (si stable)"
     }
   }
 };
@@ -1068,9 +1115,18 @@ const state = loadState();
 /* ---------- Utils ---------- */
 function $(q){ return document.querySelector(q); }
 function $all(q){ return Array.from(document.querySelectorAll(q)); }
-
-function safeJsonParse(str, fallback){
-  try{ return JSON.parse(str); }catch(e){ return fallback; }
+function safeJsonParse(str, fallback){ try{ return JSON.parse(str); }catch(e){ return fallback; } }
+function deepMerge(target, src){
+  if(!src || typeof src !== "object") return target;
+  for(const k of Object.keys(src)){
+    const v = src[k];
+    if(Array.isArray(v)) target[k] = v;
+    else if(v && typeof v === "object"){
+      if(!target[k] || typeof target[k] !== "object") target[k] = {};
+      deepMerge(target[k], v);
+    } else target[k] = v;
+  }
+  return target;
 }
 function saveState(){
   localStorage.setItem(LS.state, JSON.stringify(state));
@@ -1084,25 +1140,9 @@ function loadState(){
   if(!raw) return structuredClone(DEFAULT_STATE);
   const parsed = safeJsonParse(raw, null);
   if(!parsed) return structuredClone(DEFAULT_STATE);
-
-  // merge minimal safety (if older versions)
   const s = structuredClone(DEFAULT_STATE);
   deepMerge(s, parsed);
   return s;
-}
-function deepMerge(target, src){
-  if(!src || typeof src !== "object") return target;
-  for(const k of Object.keys(src)){
-    const v = src[k];
-    if(Array.isArray(v)) target[k] = v;
-    else if(v && typeof v === "object"){
-      if(!target[k] || typeof target[k] !== "object") target[k] = {};
-      deepMerge(target[k], v);
-    } else {
-      target[k] = v;
-    }
-  }
-  return target;
 }
 function formatDateFR(d){
   try{ return new Intl.DateTimeFormat('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(d); }
@@ -1112,9 +1152,7 @@ function formatDateTimeFR(ts){
   const d = new Date(ts);
   try{
     return new Intl.DateTimeFormat('fr-FR',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(d);
-  }catch(e){
-    return d.toLocaleString('fr-FR');
-  }
+  }catch(e){ return d.toLocaleString('fr-FR'); }
 }
 function escapeHtml(s){
   return (s||"").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
@@ -1140,23 +1178,12 @@ function copyToClipboard(text){
   if(!text) return toast("Copie", "Rien à copier.");
   navigator.clipboard?.writeText(text).then(
     ()=> toast("Copié", "Copié."),
-    ()=> toast("Copie", "Impossible de copier (permissions navigateur).")
+    ()=> toast("Copie", "Impossible de copier.")
   );
 }
 
 /* ---------- Auth + Audit ---------- */
-function audit(action, detail){
-  const who = state.currentUser?.name || "INCONNU";
-  state.audit.push({
-    who,
-    role: state.currentUser?.role || "none",
-    action,
-    detail: detail || "",
-    ts: Date.now()
-  });
-  if(state.audit.length > 2000) state.audit.shift();
-  saveState();
-}
+function isManager(){ return state.currentUser?.role === "manager"; }
 function requireAuth(){
   if(!state.currentUser){
     openAuthModal(true);
@@ -1165,19 +1192,21 @@ function requireAuth(){
   }
   return true;
 }
-function isManager(){ return state.currentUser?.role === "manager"; }
+function audit(action, detail){
+  const who = state.currentUser?.name || "INCONNU";
+  state.audit.push({ who, role: state.currentUser?.role || "none", action, detail: detail||"", ts: Date.now() });
+  if(state.audit.length > 2000) state.audit.shift();
+  saveState();
+}
 
 /* ---------- Navigation ---------- */
 function go(view){
   if(!requireAuth()) return;
-
-  // manager view restricted
   if(view === "manager" && !isManager()){
     toast("Accès refusé", "Réservé aux responsables.");
     audit("DENY_MANAGER_VIEW", "");
     return;
   }
-
   state.view = view;
   $all(".view").forEach(v => v.style.display = "none");
   $("#view-"+view).style.display = "block";
@@ -1191,7 +1220,6 @@ function go(view){
   audit("NAVIGATE", view);
   saveState();
 }
-
 function bindNav(){
   $("#nav").addEventListener("click", (e)=>{
     const btn = e.target.closest(".navbtn");
@@ -1202,22 +1230,18 @@ function bindNav(){
 
 /* ---------- Auth Modal ---------- */
 function openAuthModal(force=false){
-  const modal = $("#authModal");
   const sel = $("#authUserSelect");
   sel.innerHTML = state.users
     .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
     .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
     .join("");
   $("#authPin").value = "";
-  modal.classList.add("show");
-
-  // If force: disable closing by clicking outside (we keep it open anyway)
+  $("#authModal").classList.add("show");
   setTimeout(()=> $("#authPin").focus(), 50);
 }
 function closeAuthModal(){
-  // allow closing only if already connected
   if(!state.currentUser){
-    toast("Connexion", "Connexion obligatoire pour utiliser l’outil.");
+    toast("Connexion", "Connexion obligatoire.");
     return;
   }
   $("#authModal").classList.remove("show");
@@ -1225,36 +1249,29 @@ function closeAuthModal(){
 function refreshAuthUI(){
   const dot = $("#authDot");
   const label = $("#authLabel");
-  const userMini = $("#userMini");
-  const roleMini = $("#roleMini");
-
   if(state.currentUser){
     dot.classList.add("ok");
     label.textContent = state.currentUser.name;
-    userMini.textContent = state.currentUser.name;
-    roleMini.textContent = state.currentUser.role === "manager" ? "Responsable" : "Vendeur";
     $("#logoutBtn").style.display = "inline-flex";
+    $("#managerNav").style.display = isManager() ? "flex" : "none";
+    $("#goManagerBtn").style.display = isManager() ? "inline-flex" : "none";
+    $("#toggleMaskBtn").style.display = isManager() ? "inline-flex" : "none";
   } else {
     dot.classList.remove("ok");
     label.textContent = "Non connecté";
-    userMini.textContent = "—";
-    roleMini.textContent = "—";
     $("#logoutBtn").style.display = "none";
+    $("#managerNav").style.display = "none";
+    $("#goManagerBtn").style.display = "none";
+    $("#toggleMaskBtn").style.display = "none";
   }
-
-  // Manager nav
-  $("#managerNav").style.display = isManager() ? "flex" : "none";
-  $("#goManagerBtn").style.display = isManager() ? "inline-flex" : "none";
-  $("#toggleMaskBtn").style.display = isManager() ? "inline-flex" : "none";
+  refreshSidebarMini();
+  updateAdminButtonsLock();
 }
 function login(){
   const userId = $("#authUserSelect").value;
   const pin = ($("#authPin").value || "").trim();
   const user = state.users.find(u=>u.id===userId);
-  if(!user){
-    toast("Erreur", "Utilisateur introuvable.");
-    return;
-  }
+  if(!user){ toast("Erreur", "Utilisateur introuvable."); return; }
   if(!pin || pin !== user.pin){
     toast("PIN incorrect", "Réessaie.");
     audit("LOGIN_FAIL", userId);
@@ -1262,25 +1279,42 @@ function login(){
   }
   state.currentUser = { id:user.id, name:user.name, role:user.role };
   $("#authModal").classList.remove("show");
-  refreshAuthUI();
   audit("LOGIN_OK", user.name);
+  refreshAuthUI();
   saveState();
 }
 function logout(){
   if(state.currentUser) audit("LOGOUT", state.currentUser.name);
   state.currentUser = null;
-  refreshAuthUI();
   saveState();
+  refreshAuthUI();
   openAuthModal(true);
 }
 
-/* ---------- Import / Export full state ---------- */
+/* ---------- BLOCK Export/Import/Reset for sellers ---------- */
+function updateAdminButtonsLock(){
+  const exp = $("#exportStateBtn");
+  const imp = $("#importStateBtn");
+  const res = $("#resetBtn");
+
+  const can = !!state.currentUser && isManager();
+  exp.disabled = !can;
+  imp.disabled = !can;
+  res.disabled = !can;
+
+  exp.title = can ? "" : "Réservé responsable";
+  imp.title = can ? "" : "Réservé responsable";
+  res.title = can ? "" : "Réservé responsable";
+}
+
 function exportFullState(){
   if(!requireAuth()) return;
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    state
-  };
+  if(!isManager()){
+    toast("Accès refusé", "Export réservé aux responsables.");
+    audit("DENY_EXPORT_STATE", "");
+    return;
+  }
+  const payload = { exportedAt: new Date().toISOString(), state };
   download(`stoom-export-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2));
   audit("EXPORT_STATE", "");
 }
@@ -1296,23 +1330,13 @@ function openImportModal(){
 }
 function closeImportModal(){ $("#importModal").classList.remove("show"); }
 function importState(){
-  if(!isManager()){
-    toast("Accès refusé", "Réservé aux responsables.");
-    return;
-  }
-  const txt = $("#importText").value || "";
-  const payload = safeJsonParse(txt, null);
-  if(!payload?.state){
-    toast("Import", "JSON invalide.");
-    return;
-  }
-  // Replace state carefully
+  if(!isManager()){ toast("Accès refusé", "Réservé aux responsables."); return; }
+  const payload = safeJsonParse($("#importText").value||"", null);
+  if(!payload?.state){ toast("Import", "JSON invalide."); return; }
   const fresh = structuredClone(DEFAULT_STATE);
   deepMerge(fresh, payload.state);
-  // keep current user null to force re-auth
   fresh.currentUser = null;
 
-  // overwrite global state object
   for(const k of Object.keys(state)) delete state[k];
   Object.assign(state, fresh);
 
@@ -1321,15 +1345,14 @@ function importState(){
   toast("Import OK", "Données importées. Reconnexion requise.");
   openAuthModal(true);
 }
-
-/* ---------- Reset ---------- */
 function clearAll(){
+  if(!requireAuth()) return;
   if(!isManager()){
     toast("Accès refusé", "Réinitialisation réservée aux responsables.");
     audit("DENY_RESET", "");
     return;
   }
-  if(!confirm("Réinitialiser TOUT (audit, notes, règles, users) sur cet appareil ?")) return;
+  if(!confirm("Réinitialiser TOUT sur cet appareil ?")) return;
   localStorage.removeItem(LS.state);
   location.reload();
 }
@@ -1338,60 +1361,40 @@ function clearAll(){
 function runSearch(q){
   const query = (q||"").toLowerCase().trim();
   if(!query){ toast("Recherche", "Tape un mot-clé."); return; }
-
-  const savKeywords = ["fuite","glouglou","brûlé","brule","toux","gorge","vapeur","allume","panne","condensation"];
-  const clientKeywords = ["nicotine","sel","mtl","rdl","dl","sevrage","0mg","dosage","tirage","puissance"];
-  const managerKeywords = ["audit","règle","regle","users","utilisateur","pin"];
-
-  const hitSav = savKeywords.some(k=> query.includes(k));
-  const hitClient = clientKeywords.some(k=> query.includes(k));
-  const hitManager = managerKeywords.some(k=> query.includes(k));
+  const hitSav = ["fuite","glouglou","brûlé","brule","toux","gorge","panne","charge"].some(k=> query.includes(k));
+  const hitClient = ["nicotine","sel","mtl","rdl","dl","0mg","dosage","tirage","puissance"].some(k=> query.includes(k));
+  const hitManager = ["audit","règle","regle","users","utilisateur","pin","export"].some(k=> query.includes(k));
 
   if(hitSav){ go("sav"); toast("Recherche", "SAV ouvert."); return; }
   if(hitClient){ go("client"); toast("Recherche", "Parcours client ouvert."); return; }
   if(hitManager){ isManager() ? go("manager") : toast("Recherche", "Admin réservé responsable."); return; }
-
-  toast("Recherche", "Aucun raccourci trouvé. Essaie: fuite, brûlé, MTL, sel, règle, audit…");
+  toast("Recherche", "Aucun raccourci. Essaye: fuite, brûlé, sel, MTL, audit…");
 }
 
 /* ---------- Client Wizard ---------- */
 const clientSteps = [
   { key:"cigs", label:"Conso", desc:"cig/j" },
   { key:"cigType", label:"Cigarette", desc:"type" },
-  { key:"moments", label:"Moments", desc:"déclencheurs" },
+  { key:"moments", label:"Moments", desc:"déclencheur" },
   { key:"goal", label:"Objectif", desc:"intention" },
   { key:"tried", label:"Expérience", desc:"déjà essayé" },
 ];
 
 const clientQuestions = [
-  {
-    key:"cigs",
-    title:"Combien de cigarettes par jour ?",
-    subtitle:"On choisit d’abord un taux cohérent (stabilité).",
-    cols:"cols4",
+  { key:"cigs", title:"Combien de cigarettes par jour ?", subtitle:"On choisit d’abord un taux cohérent (stabilité).", cols:"cols4",
     choices:[
       {v:"5-10", t:"5–10 /j", s:"Souvent 3 ou 6 mg"},
       {v:"10-15", t:"10–15 /j", s:"Souvent 6 ou 12 mg"},
       {v:"15-20", t:"15–20 /j", s:"Souvent 10 mg sel"},
       {v:"25+", t:"25+ /j", s:"Souvent 20 mg sel"},
-    ]
-  },
-  {
-    key:"cigType",
-    title:"Type de cigarette ?",
-    subtitle:"Ça aide à choisir sensations & saveurs.",
-    cols:"cols3",
+    ]},
+  { key:"cigType", title:"Type de cigarette ?", subtitle:"Ça aide à choisir sensations & saveurs.", cols:"cols3",
     choices:[
       {v:"blonde", t:"Blonde", s:"Classique / light"},
       {v:"menthol", t:"Menthol", s:"Fraîcheur douce"},
       {v:"roulee", t:"Roulée", s:"Plus aromatique / puissant"},
-    ]
-  },
-  {
-    key:"moments",
-    title:"Moments difficiles ? (le principal)",
-    subtitle:"On sécurise ce moment en priorité.",
-    cols:"cols3",
+    ]},
+  { key:"moments", title:"Moment difficile principal ?", subtitle:"On sécurise ce moment en priorité.", cols:"cols3",
     choices:[
       {v:"stress", t:"Stress", s:"Nerfs / pression"},
       {v:"cafe", t:"Café", s:"Habitude ancrée"},
@@ -1399,30 +1402,19 @@ const clientQuestions = [
       {v:"journee", t:"Journée", s:"Usage fréquent"},
       {v:"apresRepas", t:"Après repas", s:"Rituel"},
       {v:"matin", t:"Matin", s:"Démarrage"},
-    ]
-  },
-  {
-    key:"goal",
-    title:"Objectif du client ?",
-    subtitle:"L’objectif n°1 = éviter la rechute.",
-    cols:"cols3",
+    ]},
+  { key:"goal", title:"Objectif du client ?", subtitle:"L’objectif n°1 = éviter la rechute.", cols:"cols3",
     choices:[
       {v:"arreter", t:"Arrêter", s:"Objectif clair"},
       {v:"reduire", t:"Réduire", s:"Étape"},
       {v:"remplacer", t:"Remplacer", s:"Sans pression"},
-    ]
-  },
-  {
-    key:"tried",
-    title:"Déjà essayé la vape ?",
-    subtitle:"On corrige ce qui a bloqué.",
-    cols:"cols3",
+    ]},
+  { key:"tried", title:"Déjà essayé la vape ?", subtitle:"On corrige ce qui a bloqué.", cols:"cols3",
     choices:[
       {v:"non", t:"Non", s:"Découverte"},
       {v:"echec", t:"Oui (échec)", s:"On sécurise"},
       {v:"ok", t:"Oui (ça marchait)", s:"On réplique"},
-    ]
-  },
+    ]},
 ];
 
 function clientReset(){
@@ -1430,24 +1422,22 @@ function clientReset(){
   state.client.step = 0;
   state.client.answers = { cigs:null, cigType:null, moments:null, goal:null, tried:null };
   state.client.sheet = null;
-  renderClient();
   audit("CLIENT_RESET", "");
   saveState();
+  renderClient();
 }
 
 function setAnswer(key, value){
   state.client.answers[key] = value;
   audit("CLIENT_ANSWER", `${key}=${value}`);
   saveState();
-  // auto-next
   setTimeout(()=> nextClient(), 60);
 }
-
 function prevClient(){
   state.client.step = Math.max(0, state.client.step - 1);
   audit("CLIENT_PREV", String(state.client.step));
-  renderClient();
   saveState();
+  renderClient();
 }
 function nextClient(){
   const q = clientQuestions[state.client.step];
@@ -1458,13 +1448,14 @@ function nextClient(){
   if(state.client.step < clientQuestions.length-1){
     state.client.step += 1;
     audit("CLIENT_NEXT", String(state.client.step));
+    saveState();
     renderClient();
   } else {
     state.client.sheet = buildSheet(state.client.answers);
     audit("SHEET_GENERATED", JSON.stringify(state.client.answers));
+    saveState();
     renderSheet();
   }
-  saveState();
 }
 
 function renderClientSteps(){
@@ -1476,11 +1467,10 @@ function renderClientSteps(){
     if(i === state.client.step) div.classList.add("active");
     if(state.client.answers[s.key]) div.classList.add("done");
     div.innerHTML = `<span>${i+1}. ${escapeHtml(s.label)}</span><span class="small mono">${escapeHtml(s.desc)}</span>`;
-    div.onclick = ()=> { state.client.step = i; audit("CLIENT_GOTO_STEP", String(i)); renderClient(); saveState(); };
+    div.onclick = ()=> { state.client.step = i; audit("CLIENT_GOTO_STEP", String(i)); saveState(); renderClient(); };
     el.appendChild(div);
   });
 }
-
 function renderClientQuestion(){
   const box = $("#clientQuestionBox");
   const q = clientQuestions[state.client.step];
@@ -1499,7 +1489,6 @@ function renderClientQuestion(){
     ch.appendChild(d);
   });
 }
-
 function renderClient(){
   renderClientSteps();
   renderClientQuestion();
@@ -1530,45 +1519,19 @@ function calcReassurance(a){
   if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable.";
   return "On ajuste si besoin, sans se précipiter.";
 }
-
-function parseNicotineMg(nicStr){
-  // best-effort: extract first number (e.g. "6–12 mg" -> 6, "10 mg (sels)" -> 10)
-  const m = (nicStr||"").match(/(\d+)\s*/);
-  return m ? Number(m[1]) : null;
-}
-
 function buildSheet(a){
   const rule = state.rules.byCigs[a.cigs] || { nicotine:"—", tirage:"MTL", power:"—", hardware:"—" };
 
-  let nicotine = rule.nicotine;
-  let tirage = rule.tirage;
-  let power = rule.power;
-  let hardware = rule.hardware;
+  const nicotine = rule.nicotine;
+  const tirage = rule.tirage;
+  const power = rule.power;
+  const hardware = rule.hardware;
 
   const flavor = calcFlavorHint(a);
   const reassurance = calcReassurance(a);
   const momentTip = calcMomentTip(a);
 
-  // RDL suggestion policy (manager-config)
-  const pol = state.rules.rdlPolicy || { enabled:false };
-  const nicMg = parseNicotineMg(nicotine);
-  const allowRdl =
-    !!pol.enabled &&
-    (nicMg === null ? false : nicMg <= Number(pol.maxNicotineMg||0)) &&
-    (!pol.requireGoalNotArreter || a.goal !== "arreter");
-
-  if(allowRdl){
-    // We do NOT force RDL, we suggest it as an evolution
-    // Keep tirage baseline but add evolution note + optionally hardware text
-    tirage = `${tirage} → RDL possible (si stable)`;
-    if(pol.rdlHardwareText) hardware = `${hardware} / ${pol.rdlHardwareText}`;
-  }
-
-  const addons = [
-    "Résistance/cartouche de secours",
-    "Réglage puissance (confort)",
-    "Rappel : baisser la nicotine quand c’est stable"
-  ];
+  const addons = ["Résistance/cartouche de secours", "Réglage puissance (confort)", "Rappel : baisser la nicotine quand c’est stable"];
 
   const goalLine =
     a.goal === "arreter" ? "viser d’abord zéro cigarette" :
@@ -1579,10 +1542,7 @@ function buildSheet(a){
 
   return {
     title: "Recommandation STOOM (profil client)",
-    tirage,
-    nicotine,
-    power,
-    hardware,
+    tirage, nicotine, power, hardware,
     explain: `${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
     addons,
     salesLine
@@ -1626,157 +1586,107 @@ function copySalesLine(){
   audit("COPY_SALESLINE", "");
 }
 
-/* ---------- Printing ---------- */
 function printSheet(){
   if(!requireAuth()) return;
   if(!state.client.sheet){ toast("Impression", "Aucune fiche."); return; }
 
   audit("PRINT_SHEET", "");
-
   const sh = state.client.sheet;
   const a = state.client.answers;
-  const html = `
-    <!doctype html><html><head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>Fiche STOOM</title>
-    <style>
-      body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
-      h1{margin:0 0 6px; font-size:18px}
-      .sub{color:#334155; margin:0 0 16px; font-size:12px}
-      .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
-      .chips{display:flex; flex-wrap:wrap; gap:8px}
-      .chip{border:1px solid #e2e8f0; border-radius:999px; padding:6px 10px; font-size:12px}
-      .muted{color:#475569; font-size:12px; line-height:1.45}
-      .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
-      .hr{height:1px; background:#e2e8f0; margin:12px 0}
-    </style></head><body>
-      <h1>${escapeHtml(state.settings.shopName)} • Fiche recommandation</h1>
-      <p class="sub">Généré le ${escapeHtml(formatDateFR(new Date()))}</p>
 
-      <div class="card">
-        <div class="chips">
-          <span class="chip"><b>Tirage</b> ${escapeHtml(sh.tirage)}</span>
-          <span class="chip"><b>Nicotine</b> ${escapeHtml(sh.nicotine)}</span>
-          <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
-          <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
-        </div>
-        <div class="hr"></div>
-        <p class="muted">${escapeHtml(sh.explain)}</p>
-      </div>
+  const html =
+`<!doctype html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fiche STOOM</title>
+<style>
+  body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
+  h1{margin:0 0 6px; font-size:18px}
+  .sub{color:#334155; margin:0 0 16px; font-size:12px}
+  .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
+  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chip{border:1px solid #e2e8f0; border-radius:999px; padding:6px 10px; font-size:12px}
+  .muted{color:#475569; font-size:12px; line-height:1.45}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  .hr{height:1px; background:#e2e8f0; margin:12px 0}
+</style></head><body>
+<h1>${escapeHtml(state.settings.shopName)} • Fiche recommandation</h1>
+<p class="sub">Généré le ${escapeHtml(formatDateFR(new Date()))}</p>
 
-      <div class="card">
-        <h2 style="font-size:14px; margin:0 0 8px">Profil (résumé)</h2>
-        <p class="muted mono" style="margin:0">
-          Conso: ${escapeHtml(a.cigs||"—")} • Type: ${escapeHtml(a.cigType||"—")} • Moment: ${escapeHtml(a.moments||"—")} • Objectif: ${escapeHtml(a.goal||"—")} • Déjà essayé: ${escapeHtml(a.tried||"—")}
-        </p>
-      </div>
+<div class="card">
+  <div class="chips">
+    <span class="chip"><b>Tirage</b> ${escapeHtml(sh.tirage)}</span>
+    <span class="chip"><b>Nicotine</b> ${escapeHtml(sh.nicotine)}</span>
+    <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
+    <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
+  </div>
+  <div class="hr"></div>
+  <p class="muted">${escapeHtml(sh.explain)}</p>
+</div>
 
-      <div class="card">
-        <h2 style="font-size:14px; margin:0 0 8px">Phrase prête à dire</h2>
-        <p class="muted mono" style="margin:0">${escapeHtml(sh.salesLine)}</p>
-      </div>
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Profil (résumé)</h2>
+  <p class="muted mono" style="margin:0">
+    Conso: ${escapeHtml(a.cigs||"—")} • Type: ${escapeHtml(a.cigType||"—")} • Moment: ${escapeHtml(a.moments||"—")} • Objectif: ${escapeHtml(a.goal||"—")} • Déjà essayé: ${escapeHtml(a.tried||"—")}
+  </p>
+</div>
 
-      <div class="card">
-        <h2 style="font-size:14px; margin:0 0 8px">À proposer (anti-panne)</h2>
-        <ul class="muted" style="margin:0; padding-left:18px">
-          ${sh.addons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}
-        </ul>
-      </div>
-      <script>window.print();<\/script>
-    </body></html>
-  `;
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Phrase prête à dire</h2>
+  <p class="muted mono" style="margin:0">${escapeHtml(sh.salesLine)}</p>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">À proposer (anti-panne)</h2>
+  <ul class="muted" style="margin:0; padding-left:18px">
+    ${sh.addons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}
+  </ul>
+</div>
+
+</body></html>`;
+
   const w = window.open("", "_blank");
   if(!w){ toast("Impression", "Pop-up bloquée."); return; }
   w.document.write(html);
   w.document.close();
+  w.focus();
+  w.print();
 }
 
 /* ---------- SAV ---------- */
 const savMap = [
-  {
-    id:"fuite",
-    t:"Fuite",
-    s:"liquide partout / glouglou",
-    causes:[
-      "Résistance en fin de vie ou mal amorcée",
-      "Airflow trop ouvert + aspiration trop forte",
-      "Liquide trop fluide / chaleur",
-      "Cartouche/joint usé"
-    ],
-    actions:[
-      "Changer résistance + amorcer (attendre 5–10 min)",
-      "Baisser puissance / fermer un peu l’airflow",
-      "Nettoyer, vérifier joints, resserrer correctement",
-      "Si persiste : tester autre cartouche / autre liquide"
-    ],
+  { id:"fuite", t:"Fuite", s:"liquide partout / glouglou",
+    causes:["Résistance en fin de vie ou mal amorcée","Airflow trop ouvert + aspiration trop forte","Liquide trop fluide / chaleur","Cartouche/joint usé"],
+    actions:["Changer résistance + amorcer (attendre 5–10 min)","Baisser puissance / fermer un peu l’airflow","Nettoyer, vérifier joints, resserrer correctement","Si persiste : tester autre cartouche / autre liquide"],
     tip:"Règle d’or : 1 changement à la fois."
   },
-  {
-    id:"goutBrule",
-    t:"Goût brûlé",
-    s:"dry hit / brûlé",
-    causes:[
-      "Résistance cramée ou mal imbibée",
-      "Puissance trop haute",
-      "Chaînes de bouffées"
-    ],
-    actions:[
-      "Changer résistance + amorçage",
-      "Baisser la puissance (W)",
-      "Faire des pauses"
-    ],
+  { id:"goutBrule", t:"Goût brûlé", s:"dry hit / brûlé",
+    causes:["Résistance cramée ou mal imbibée","Puissance trop haute","Chaînes de bouffées"],
+    actions:["Changer résistance + amorçage","Baisser la puissance (W)","Faire des pauses"],
     tip:"Si brûlé permanent : résistance à remplacer."
   },
-  {
-    id:"toux",
-    t:"Toux / gorge irritée",
-    s:"inconfort, hit trop fort",
-    causes:[
-      "Taux nicotine trop élevé pour le matériel",
-      "Puissance trop haute / tirage trop aérien",
-      "Liquide/arôme agressif"
-    ],
-    actions:[
-      "Adapter matériel au taux (MTL + puissance basse)",
-      "Ou baisser progressivement le taux si client veut plus puissant",
-      "Tester un liquide plus doux"
-    ],
+  { id:"toux", t:"Toux / gorge irritée", s:"inconfort, hit trop fort",
+    causes:["Taux nicotine trop élevé pour le matériel","Puissance trop haute / tirage trop aérien","Liquide/arôme agressif"],
+    actions:["Adapter matériel au taux (MTL + puissance basse)","Ou baisser progressivement le taux si client veut plus puissant","Tester un liquide plus doux"],
     tip:"Objectif : confort → sinon abandon → rechute."
   },
-  {
-    id:"pasDeVapeur",
-    t:"Pas de vapeur",
-    s:"ne s’allume pas / rien",
-    causes:[
-      "Batterie vide / mauvais contact",
-      "Cartouche mal enclenchée",
-      "Défaut résistance"
-    ],
-    actions:[
-      "Charger / vérifier câble / nettoyer contacts",
-      "Retirer-remettre la cartouche",
-      "Tester une autre résistance/cartouche"
-    ],
+  { id:"pasDeVapeur", t:"Pas de vapeur", s:"ne s’allume pas / rien",
+    causes:["Batterie vide / mauvais contact","Cartouche mal enclenchée","Défaut résistance"],
+    actions:["Charger / vérifier câble / nettoyer contacts","Retirer-remettre la cartouche","Tester une autre résistance/cartouche"],
     tip:"Toujours commencer par contacts + charge."
   },
-  {
-    id:"glouglou",
-    t:"Glouglou",
-    s:"bruit / remontées",
-    causes:[
-      "Condensation / noyade",
-      "Aspiration trop forte",
-      "Résistance noyée"
-    ],
-    actions:[
-      "Souffler doucement (papier dessous)",
-      "Nettoyer cheminée / base",
-      "Réduire aspiration / fermer airflow"
-    ],
+  { id:"glouglou", t:"Glouglou", s:"bruit / remontées",
+    causes:["Condensation / noyade","Aspiration trop forte","Résistance noyée"],
+    actions:["Souffler doucement (papier dessous)","Nettoyer cheminée / base","Réduire aspiration / fermer airflow"],
     tip:"Glouglou = trop de liquide dans la cheminée."
   },
 ];
 
+function clearSavProblem(){
+  $("#savVendorProblem").value = "";
+  state.sav.vendorProblem = "";
+  audit("SAV_CLEAR_PROBLEM", "");
+  saveState();
+}
 function renderSav(){
   const box = $("#savChoices");
   box.innerHTML = "";
@@ -1784,9 +1694,17 @@ function renderSav(){
     const d = document.createElement("div");
     d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
     d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
-    d.onclick = ()=> { state.sav.symptom = it.id; audit("SAV_SYMPTOM", it.id); renderSavResult(); saveState(); };
+    d.onclick = ()=> {
+      state.sav.symptom = it.id;
+      audit("SAV_SYMPTOM", it.id);
+      saveState();
+      renderSavResult();
+      // auto-fill symptom label in modal
+      $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===it.id)?.t || it.id);
+    };
     box.appendChild(d);
   });
+  $("#savVendorProblem").value = state.sav.vendorProblem || "";
   renderSavResult();
 }
 function renderSavResult(){
@@ -1814,10 +1732,196 @@ function renderSavResult(){
         </ul>
       </div>
     </div>
-    <div class="btnrow" style="margin-top:12px">
-      <button class="btn" onclick="go('notes')">Noter ce cas</button>
-    </div>
   `;
+}
+
+function openSavForm(){
+  if(!requireAuth()) return;
+  if(!state.sav.symptom){
+    toast("SAV", "Choisis d’abord un symptôme.");
+    return;
+  }
+  // sync vendor problem
+  state.sav.vendorProblem = ($("#savVendorProblem").value || "").trim();
+  saveState();
+
+  $("#savClientName").value = "";
+  $("#savPurchaseDate").value = "";
+  $("#savGoodState").value = "yes";
+  $("#savPortOk").value = "yes";
+  $("#savBoxPresent").value = "yes";
+  $("#savCablePresent").value = "yes";
+  $("#savProblemText").value = state.sav.vendorProblem || "";
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
+  $("#savDecisionBox").textContent = "—";
+
+  $("#savModal").classList.add("show");
+  audit("SAV_OPEN_FORM", state.sav.symptom);
+}
+function closeSavModal(){ $("#savModal").classList.remove("show"); }
+
+function computeSavDecision(data){
+  const reasons = [];
+  if(!data.clientName) reasons.push("Nom/prénom client manquant");
+  if(!data.purchaseDate) reasons.push("Date d’achat manquante");
+  if(data.goodState !== "yes") reasons.push("Produit non en bon état (trace de chute/casse)");
+  if(data.portOk !== "yes") reasons.push("Port de charge non intact");
+  if(data.boxPresent !== "yes") reasons.push("Boîte produit absente");
+  if(data.cablePresent !== "yes") reasons.push("Câble de charge absent");
+
+  const ok = reasons.length === 0;
+  return { ok, reasons };
+}
+
+function previewSavEligibility(){
+  const data = {
+    clientName: ($("#savClientName").value||"").trim(),
+    purchaseDate: $("#savPurchaseDate").value,
+    goodState: $("#savGoodState").value,
+    portOk: $("#savPortOk").value,
+    boxPresent: $("#savBoxPresent").value,
+    cablePresent: $("#savCablePresent").value,
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
+  };
+  const dec = computeSavDecision(data);
+  if(dec.ok){
+    $("#savDecisionBox").innerHTML = `<span class="goodText"><b>SAV RECEVABLE</b></span> ✅`;
+  } else {
+    $("#savDecisionBox").innerHTML = `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+  }
+}
+
+function validateSavAndPrint(){
+  if(!requireAuth()) return;
+  const data = {
+    clientName: ($("#savClientName").value||"").trim(),
+    purchaseDate: $("#savPurchaseDate").value,
+    goodState: $("#savGoodState").value,
+    portOk: $("#savPortOk").value,
+    boxPresent: $("#savBoxPresent").value,
+    cablePresent: $("#savCablePresent").value,
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
+  };
+  const dec = computeSavDecision(data);
+  const nowTs = Date.now();
+
+  const symptomLabel = (savMap.find(x=>x.id===data.symptom)?.t || data.symptom);
+  const vendor = state.currentUser?.name || "INCONNU";
+  const when = formatDateTimeFR(nowTs);
+
+  const savSheet = {
+    ...data,
+    symptomLabel,
+    vendor,
+    when,
+    decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
+    reasons: dec.reasons
+  };
+
+  state.sav.lastSavSheet = savSheet;
+  audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
+  saveState();
+
+  // Print A4
+  printSavSheet(savSheet);
+
+  closeSavModal();
+}
+
+function printSavSheet(s){
+  audit("PRINT_SAV_SHEET", s.decision);
+
+  const yesNo = v => (v==="yes" ? "Oui" : "Non");
+  const reasonsHtml = (s.reasons||[]).length
+    ? `<ul>${s.reasons.map(r=>`<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+    : `<p>Aucune.</p>`;
+
+  const badgeColor = (s.decision === "SAV RECEVABLE") ? "#16a34a" : "#dc2626";
+
+  const html =
+`<!doctype html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fiche SAV STOOM</title>
+<style>
+  body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
+  h1{margin:0 0 6px; font-size:18px}
+  .sub{color:#334155; margin:0 0 16px; font-size:12px}
+  .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .col{flex:1; min-width:220px}
+  .k{color:#334155; font-size:12px; margin:0}
+  .v{font-size:13px; margin:6px 0 0}
+  .badge{display:inline-block; padding:8px 12px; border-radius:999px; color:white; font-weight:700; font-size:12px; background:${badgeColor}}
+  .muted{color:#475569; font-size:12px; line-height:1.45}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  .hr{height:1px; background:#e2e8f0; margin:12px 0}
+  ul{margin:8px 0 0; padding-left:18px}
+</style></head><body>
+
+<h1>${escapeHtml(state.settings.shopName)} • FICHE SAV</h1>
+<p class="sub">Pris en charge par <b>${escapeHtml(s.vendor)}</b> • ${escapeHtml(s.when)}</p>
+
+<div class="card">
+  <span class="badge">${escapeHtml(s.decision)}</span>
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="k">Client</p>
+      <p class="v"><b>${escapeHtml(s.clientName || "—")}</b></p>
+    </div>
+    <div class="col">
+      <p class="k">Date d’achat</p>
+      <p class="v">${escapeHtml(s.purchaseDate || "—")}</p>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col"><p class="k">Symptôme</p><p class="v">${escapeHtml(s.symptomLabel)}</p></div>
+    <div class="col"><p class="k">Problème constaté</p><p class="v">${escapeHtml(s.problem || "—")}</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Vérifications garantie</h2>
+  <div class="row">
+    <div class="col"><p class="k">Bon état (pas de chute)</p><p class="v">${escapeHtml(yesNo(s.goodState))}</p></div>
+    <div class="col"><p class="k">Port de charge intact</p><p class="v">${escapeHtml(yesNo(s.portOk))}</p></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="col"><p class="k">Boîte présente</p><p class="v">${escapeHtml(yesNo(s.boxPresent))}</p></div>
+    <div class="col"><p class="k">Câble de charge présent</p><p class="v">${escapeHtml(yesNo(s.cablePresent))}</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Raisons / Justification</h2>
+  <p class="muted">Si un élément requis est manquant ou non conforme : <b>prise en garantie impossible</b>.</p>
+  ${reasonsHtml}
+  <div class="hr"></div>
+  <p class="muted mono">Signature vendeur : _____________________</p>
+  <p class="muted mono">Signature client : ______________________</p>
+</div>
+
+</body></html>`;
+
+  const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée."); return; }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
+function reprintLastSav(){
+  if(!requireAuth()) return;
+  if(!state.sav.lastSavSheet){
+    toast("SAV", "Aucune fiche SAV récente.");
+    return;
+  }
+  printSavSheet(state.sav.lastSavSheet);
 }
 
 /* ---------- Notes ---------- */
@@ -1842,11 +1946,7 @@ function saveNote(){
   if(!name && !phone && !text){ toast("Note", "Rien à enregistrer."); return; }
 
   const id = (crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2));
-  state.notes.push({
-    id, name, phone, text,
-    createdAt: Date.now(),
-    createdBy: state.currentUser?.name || "INCONNU"
-  });
+  state.notes.push({ id, name, phone, text, createdAt: Date.now(), createdBy: state.currentUser?.name || "INCONNU" });
   audit("NOTE_ADD", `${name} ${phone}`.trim());
   saveState();
   clearNoteForm();
@@ -1895,9 +1995,7 @@ function renderNotes(){
             <strong>${escapeHtml(n.name||"Sans nom")}</strong>
             <div class="small">Par ${escapeHtml(n.createdBy||"—")} • ${escapeHtml(d)}</div>
           </div>
-          <div class="right">
-            <span>${escapeHtml(phoneShown)}</span>
-          </div>
+          <div><span>${escapeHtml(phoneShown)}</span></div>
         </div>
         <p>${escapeHtml(n.text||"")}</p>
         <div class="btnrow" style="margin-top:10px">
@@ -1946,7 +2044,6 @@ function calcBottles(){
     </div>
     <p class="muted">${offerText}</p>
     ${cost !== null ? `<p class="muted"><b>Budget :</b> ~${cost.toFixed(2)} €</p>` : ``}
-    <p class="small">Modèle proportionnel à 20 cig/j. Ajuster au besoin.</p>
   `;
   audit("CALC_BOTTLES", `cigs=${cigs},days=${days},mlAt20=${mlAt20}`);
 }
@@ -1969,7 +2066,6 @@ function calcSavings(){
       <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
       <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
     </div>
-    <p class="muted">${save >= 0 ? "✅ Argument clair : la vape reste gagnante sur cette hypothèse." : "⚠️ Vérifier les entrées (paquets/j, budget vape)."} </p>
   `;
   audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
 }
@@ -1983,11 +2079,8 @@ function refreshRulesSummary(){
     if(!x) continue;
     parts.push(`${k}: ${x.nicotine} • ${x.tirage} • ${x.power}`);
   }
-  const pol = state.rules?.rdlPolicy;
-  const polTxt = pol?.enabled ? `RDL: ON (≤${pol.maxNicotineMg}mg)` : `RDL: OFF`;
-  $("#rulesSummary").textContent = parts.length ? (parts.join(" | ") + " • " + polTxt) : "—";
+  $("#rulesSummary").textContent = parts.length ? parts.join(" | ") : "—";
 }
-
 function renderRulesEditor(){
   if(!isManager()) return;
   const wrap = $("#rulesEditor");
@@ -2003,24 +2096,12 @@ function renderRulesEditor(){
         </div>
         <div class="hr"></div>
         <div class="two">
-          <div>
-            <label>Nicotine</label>
-            <input data-rule="${key}" data-field="nicotine" type="text" value="${escapeHtml(x.nicotine||"")}" />
-          </div>
-          <div>
-            <label>Tirage</label>
-            <input data-rule="${key}" data-field="tirage" type="text" value="${escapeHtml(x.tirage||"")}" />
-          </div>
+          <div><label>Nicotine</label><input data-rule="${key}" data-field="nicotine" type="text" value="${escapeHtml(x.nicotine||"")}" /></div>
+          <div><label>Tirage</label><input data-rule="${key}" data-field="tirage" type="text" value="${escapeHtml(x.tirage||"")}" /></div>
         </div>
         <div class="two" style="margin-top:10px">
-          <div>
-            <label>Puissance</label>
-            <input data-rule="${key}" data-field="power" type="text" value="${escapeHtml(x.power||"")}" />
-          </div>
-          <div>
-            <label>Matériel</label>
-            <input data-rule="${key}" data-field="hardware" type="text" value="${escapeHtml(x.hardware||"")}" />
-          </div>
+          <div><label>Puissance</label><input data-rule="${key}" data-field="power" type="text" value="${escapeHtml(x.power||"")}" /></div>
+          <div><label>Matériel</label><input data-rule="${key}" data-field="hardware" type="text" value="${escapeHtml(x.hardware||"")}" /></div>
         </div>
       </div>
     `;
@@ -2032,14 +2113,7 @@ function renderRulesEditor(){
     row("15-20","Profil 15–20 cig/j"),
     row("25+","Profil 25+ cig/j"),
   ].join("");
-
-  // RDL policy UI
-  $("#rdlEnabled").value = String(state.rules.rdlPolicy.enabled);
-  $("#rdlMaxNic").value = String(state.rules.rdlPolicy.maxNicotineMg ?? 6);
-  $("#rdlRequireGoalNotArreter").value = String(state.rules.rdlPolicy.requireGoalNotArreter);
-  $("#rdlHardwareText").value = state.rules.rdlPolicy.rdlHardwareText || "";
 }
-
 function saveRulesFromUI(){
   if(!isManager()) return;
   const inputs = $all("#rulesEditor input[data-rule]");
@@ -2053,7 +2127,6 @@ function saveRulesFromUI(){
   saveState();
   toast("Règles", "Enregistrées.");
 }
-
 function resetRules(){
   if(!isManager()) return;
   if(!confirm("Réinitialiser les règles par défaut ?")) return;
@@ -2064,24 +2137,10 @@ function resetRules(){
   toast("Règles", "Réinitialisées.");
 }
 
-function saveRdlPolicyFromUI(){
-  if(!isManager()) return;
-  state.rules.rdlPolicy.enabled = ($("#rdlEnabled").value === "true");
-  state.rules.rdlPolicy.maxNicotineMg = Number($("#rdlMaxNic").value||0);
-  state.rules.rdlPolicy.requireGoalNotArreter = ($("#rdlRequireGoalNotArreter").value === "true");
-  state.rules.rdlPolicy.rdlHardwareText = ($("#rdlHardwareText").value||"").trim();
-  audit("RDL_POLICY_SAVE", JSON.stringify(state.rules.rdlPolicy));
-  saveState();
-  toast("RDL", "Politique enregistrée.");
-}
-
 /* ---------- Manager: Users ---------- */
 function slugifyName(name){
-  return (name||"")
-    .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .replace(/[^a-z0-9]+/g,"-")
-    .replace(/^-+|-+$/g,"") || ("u"+Math.random().toString(16).slice(2,7));
+  return (name||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || ("u"+Math.random().toString(16).slice(2,7));
 }
 function renderUsers(){
   if(!isManager()) return;
@@ -2103,7 +2162,6 @@ function renderUsers(){
     `;
   }).join("");
 
-  // auto fill id
   $("#newUserName").addEventListener("input", ()=>{
     $("#newUserId").value = slugifyName($("#newUserName").value);
   }, { once:false });
@@ -2117,7 +2175,7 @@ function addUser(){
 
   if(!name){ toast("User", "Nom requis."); return; }
   if(!pin || pin.length < 4){ toast("User", "PIN 4 chiffres mini."); return; }
-  if(state.users.some(u=>u.id===id)){ toast("User", "ID existe déjà (change le nom)."); return; }
+  if(state.users.some(u=>u.id===id)){ toast("User", "ID existe déjà."); return; }
 
   state.users.push({ id, name, pin, role });
   audit("USER_ADD", `${id}:${role}`);
@@ -2154,24 +2212,22 @@ function openEditUser(id){
     u.pin = pin.trim();
   }
 
-  // If edited current user, refresh session
   if(state.currentUser?.id === u.id){
     state.currentUser.name = u.name;
     state.currentUser.role = u.role;
   }
-
   audit("USER_EDIT", `${u.id}:${u.role}`);
   saveState();
   renderUsers();
   refreshAuthUI();
 }
 
-/* ---------- Manager: Audit ---------- */
+/* ---------- Audit peek + full (manager only) ---------- */
 function renderAuditPeek(){
   const box = $("#auditPeek");
   const last = state.audit.slice(-5).reverse();
   if(last.length === 0){
-    box.innerHTML = `<div class="small">Aucune action enregistrée pour le moment.</div>`;
+    box.innerHTML = `<div class="small">Aucune action enregistrée.</div>`;
     return;
   }
   box.innerHTML = last.map(e=>{
@@ -2186,13 +2242,12 @@ function renderAuditPeek(){
     `;
   }).join("");
 }
-
 function renderAudit(){
   if(!isManager()) return;
   const filter = ($("#auditFilter").value||"").toLowerCase().trim();
   const limit = Number($("#auditLimit").value||200);
 
-  let rows = state.audit.slice().reverse(); // newest first
+  let rows = state.audit.slice().reverse();
   if(filter){
     rows = rows.filter(e =>
       (e.who||"").toLowerCase().includes(filter) ||
@@ -2219,7 +2274,6 @@ function renderAudit(){
     `;
   }).join("");
 }
-
 function exportAuditJSON(){
   if(!isManager()) return;
   const payload = { exportedAt: new Date().toISOString(), audit: state.audit };
@@ -2256,6 +2310,8 @@ function clearAudit(){
 /* ---------- Sidebar mini + home last sheet ---------- */
 function refreshSidebarMini(){
   $("#today").textContent = formatDateFR(new Date());
+  $("#userMini").textContent = state.currentUser?.name || "—";
+  $("#roleMini").textContent = state.currentUser ? (isManager() ? "Responsable" : "Vendeur") : "—";
   $("#sheetMini").textContent = state.client.sheet ? "OK" : "—";
 }
 function refreshHomeLastSheet(){
@@ -2281,6 +2337,7 @@ function bindKeys(){
     if(e.key === "Escape"){
       $("#authModal").classList.remove("show");
       $("#importModal").classList.remove("show");
+      $("#savModal").classList.remove("show");
       return;
     }
     if(e.key === "/" && !e.metaKey && !e.ctrlKey){
@@ -2290,18 +2347,7 @@ function bindKeys(){
     }
     const tag = (document.activeElement?.tagName || "").toLowerCase();
     const typing = ["input","textarea","select"].includes(tag);
-
-    if(typing){
-      if(state.view === "client"){
-        const n = Number(e.key);
-        if(n>=1 && n<=4){
-          const q = clientQuestions[state.client.step];
-          const opt = q.choices[n-1];
-          if(opt) setAnswer(q.key, opt.v);
-        }
-      }
-      return;
-    }
+    if(typing) return;
 
     const k = e.key.toLowerCase();
     if(k==="h") go("home");
@@ -2336,14 +2382,20 @@ function bindButtons(){
   $("#noteFilter").addEventListener("input", renderNotes);
 
   $("#printBtn").addEventListener("click", printSheet);
+
   $("#exportStateBtn").addEventListener("click", exportFullState);
   $("#importStateBtn").addEventListener("click", openImportModal);
   $("#resetBtn").addEventListener("click", clearAll);
 
+  $("#savVendorProblem").addEventListener("input", ()=>{
+    state.sav.vendorProblem = ($("#savVendorProblem").value||"").trim();
+    saveState();
+  });
+
   $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
+  $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
 }
-function closeImportModal(){ $("#importModal").classList.remove("show"); }
 
 /* ---------- Init ---------- */
 function init(){
@@ -2355,14 +2407,12 @@ function init(){
   bindButtons();
   bindKeys();
 
-  // default view
   $all(".view").forEach(v=> v.style.display="none");
   $("#view-home").style.display = "block";
 
-  // Force auth at start
   if(!state.currentUser) openAuthModal(true);
 }
 init();
 </script>
 </body>
-                </html>
+</html>
