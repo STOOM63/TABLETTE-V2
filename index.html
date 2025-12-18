@@ -449,7 +449,7 @@
       </div>
 
       <div class="small" style="margin-top:10px">
-        ⚠️ Export/Import/Reset : <b>Responsable uniquement</b> (PIN demandé).<br/>
+        ⚠️ Export/Import/Reset : <b>Responsable uniquement</b>.<br/>
         Offline : OK (stockage appareil).<br/>
         Raccourcis : H C S K N A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
       </div>
@@ -847,7 +847,7 @@
           <div class="pb">
             <div class="q">
               <h3>Règles de recommandation</h3>
-              <p class="muted">Modifiable par responsable (PIN demandé pour réinitialiser).</p>
+              <p class="muted">Modifiable par responsable.</p>
               <div id="rulesEditor"></div>
               <div class="btnrow">
                 <button class="btn primary" onclick="saveRulesFromUI()">Enregistrer règles</button>
@@ -1013,17 +1013,6 @@
 
       <div class="two" style="margin-top:10px">
         <div>
-          <label>Référence produit (OBLIGATOIRE)</label>
-          <input id="savProductRef" type="text" placeholder="Ex: XROS-3 / Aegis Boost / etc." />
-        </div>
-        <div>
-          <label>Symptôme sélectionné</label>
-          <input id="savSymptomReadOnly" type="text" disabled />
-        </div>
-      </div>
-
-      <div class="two" style="margin-top:10px">
-        <div>
           <label>Produit en bon état (pas de chute / casse) ?</label>
           <select id="savGoodState">
             <option value="yes">Oui</option>
@@ -1056,30 +1045,11 @@
         </div>
       </div>
 
-      <!-- Autofire rule -->
-      <div id="autofireBlock" class="q" style="margin-top:12px; display:none">
-        <h3>Autofire — vérification obligatoire</h3>
-        <p class="muted">Si <b>liquide dans capteur d’aspiration</b> → <b>REFUS garantie automatique</b>.</p>
-        <div class="two">
-          <div>
-            <label>Liquide dans capteur d’aspiration ?</label>
-            <select id="savLiquidInSensor">
-              <option value="no" selected>Non</option>
-              <option value="yes">Oui</option>
-            </select>
-          </div>
-          <div>
-            <label>Preuve/constat (optionnel)</label>
-            <input id="savAutofireNote" type="text" placeholder="Ex: traces visibles / client a rempli trop fort..." />
-          </div>
-        </div>
-      </div>
-
       <div style="margin-top:10px">
         <label>Problème constaté (repris SAV)</label>
         <textarea id="savProblemText" placeholder="(repris automatiquement, modifiable si besoin)"></textarea>
         <div class="small" style="margin-top:6px">
-          Symptôme : <span class="mono" id="savSymptomLabel">—</span>
+          Symptôme sélectionné : <span class="mono" id="savSymptomLabel">—</span>
         </div>
       </div>
 
@@ -1100,13 +1070,11 @@
 
 <script>
 /* =========================
-   STOOM • Tablette PRO (v2.1)
+   STOOM • Tablette PRO (v2)
    - PIN / rôles
-   - export/import/reset invisibles vendeurs
-   - reset règles/tablette = redemande PIN responsable
-   - SAV: référence produit obligatoire
-   - SAV: ajouts HS TOTAL / CHIPSET HS / AUTOFIRE
-   - AUTOFIRE + liquide capteur aspiration => REFUS auto
+   - export/import BLOQUÉS vendeurs
+   - audit complet: responsable seulement
+   - SAV: fiche imprimable A4 accept/refus + raisons
    ========================= */
 
 const LS = { state: "stoom_tablette_v2_state" };
@@ -1231,31 +1199,6 @@ function audit(action, detail){
   saveState();
 }
 
-/* ---------- Manager PIN confirm ---------- */
-function promptManagerPinOrFail(reason){
-  if(!requireAuth()) return false;
-  if(!isManager()){
-    toast("Accès refusé", "Réservé aux responsables.");
-    audit("DENY_ADMIN_ACTION", reason||"");
-    return false;
-  }
-  const currentId = state.currentUser?.id;
-  const u = state.users.find(x => x.id === currentId);
-  if(!u){
-    toast("Erreur", "Utilisateur responsable introuvable.");
-    audit("ADMIN_PIN_USER_NOT_FOUND", reason||"");
-    return false;
-  }
-  const pin = (prompt("Action sensible : entre ton PIN responsable", "") || "").trim();
-  if(!pin || pin !== u.pin){
-    toast("PIN incorrect", "Action annulée.");
-    audit("ADMIN_PIN_FAIL", reason||"");
-    return false;
-  }
-  audit("ADMIN_PIN_OK", reason||"");
-  return true;
-}
-
 /* ---------- Navigation ---------- */
 function go(view){
   if(!requireAuth()) return;
@@ -1348,20 +1291,13 @@ function logout(){
   openAuthModal(true);
 }
 
-/* ---------- Export/Import/Reset visibility ---------- */
+/* ---------- BLOCK Export/Import/Reset for sellers ---------- */
 function updateAdminButtonsLock(){
   const exp = $("#exportStateBtn");
   const imp = $("#importStateBtn");
   const res = $("#resetBtn");
 
-  const logged = !!state.currentUser;
-  const can = logged && isManager();
-
-  // EXIGÉ: export invisible vendeurs
-  exp.style.display = can ? "inline-flex" : "none";
-  imp.style.display = can ? "inline-flex" : "none";
-  res.style.display = can ? "inline-flex" : "none";
-
+  const can = !!state.currentUser && isManager();
   exp.disabled = !can;
   imp.disabled = !can;
   res.disabled = !can;
@@ -1378,8 +1314,6 @@ function exportFullState(){
     audit("DENY_EXPORT_STATE", "");
     return;
   }
-  if(!promptManagerPinOrFail("EXPORT_STATE")) return;
-
   const payload = { exportedAt: new Date().toISOString(), state };
   download(`stoom-export-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2));
   audit("EXPORT_STATE", "");
@@ -1391,16 +1325,12 @@ function openImportModal(){
     audit("DENY_IMPORT", "");
     return;
   }
-  if(!promptManagerPinOrFail("OPEN_IMPORT_MODAL")) return;
-
   $("#importText").value = "";
   $("#importModal").classList.add("show");
 }
 function closeImportModal(){ $("#importModal").classList.remove("show"); }
 function importState(){
   if(!isManager()){ toast("Accès refusé", "Réservé aux responsables."); return; }
-  if(!promptManagerPinOrFail("IMPORT_STATE")) return;
-
   const payload = safeJsonParse($("#importText").value||"", null);
   if(!payload?.state){ toast("Import", "JSON invalide."); return; }
   const fresh = structuredClone(DEFAULT_STATE);
@@ -1422,8 +1352,6 @@ function clearAll(){
     audit("DENY_RESET", "");
     return;
   }
-  if(!promptManagerPinOrFail("RESET_TABLETTE")) return;
-
   if(!confirm("Réinitialiser TOUT sur cet appareil ?")) return;
   localStorage.removeItem(LS.state);
   location.reload();
@@ -1433,9 +1361,9 @@ function clearAll(){
 function runSearch(q){
   const query = (q||"").toLowerCase().trim();
   if(!query){ toast("Recherche", "Tape un mot-clé."); return; }
-  const hitSav = ["fuite","glouglou","brûlé","brule","toux","gorge","panne","charge","autofire","chipset","hs"].some(k=> query.includes(k));
+  const hitSav = ["fuite","glouglou","brûlé","brule","toux","gorge","panne","charge"].some(k=> query.includes(k));
   const hitClient = ["nicotine","sel","mtl","rdl","dl","0mg","dosage","tirage","puissance"].some(k=> query.includes(k));
-  const hitManager = ["audit","règle","regle","users","utilisateur","pin","export","import","reset"].some(k=> query.includes(k));
+  const hitManager = ["audit","règle","regle","users","utilisateur","pin","export"].some(k=> query.includes(k));
 
   if(hitSav){ go("sav"); toast("Recherche", "SAV ouvert."); return; }
   if(hitClient){ go("client"); toast("Recherche", "Parcours client ouvert."); return; }
@@ -1751,23 +1679,6 @@ const savMap = [
     actions:["Souffler doucement (papier dessous)","Nettoyer cheminée / base","Réduire aspiration / fermer airflow"],
     tip:"Glouglou = trop de liquide dans la cheminée."
   },
-
-  // AJOUTS demandés
-  { id:"hsTotal", t:"Matériel HS TOTAL", s:"ne s’allume plus / mort",
-    causes:["Batterie/PCB HS","Oxydation / liquide interne","Choc important"],
-    actions:["Test charge + câble + prise","Nettoyage contacts, test autre cartouche","Si aucun signe de vie : procédure SAV / garantie"],
-    tip:"Si aucun signe de vie après vérifs rapides : SAV."
-  },
-  { id:"chipsetHs", t:"CHIPSET HS", s:"bug / écran / erreur",
-    causes:["Carte électronique HS","Surtension / charge non adaptée","Liquide infiltré"],
-    actions:["Reset (si possible), test charge/câble","Vérifier traces de liquide/oxydation","SAV si anomalies persistantes"],
-    tip:"Un chipset HS = souvent non réparable en boutique."
-  },
-  { id:"autofire", t:"Autofire", s:"déclenche tout seul",
-    causes:["Liquide dans capteur d’aspiration (pods auto)","Bouton coincé","Condensation excessive"],
-    actions:["Stopper usage, nettoyer et sécher","Vérifier capteur/bouton","Si liquide capteur confirmé : REFUS garantie (usage)"],
-    tip:"⚠️ Règle: liquide dans capteur d’aspiration = refus automatique."
-  },
 ];
 
 function clearSavProblem(){
@@ -1788,6 +1699,7 @@ function renderSav(){
       audit("SAV_SYMPTOM", it.id);
       saveState();
       renderSavResult();
+      // auto-fill symptom label in modal
       $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===it.id)?.t || it.id);
     };
     box.appendChild(d);
@@ -1829,28 +1741,19 @@ function openSavForm(){
     toast("SAV", "Choisis d’abord un symptôme.");
     return;
   }
-
   // sync vendor problem
   state.sav.vendorProblem = ($("#savVendorProblem").value || "").trim();
   saveState();
 
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
-  $("#savProductRef").value = "";
   $("#savGoodState").value = "yes";
   $("#savPortOk").value = "yes";
   $("#savBoxPresent").value = "yes";
   $("#savCablePresent").value = "yes";
   $("#savProblemText").value = state.sav.vendorProblem || "";
-  const symLabel = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
-  $("#savSymptomLabel").textContent = symLabel;
-  $("#savSymptomReadOnly").value = symLabel;
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
-
-  // Autofire block toggle
-  $("#autofireBlock").style.display = (state.sav.symptom === "autofire") ? "block" : "none";
-  $("#savLiquidInSensor").value = "no";
-  $("#savAutofireNote").value = "";
 
   $("#savModal").classList.add("show");
   audit("SAV_OPEN_FORM", state.sav.symptom);
@@ -1861,20 +1764,10 @@ function computeSavDecision(data){
   const reasons = [];
   if(!data.clientName) reasons.push("Nom/prénom client manquant");
   if(!data.purchaseDate) reasons.push("Date d’achat manquante");
-
-  // REF obligatoire
-  if(!data.productRef) reasons.push("Référence produit manquante");
-
-  // règles garantie standard
   if(data.goodState !== "yes") reasons.push("Produit non en bon état (trace de chute/casse)");
   if(data.portOk !== "yes") reasons.push("Port de charge non intact");
   if(data.boxPresent !== "yes") reasons.push("Boîte produit absente");
   if(data.cablePresent !== "yes") reasons.push("Câble de charge absent");
-
-  // règle AUTOFIRE demandée
-  if(data.symptom === "autofire" && data.liquidInSensor === "yes"){
-    reasons.push("Autofire + liquide dans capteur d’aspiration : refus automatique (usage)");
-  }
 
   const ok = reasons.length === 0;
   return { ok, reasons };
@@ -1884,218 +1777,642 @@ function previewSavEligibility(){
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
     purchaseDate: $("#savPurchaseDate").value,
-    productRef: ($("#savProductRef").value||"").trim(),
     goodState: $("#savGoodState").value,
     portOk: $("#savPortOk").value,
     boxPresent: $("#savBoxPresent").value,
     cablePresent: $("#savCablePresent").value,
-    liquidInSensor: $("#savLiquidInSensor") ? $("#savLiquidInSensor").value : "no",
+    problem: ($("#savProblemText").value||"").trim(),
     symptom: state.sav.symptom
   };
-
-  const decision = computeSavDecision(data);
-
-  const box = $("#savDecisionBox");
-  if(decision.ok){
-    box.innerHTML = `<span class="goodText"><b>PRISE EN GARANTIE POSSIBLE</b></span><br/>Aucune anomalie bloquante détectée.`;
+  const dec = computeSavDecision(data);
+  if(dec.ok){
+    $("#savDecisionBox").innerHTML = `<span class="goodText"><b>SAV RECEVABLE</b></span> ✅`;
   } else {
-    box.innerHTML = `
-      <span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span>
-      <ul class="muted" style="margin:8px 0 0; padding-left:18px">
-        ${decision.reasons.map(r=>`<li>${escapeHtml(r)}</li>`).join("")}
-      </ul>
-    `;
+    $("#savDecisionBox").innerHTML = `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
   }
 }
 
-
 function validateSavAndPrint(){
   if(!requireAuth()) return;
-
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
     purchaseDate: $("#savPurchaseDate").value,
-    productRef: ($("#savProductRef").value||"").trim(),
     goodState: $("#savGoodState").value,
     portOk: $("#savPortOk").value,
     boxPresent: $("#savBoxPresent").value,
     cablePresent: $("#savCablePresent").value,
-    liquidInSensor: $("#savLiquidInSensor") ? $("#savLiquidInSensor").value : "no",
-    autofireNote: ($("#savAutofireNote").value||"").trim(),
-    symptom: state.sav.symptom,
-    symptomLabel: $("#savSymptomReadOnly").value,
-    problemText: ($("#savProblemText").value||"").trim()
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
   };
+  const dec = computeSavDecision(data);
+  const nowTs = Date.now();
 
-  const decision = computeSavDecision(data);
-  if(!decision.ok){
-    previewSavEligibility();
-    audit("SAV_REFUSED", decision.reasons.join(" | "));
-    return;
-  }
+  const symptomLabel = (savMap.find(x=>x.id===data.symptom)?.t || data.symptom);
+  const vendor = state.currentUser?.name || "INCONNU";
+  const when = formatDateTimeFR(nowTs);
 
-  audit("SAV_ACCEPTED", data.symptom);
-
-  const seller = state.currentUser?.name || "—";
-  const now = formatDateTimeFR(Date.now());
-
-  state.sav.lastSavSheet = {
+  const savSheet = {
     ...data,
-    seller,
-    when: now
+    symptomLabel,
+    vendor,
+    when,
+    decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
+    reasons: dec.reasons
   };
+
+  state.sav.lastSavSheet = savSheet;
+  audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
   saveState();
 
-  const html = `
-<!doctype html><html><head><meta charset="utf-8"/>
+  // Print A4
+  printSavSheet(savSheet);
+
+  closeSavModal();
+}
+
+function printSavSheet(s){
+  audit("PRINT_SAV_SHEET", s.decision);
+
+  const yesNo = v => (v==="yes" ? "Oui" : "Non");
+  const reasonsHtml = (s.reasons||[]).length
+    ? `<ul>${s.reasons.map(r=>`<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+    : `<p>Aucune.</p>`;
+
+  const badgeColor = (s.decision === "SAV RECEVABLE") ? "#16a34a" : "#dc2626";
+
+  const html =
+`<!doctype html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Fiche SAV STOOM</title>
 <style>
-body{font-family:Arial, sans-serif; padding:24px; color:#0b1220}
-h1{margin:0 0 6px; font-size:18px}
-.sub{color:#334155; margin:0 0 16px; font-size:12px}
-.card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
-.hr{height:1px;background:#e2e8f0;margin:12px 0}
-.bad{color:#b91c1c;font-weight:700}
-.good{color:#15803d;font-weight:700}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-</style>
-</head><body>
+  body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
+  h1{margin:0 0 6px; font-size:18px}
+  .sub{color:#334155; margin:0 0 16px; font-size:12px}
+  .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .col{flex:1; min-width:220px}
+  .k{color:#334155; font-size:12px; margin:0}
+  .v{font-size:13px; margin:6px 0 0}
+  .badge{display:inline-block; padding:8px 12px; border-radius:999px; color:white; font-weight:700; font-size:12px; background:${badgeColor}}
+  .muted{color:#475569; font-size:12px; line-height:1.45}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  .hr{height:1px; background:#e2e8f0; margin:12px 0}
+  ul{margin:8px 0 0; padding-left:18px}
+</style></head><body>
 
-<h1>STOOM • FICHE SAV</h1>
-<p class="sub">Traitée le ${escapeHtml(now)} • Vendeur : ${escapeHtml(seller)}</p>
+<h1>${escapeHtml(state.settings.shopName)} • FICHE SAV</h1>
+<p class="sub">Pris en charge par <b>${escapeHtml(s.vendor)}</b> • ${escapeHtml(s.when)}</p>
 
 <div class="card">
-<b>Client :</b> ${escapeHtml(data.clientName)}<br/>
-<b>Date d’achat :</b> ${escapeHtml(data.purchaseDate)}<br/>
-<b>Référence produit :</b> ${escapeHtml(data.productRef)}<br/>
-<b>Symptôme :</b> ${escapeHtml(data.symptomLabel)}
+  <span class="badge">${escapeHtml(s.decision)}</span>
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="k">Client</p>
+      <p class="v"><b>${escapeHtml(s.clientName || "—")}</b></p>
+    </div>
+    <div class="col">
+      <p class="k">Date d’achat</p>
+      <p class="v">${escapeHtml(s.purchaseDate || "—")}</p>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col"><p class="k">Symptôme</p><p class="v">${escapeHtml(s.symptomLabel)}</p></div>
+    <div class="col"><p class="k">Problème constaté</p><p class="v">${escapeHtml(s.problem || "—")}</p></div>
+  </div>
 </div>
 
 <div class="card">
-<b>État du produit</b><br/>
-Bon état : ${data.goodState}<br/>
-Port de charge intact : ${data.portOk}<br/>
-Boîte présente : ${data.boxPresent}<br/>
-Câble présent : ${data.cablePresent}
-${data.symptom==="autofire" ? `<div class="hr"/><b>Autofire :</b><br/>Liquide dans capteur : ${data.liquidInSensor}<br/>${escapeHtml(data.autofireNote)}` : ""}
+  <h2 style="font-size:14px; margin:0 0 8px">Vérifications garantie</h2>
+  <div class="row">
+    <div class="col"><p class="k">Bon état (pas de chute)</p><p class="v">${escapeHtml(yesNo(s.goodState))}</p></div>
+    <div class="col"><p class="k">Port de charge intact</p><p class="v">${escapeHtml(yesNo(s.portOk))}</p></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="col"><p class="k">Boîte présente</p><p class="v">${escapeHtml(yesNo(s.boxPresent))}</p></div>
+    <div class="col"><p class="k">Câble de charge présent</p><p class="v">${escapeHtml(yesNo(s.cablePresent))}</p></div>
+  </div>
 </div>
 
 <div class="card">
-<b>Problème constaté</b><br/>
-<p>${escapeHtml(data.problemText)}</p>
+  <h2 style="font-size:14px; margin:0 0 8px">Raisons / Justification</h2>
+  <p class="muted">Si un élément requis est manquant ou non conforme : <b>prise en garantie impossible</b>.</p>
+  ${reasonsHtml}
+  <div class="hr"></div>
+  <p class="muted mono">Signature vendeur : _____________________</p>
+  <p class="muted mono">Signature client : ______________________</p>
 </div>
 
-<div class="card">
-<span class="good">PRISE EN GARANTIE ACCEPTÉE</span>
-</div>
-
-</body></html>
-`;
+</body></html>`;
 
   const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée."); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
   w.print();
-  closeSavModal();
 }
 
-/* ---------- Home helpers ---------- */
-function refreshSidebarMini(){
-  $("#today").textContent = formatDateFR(new Date());
-  $("#userMini").textContent = state.currentUser?.name || "—";
-  $("#roleMini").textContent = state.currentUser?.role || "—";
-  $("#sheetMini").textContent = state.client.sheet ? "Client" : (state.sav.lastSavSheet ? "SAV" : "—");
-}
-function refreshHomeLastSheet(){
-  const box = $("#lastSheetBox");
-  if(state.client.sheet){
-    box.innerHTML = `<h3>Fiche client disponible</h3><p class="muted">Tu peux la ré-imprimer.</p>`;
-  } else {
-    box.innerHTML = `<h3>—</h3><p class="muted">Aucune fiche pour le moment.</p>`;
-  }
-}
 function reprintLastSav(){
+  if(!requireAuth()) return;
   if(!state.sav.lastSavSheet){
-    toast("SAV", "Aucune fiche SAV.");
+    toast("SAV", "Aucune fiche SAV récente.");
     return;
   }
-  const s = state.sav.lastSavSheet;
-  audit("SAV_REPRINT", s.productRef);
-  alert("La fiche SAV sera réimprimée via l’historique (fonctionnel en V3).");
+  printSavSheet(state.sav.lastSavSheet);
 }
 
 /* ---------- Notes ---------- */
+function maskPhone(p){
+  if(!p) return "";
+  const s = String(p).replace(/\s+/g,"");
+  if(s.length <= 4) return "••••";
+  return "••••••" + s.slice(-2);
+}
+function toggleMaskPhones(){
+  if(!isManager()){ toast("Accès", "Réservé responsable."); return; }
+  state.settings.maskPhones = !state.settings.maskPhones;
+  audit("TOGGLE_MASK_PHONES", String(state.settings.maskPhones));
+  saveState();
+  renderNotes();
+}
 function saveNote(){
   if(!requireAuth()) return;
   const name = ($("#noteName").value||"").trim();
   const phone = ($("#notePhone").value||"").trim();
   const text = ($("#noteText").value||"").trim();
-  if(!name || !text){
-    toast("Note", "Nom et note requis.");
-    return;
-  }
-  state.notes.unshift({
-    id: Date.now(),
-    name,
-    phone,
-    text,
-    who: state.currentUser.name,
-    ts: Date.now()
-  });
-  audit("NOTE_SAVE", name);
+  if(!name && !phone && !text){ toast("Note", "Rien à enregistrer."); return; }
+
+  const id = (crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2));
+  state.notes.push({ id, name, phone, text, createdAt: Date.now(), createdBy: state.currentUser?.name || "INCONNU" });
+  audit("NOTE_ADD", `${name} ${phone}`.trim());
   saveState();
-  renderNotes();
   clearNoteForm();
+  renderNotes();
+  toast("OK", "Note enregistrée.");
 }
 function clearNoteForm(){
-  $("#noteName").value="";
-  $("#notePhone").value="";
-  $("#noteText").value="";
+  $("#noteName").value = "";
+  $("#notePhone").value = "";
+  $("#noteText").value = "";
+}
+function deleteNote(id){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_NOTE_DELETE", id);
+    return;
+  }
+  state.notes = state.notes.filter(n=>n.id!==id);
+  audit("NOTE_DELETE", id);
+  saveState();
+  renderNotes();
 }
 function renderNotes(){
   const list = $("#notesList");
-  const f = ($("#noteFilter")?.value||"").toLowerCase();
-  list.innerHTML="";
-  state.notes
-    .filter(n=> !f || `${n.name} ${n.text} ${n.phone}`.toLowerCase().includes(f))
-    .forEach(n=>{
-      const d = document.createElement("div");
-      d.className="item";
-      d.innerHTML=`
+  const filter = ($("#noteFilter").value||"").toLowerCase().trim();
+  const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
+    if(!filter) return true;
+    return (n.name||"").toLowerCase().includes(filter)
+      || (n.phone||"").toLowerCase().includes(filter)
+      || (n.text||"").toLowerCase().includes(filter)
+      || (n.createdBy||"").toLowerCase().includes(filter);
+  });
+
+  if(items.length === 0){
+    list.innerHTML = `<p class="muted">Aucune note.</p>`;
+    return;
+  }
+
+  list.innerHTML = items.map(n=>{
+    const d = formatDateTimeFR(n.createdAt);
+    const phoneShown = state.settings.maskPhones ? maskPhone(n.phone) : (n.phone||"");
+    return `
+      <div class="item">
         <div class="top">
-          <strong>${escapeHtml(n.name)}</strong>
-          <span>${escapeHtml(formatDateTimeFR(n.ts))}</span>
+          <div>
+            <strong>${escapeHtml(n.name||"Sans nom")}</strong>
+            <div class="small">Par ${escapeHtml(n.createdBy||"—")} • ${escapeHtml(d)}</div>
+          </div>
+          <div><span>${escapeHtml(phoneShown)}</span></div>
         </div>
-        <p>${escapeHtml(n.text)}</p>
-        <p class="small mono">par ${escapeHtml(n.who)}</p>
-      `;
-      list.appendChild(d);
-    });
+        <p>${escapeHtml(n.text||"")}</p>
+        <div class="btnrow" style="margin-top:10px">
+          ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* ---------- Calculators ---------- */
+function fillExample(){
+  $("#cigsPerDay").value = 20;
+  $("#days").value = 30;
+  $("#mlPerDayAt20").value = 4;
+  $("#price10ml").value = 5.9;
+  audit("CALC_FILL_EXAMPLE", "");
+  toast("Exemple", "Valeurs remplies.");
+}
+function calcBottles(){
+  const cigs = Number($("#cigsPerDay").value||0);
+  const days = Number($("#days").value||0);
+  const mlAt20 = Number($("#mlPerDayAt20").value||4);
+  const price = Number($("#price10ml").value||0);
+  if(days <= 0){ toast("Erreur", "Durée invalide."); return; }
+
+  const mlPerDay = (cigs/20) * mlAt20;
+  const totalMl = mlPerDay * days;
+  const bottles = totalMl / 10;
+  const bottlesCeil = Math.max(0, Math.ceil(bottles));
+  const bottlesRound = Math.max(0, Math.round(bottles*10)/10);
+  let cost = null;
+  if(price>0) cost = bottlesCeil * price;
+
+  const offerText = (bottlesCeil >= 15) ? "Astuce : 15+2 offert (si applicable)." :
+                    (bottlesCeil >= 10) ? "Astuce : 10+1 offert (si applicable)." :
+                    "Astuce : prévoir 1 flacon de sécurité.";
+
+  $("#bottleResult").innerHTML = `
+    <h3>Résultat (estimation)</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>ml/j</b> ${mlPerDay.toFixed(1)}</span>
+      <span class="chip"><b>Total</b> ${totalMl.toFixed(0)} ml</span>
+      <span class="chip"><b>Flacons</b> ~${bottlesRound}</span>
+      <span class="chip"><b>À prévoir</b> ${bottlesCeil}</span>
+    </div>
+    <p class="muted">${offerText}</p>
+    ${cost !== null ? `<p class="muted"><b>Budget :</b> ~${cost.toFixed(2)} €</p>` : ``}
+  `;
+  audit("CALC_BOTTLES", `cigs=${cigs},days=${days},mlAt20=${mlAt20}`);
+}
+function calcSavings(){
+  const packPrice = Number($("#packPrice").value||0);
+  const packsPerDay = Number($("#packsPerDay").value||0);
+  const vapeMonthly = Number($("#vapeMonthly").value||0);
+  const months = Number($("#months").value||0);
+  if(months <= 0){ toast("Erreur", "Durée invalide."); return; }
+  const tobaccoMonthly = packPrice * packsPerDay * 30;
+  const tobaccoTotal = tobaccoMonthly * months;
+  const vapeTotal = vapeMonthly * months;
+  const save = tobaccoTotal - vapeTotal;
+
+  $("#savingsResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tabac/mois</b> ${tobaccoMonthly.toFixed(2)} €</span>
+      <span class="chip"><b>Tabac</b> ${tobaccoTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
+    </div>
+  `;
+  audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
+}
+
+/* ---------- Manager: Rules editor ---------- */
+function refreshRulesSummary(){
+  const r = state.rules?.byCigs || {};
+  const parts = [];
+  for(const k of ["5-10","10-15","15-20","25+"]){
+    const x = r[k];
+    if(!x) continue;
+    parts.push(`${k}: ${x.nicotine} • ${x.tirage} • ${x.power}`);
+  }
+  $("#rulesSummary").textContent = parts.length ? parts.join(" | ") : "—";
+}
+function renderRulesEditor(){
+  if(!isManager()) return;
+  const wrap = $("#rulesEditor");
+  const r = state.rules.byCigs;
+
+  const row = (key, label) => {
+    const x = r[key];
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${label}</strong>
+          <span>${key}</span>
+        </div>
+        <div class="hr"></div>
+        <div class="two">
+          <div><label>Nicotine</label><input data-rule="${key}" data-field="nicotine" type="text" value="${escapeHtml(x.nicotine||"")}" /></div>
+          <div><label>Tirage</label><input data-rule="${key}" data-field="tirage" type="text" value="${escapeHtml(x.tirage||"")}" /></div>
+        </div>
+        <div class="two" style="margin-top:10px">
+          <div><label>Puissance</label><input data-rule="${key}" data-field="power" type="text" value="${escapeHtml(x.power||"")}" /></div>
+          <div><label>Matériel</label><input data-rule="${key}" data-field="hardware" type="text" value="${escapeHtml(x.hardware||"")}" /></div>
+        </div>
+      </div>
+    `;
+  };
+
+  wrap.innerHTML = [
+    row("5-10", "Profil 5–10 cig/j"),
+    row("10-15","Profil 10–15 cig/j"),
+    row("15-20","Profil 15–20 cig/j"),
+    row("25+","Profil 25+ cig/j"),
+  ].join("");
+}
+function saveRulesFromUI(){
+  if(!isManager()) return;
+  const inputs = $all("#rulesEditor input[data-rule]");
+  inputs.forEach(inp=>{
+    const key = inp.getAttribute("data-rule");
+    const field = inp.getAttribute("data-field");
+    if(!state.rules.byCigs[key]) state.rules.byCigs[key] = {};
+    state.rules.byCigs[key][field] = (inp.value||"").trim();
+  });
+  audit("RULES_SAVE", "");
+  saveState();
+  toast("Règles", "Enregistrées.");
+}
+function resetRules(){
+  if(!isManager()) return;
+  if(!confirm("Réinitialiser les règles par défaut ?")) return;
+  state.rules = structuredClone(DEFAULT_STATE.rules);
+  audit("RULES_RESET", "");
+  saveState();
+  renderRulesEditor();
+  toast("Règles", "Réinitialisées.");
+}
+
+/* ---------- Manager: Users ---------- */
+function slugifyName(name){
+  return (name||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"") || ("u"+Math.random().toString(16).slice(2,7));
+}
+function renderUsers(){
+  if(!isManager()) return;
+  const wrap = $("#usersList");
+  const users = state.users.slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'));
+  wrap.innerHTML = users.map(u=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(u.name)}</strong>
+          <span>${escapeHtml(u.role)}</span>
+        </div>
+        <p class="small mono">id=${escapeHtml(u.id)} • PIN=••••</p>
+        <div class="btnrow">
+          <button class="btn" onclick="openEditUser('${u.id}')">Modifier</button>
+          ${u.id === "arnaud" ? `<span class="small">Arnaud protégé</span>` : `<button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  $("#newUserName").addEventListener("input", ()=>{
+    $("#newUserId").value = slugifyName($("#newUserName").value);
+  }, { once:false });
+}
+function addUser(){
+  if(!isManager()) return;
+  const name = ($("#newUserName").value||"").trim();
+  const pin = ($("#newUserPin").value||"").trim();
+  const role = $("#newUserRole").value;
+  const id = slugifyName(name);
+
+  if(!name){ toast("User", "Nom requis."); return; }
+  if(!pin || pin.length < 4){ toast("User", "PIN 4 chiffres mini."); return; }
+  if(state.users.some(u=>u.id===id)){ toast("User", "ID existe déjà."); return; }
+
+  state.users.push({ id, name, pin, role });
+  audit("USER_ADD", `${id}:${role}`);
+  saveState();
+  $("#newUserName").value = "";
+  $("#newUserPin").value = "";
+  $("#newUserId").value = "";
+  renderUsers();
+  toast("OK", "Utilisateur ajouté.");
+}
+function removeUser(id){
+  if(!isManager()) return;
+  if(!confirm("Supprimer cet utilisateur ?")) return;
+  state.users = state.users.filter(u=>u.id!==id);
+  audit("USER_REMOVE", id);
+  saveState();
+  renderUsers();
+}
+function openEditUser(id){
+  const u = state.users.find(x=>x.id===id);
+  if(!u) return;
+
+  const name = prompt("Nom", u.name);
+  if(name === null) return;
+  const role = prompt("Rôle (seller/manager)", u.role);
+  if(role === null) return;
+  const pin = prompt("Nouveau PIN (laisser vide pour ne pas changer)", "");
+  if(pin === null) return;
+
+  u.name = name.trim() || u.name;
+  u.role = (role.trim()==="manager") ? "manager" : "seller";
+  if(pin.trim()){
+    if(pin.trim().length < 4){ toast("PIN", "4 chiffres mini."); return; }
+    u.pin = pin.trim();
+  }
+
+  if(state.currentUser?.id === u.id){
+    state.currentUser.name = u.name;
+    state.currentUser.role = u.role;
+  }
+  audit("USER_EDIT", `${u.id}:${u.role}`);
+  saveState();
+  renderUsers();
+  refreshAuthUI();
+}
+
+/* ---------- Audit peek + full (manager only) ---------- */
+function renderAuditPeek(){
+  const box = $("#auditPeek");
+  const last = state.audit.slice(-5).reverse();
+  if(last.length === 0){
+    box.innerHTML = `<div class="small">Aucune action enregistrée.</div>`;
+    return;
+  }
+  box.innerHTML = last.map(e=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(e.who)} • ${escapeHtml(e.action)}</strong>
+          <span>${escapeHtml(formatDateTimeFR(e.ts))}</span>
+        </div>
+        <p>${escapeHtml(e.detail||"")}</p>
+      </div>
+    `;
+  }).join("");
+}
+function renderAudit(){
+  if(!isManager()) return;
+  const filter = ($("#auditFilter").value||"").toLowerCase().trim();
+  const limit = Number($("#auditLimit").value||200);
+
+  let rows = state.audit.slice().reverse();
+  if(filter){
+    rows = rows.filter(e =>
+      (e.who||"").toLowerCase().includes(filter) ||
+      (e.action||"").toLowerCase().includes(filter) ||
+      (e.detail||"").toLowerCase().includes(filter)
+    );
+  }
+  rows = rows.slice(0, limit);
+
+  const box = $("#auditList");
+  if(rows.length === 0){
+    box.innerHTML = `<div class="small">Aucune ligne.</div>`;
+    return;
+  }
+  box.innerHTML = rows.map(e=>{
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(e.who)} <span class="small">(${escapeHtml(e.role)})</span> • ${escapeHtml(e.action)}</strong>
+          <span>${escapeHtml(formatDateTimeFR(e.ts))}</span>
+        </div>
+        <p>${escapeHtml(e.detail||"")}</p>
+      </div>
+    `;
+  }).join("");
+}
+function exportAuditJSON(){
+  if(!isManager()) return;
+  const payload = { exportedAt: new Date().toISOString(), audit: state.audit };
+  download(`stoom-audit-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2));
+  audit("AUDIT_EXPORT_JSON", "");
+}
+function exportAuditCSV(){
+  if(!isManager()) return;
+  const header = ["timestamp","date","who","role","action","detail"];
+  const lines = [header.join(",")];
+  for(const e of state.audit){
+    const row = [
+      e.ts,
+      `"${formatDateTimeFR(e.ts).replace(/"/g,'""')}"`,
+      `"${String(e.who||"").replace(/"/g,'""')}"`,
+      `"${String(e.role||"").replace(/"/g,'""')}"`,
+      `"${String(e.action||"").replace(/"/g,'""')}"`,
+      `"${String(e.detail||"").replace(/"/g,'""')}"`,
+    ];
+    lines.push(row.join(","));
+  }
+  download(`stoom-audit-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("AUDIT_EXPORT_CSV", "");
+}
+function clearAudit(){
+  if(!isManager()) return;
+  if(!confirm("Vider le journal d’audit ?")) return;
+  state.audit = [];
+  audit("AUDIT_CLEARED", "");
+  saveState();
+  renderAudit();
+}
+
+/* ---------- Sidebar mini + home last sheet ---------- */
+function refreshSidebarMini(){
+  $("#today").textContent = formatDateFR(new Date());
+  $("#userMini").textContent = state.currentUser?.name || "—";
+  $("#roleMini").textContent = state.currentUser ? (isManager() ? "Responsable" : "Vendeur") : "—";
+  $("#sheetMini").textContent = state.client.sheet ? "OK" : "—";
+}
+function refreshHomeLastSheet(){
+  const box = $("#lastSheetBox");
+  if(!state.client.sheet){
+    box.innerHTML = `<h3>—</h3><p class="muted">Aucune fiche pour le moment.</p><div class="btnrow"><button class="btn" onclick="go('client')">Créer une fiche</button></div>`;
+    return;
+  }
+  const sh = state.client.sheet;
+  box.innerHTML = `
+    <h3>${escapeHtml(sh.title)}</h3>
+    <p class="muted">${escapeHtml(sh.tirage)} • ${escapeHtml(sh.nicotine)} • ${escapeHtml(sh.hardware)}</p>
+    <div class="btnrow">
+      <button class="btn primary" onclick="go('client')">Voir</button>
+      <button class="btn" onclick="printSheet()">Imprimer</button>
+    </div>
+  `;
+}
+
+/* ---------- Keyboard shortcuts ---------- */
+function bindKeys(){
+  window.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape"){
+      $("#authModal").classList.remove("show");
+      $("#importModal").classList.remove("show");
+      $("#savModal").classList.remove("show");
+      return;
+    }
+    if(e.key === "/" && !e.metaKey && !e.ctrlKey){
+      e.preventDefault();
+      $("#searchInput").focus();
+      return;
+    }
+    const tag = (document.activeElement?.tagName || "").toLowerCase();
+    const typing = ["input","textarea","select"].includes(tag);
+    if(typing) return;
+
+    const k = e.key.toLowerCase();
+    if(k==="h") go("home");
+    if(k==="c") go("client");
+    if(k==="s") go("sav");
+    if(k==="k") go("calc");
+    if(k==="n") go("notes");
+    if(k==="a") isManager() ? go("manager") : null;
+
+    if((e.ctrlKey || e.metaKey) && k==="p"){
+      e.preventDefault();
+      printSheet();
+    }
+  });
+}
+
+/* ---------- Bind buttons ---------- */
+function bindButtons(){
+  $("#authBtn").addEventListener("click", ()=> openAuthModal(false));
+  $("#logoutBtn").addEventListener("click", logout);
+
+  $("#quickNew").addEventListener("click", ()=>{
+    if(!requireAuth()) return;
+    clientReset();
+    go("client");
+  });
+
+  $("#searchInput").addEventListener("keydown", (e)=>{
+    if(e.key === "Enter") runSearch(e.target.value);
+  });
+
+  $("#noteFilter").addEventListener("input", renderNotes);
+
+  $("#printBtn").addEventListener("click", printSheet);
+
+  $("#exportStateBtn").addEventListener("click", exportFullState);
+  $("#importStateBtn").addEventListener("click", openImportModal);
+  $("#resetBtn").addEventListener("click", clearAll);
+
+  $("#savVendorProblem").addEventListener("input", ()=>{
+    state.sav.vendorProblem = ($("#savVendorProblem").value||"").trim();
+    saveState();
+  });
+
+  $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
+  $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
+  $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
 }
 
 /* ---------- Init ---------- */
 function init(){
-  bindNav();
-  $("#authBtn").onclick = ()=> openAuthModal(true);
-  $("#logoutBtn").onclick = logout;
-  $("#printBtn").onclick = printSheet;
-  $("#exportStateBtn").onclick = exportFullState;
-  $("#importStateBtn").onclick = openImportModal;
-  $("#resetBtn").onclick = clearAll;
-  $("#searchInput").addEventListener("keydown", e=>{
-    if(e.key==="Enter") runSearch(e.target.value);
-  });
-  document.addEventListener("keydown", e=>{
-    if(e.key==="/"){ e.preventDefault(); $("#searchInput").focus(); }
-    if(e.key==="Escape") $(".modal.show")?.classList.remove("show");
-  });
-
+  refreshSidebarMini();
   refreshAuthUI();
-  go(state.view || "home");
+  refreshRulesSummary();
+  renderAuditPeek();
+  bindNav();
+  bindButtons();
+  bindKeys();
+
+  $all(".view").forEach(v=> v.style.display="none");
+  $("#view-home").style.display = "block";
+
+  if(!state.currentUser) openAuthModal(true);
 }
 init();
 </script>
-
 </body>
-</html>
+  </html>
