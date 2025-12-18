@@ -1654,32 +1654,126 @@ function printSheet(){
 
 /* ---------- SAV ---------- */
 const savMap = [
-  { id:"fuite", t:"Fuite", s:"liquide partout / glouglou",
-    causes:["Résistance en fin de vie ou mal amorcée","Airflow trop ouvert + aspiration trop forte","Liquide trop fluide / chaleur","Cartouche/joint usé"],
-    actions:["Changer résistance + amorcer (attendre 5–10 min)","Baisser puissance / fermer un peu l’airflow","Nettoyer, vérifier joints, resserrer correctement","Si persiste : tester autre cartouche / autre liquide"],
-    tip:"Règle d’or : 1 changement à la fois."
+  {
+    id:"fuite",
+    t:"Fuite",
+    s:"liquide / glouglou",
+    causes:[
+      "Résistance en fin de vie ou mal amorcée",
+      "Airflow trop ouvert + aspiration trop forte",
+      "Liquide trop fluide / chaleur",
+      "Joint ou cartouche usé"
+    ],
+    actions:[
+      "Changer résistance + amorcer (5–10 min)",
+      "Réduire airflow / aspiration",
+      "Nettoyer et vérifier joints",
+      "Tester autre cartouche"
+    ],
+    tip:"Toujours 1 changement à la fois.",
+    autoRefuse:false
   },
-  { id:"goutBrule", t:"Goût brûlé", s:"dry hit / brûlé",
-    causes:["Résistance cramée ou mal imbibée","Puissance trop haute","Chaînes de bouffées"],
-    actions:["Changer résistance + amorçage","Baisser la puissance (W)","Faire des pauses"],
-    tip:"Si brûlé permanent : résistance à remplacer."
+
+  {
+    id:"goutBrule",
+    t:"Goût brûlé",
+    s:"dry hit",
+    causes:[
+      "Résistance cramée",
+      "Puissance trop élevée",
+      "Chaîne de bouffées"
+    ],
+    actions:[
+      "Changer résistance",
+      "Baisser la puissance",
+      "Espacer les bouffées"
+    ],
+    tip:"Résistance brûlée = non garantie.",
+    autoRefuse:false
   },
-  { id:"toux", t:"Toux / gorge irritée", s:"inconfort, hit trop fort",
-    causes:["Taux nicotine trop élevé pour le matériel","Puissance trop haute / tirage trop aérien","Liquide/arôme agressif"],
-    actions:["Adapter matériel au taux (MTL + puissance basse)","Ou baisser progressivement le taux si client veut plus puissant","Tester un liquide plus doux"],
-    tip:"Objectif : confort → sinon abandon → rechute."
+
+  {
+    id:"chipset",
+    t:"Chipset HS",
+    s:"ne répond plus / bug",
+    causes:[
+      "Court-circuit",
+      "Surtension",
+      "Défaut électronique"
+    ],
+    actions:[
+      "Test avec autre cartouche",
+      "Redémarrage",
+      "Diagnostic SAV"
+    ],
+    tip:"Garantie possible si aucun signe de liquide.",
+    autoRefuse:false
   },
-  { id:"pasDeVapeur", t:"Pas de vapeur", s:"ne s’allume pas / rien",
-    causes:["Batterie vide / mauvais contact","Cartouche mal enclenchée","Défaut résistance"],
-    actions:["Charger / vérifier câble / nettoyer contacts","Retirer-remettre la cartouche","Tester une autre résistance/cartouche"],
-    tip:"Toujours commencer par contacts + charge."
+
+  {
+    id:"bouton",
+    t:"Bouton HS",
+    s:"ne clique plus / reste bloqué",
+    causes:[
+      "Usure mécanique",
+      "Liquide infiltré"
+    ],
+    actions:[
+      "Inspection bouton",
+      "Test fonctionnel"
+    ],
+    tip:"Liquide visible = refus garantie.",
+    autoRefuse:false
   },
-  { id:"glouglou", t:"Glouglou", s:"bruit / remontées",
-    causes:["Condensation / noyade","Aspiration trop forte","Résistance noyée"],
-    actions:["Souffler doucement (papier dessous)","Nettoyer cheminée / base","Réduire aspiration / fermer airflow"],
-    tip:"Glouglou = trop de liquide dans la cheminée."
+
+  {
+    id:"ecran",
+    t:"Écran HS",
+    s:"noir / figé",
+    causes:[
+      "Choc",
+      "Défaut électronique",
+      "Humidité"
+    ],
+    actions:[
+      "Vérification chocs",
+      "Diagnostic visuel"
+    ],
+    tip:"Trace de choc = refus.",
+    autoRefuse:false
   },
+
+  {
+    id:"autofire",
+    t:"AUTOFIRE",
+    s:"déclenche seul",
+    causes:[
+      "Liquide dans le chipset",
+      "Capteur aspiration noyé"
+    ],
+    actions:[
+      "Aucune réparation possible"
+    ],
+    tip:"AUTOFIRE = refus automatique.",
+    autoRefuse:true
+  },
+
+  {
+    id:"liquideAspire",
+    t:"Liquide aspiré",
+    s:"liquide dans l’électronique",
+    causes:[
+      "Aspiration trop forte",
+      "Condensation excessive"
+    ],
+    actions:[
+      "Aucune"
+    ],
+    tip:"Liquide aspiré = exclusion de garantie.",
+    autoRefuse:true
+  }
 ];
+
 
 function clearSavProblem(){
   $("#savVendorProblem").value = "";
