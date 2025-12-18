@@ -1887,8 +1887,7 @@ function previewSavEligibility(){
     productRef: ($("#savProductRef").value||"").trim(),
     goodState: $("#savGoodState").value,
     portOk: $("#savPortOk").value,
-    boxPresent: $("#savBoxPresent").
-boxPresent: $("#savBoxPresent").value,
+    boxPresent: $("#savBoxPresent").value,
     cablePresent: $("#savCablePresent").value,
     liquidInSensor: $("#savLiquidInSensor") ? $("#savLiquidInSensor").value : "no",
     symptom: state.sav.symptom
@@ -1908,6 +1907,7 @@ boxPresent: $("#savBoxPresent").value,
     `;
   }
 }
+
 
 function validateSavAndPrint(){
   if(!requireAuth()) return;
