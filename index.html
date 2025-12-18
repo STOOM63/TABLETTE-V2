@@ -1873,7 +1873,7 @@ function closeSavModal(){ $("#savModal").classList.remove("show"); }
 function computeSavDecision(data){
   const reasons = [];
 
-  if(!data.clientName) reasons.push("Nom/prénom client manquant");
+  if(!data.clientName) reasons.push("Nom / prénom client manquant");
   if(!data.purchaseDate) reasons.push("Date d’achat manquante");
   if(!data.productRef) reasons.push("Référence produit manquante");
   if(!data.productColor) reasons.push("Couleur du produit manquante");
@@ -1881,18 +1881,18 @@ function computeSavDecision(data){
   if(data.goodState !== "yes") reasons.push("Produit non en bon état");
   if(data.portOk !== "yes") reasons.push("Port de charge non intact");
   if(data.boxPresent !== "yes") reasons.push("Boîte absente");
-  if(data.cablePresent !== "yes") reasons.push("Câble absent");
+  if(data.cablePresent !== "yes") reasons.push("Câble de charge absent");
 
   const symptom = savMap.find(s => s.id === data.symptom);
   if(symptom?.autoRefuse){
     reasons.push("Symptôme exclu de garantie (liquide / autofire)");
   }
 
-  const ok = reasons.length === 0;
-  return { ok, reasons };
+  return {
+    ok: reasons.length === 0,
+    reasons
+  };
 }
-
-
 
 const data = {
   clientName: ($("#savClientName").value||"").trim(),
@@ -1918,20 +1918,21 @@ const data = {
 
 function validateSavAndPrint(){
   if(!requireAuth()) return;
+
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
     purchaseDate: $("#savPurchaseDate").value,
-     productRef: ($("#savProductRef").value||"").trim(),
-productColor: ($("#savProductColor").value||"").trim(),
-scratchCode: ($("#savScratchCode").value||"").trim()
+    productRef: ($("#savProductRef").value||"").trim(),
+    productColor: ($("#savProductColor").value||"").trim(),
+    scratchCode: ($("#savScratchCode").value||"").trim(),
     goodState: $("#savGoodState").value,
     portOk: $("#savPortOk").value,
     boxPresent: $("#savBoxPresent").value,
     cablePresent: $("#savCablePresent").value,
     problem: ($("#savProblemText").value||"").trim(),
     symptom: state.sav.symptom
-    productRef: ($("#savProductRef").value||"").trim(),
- };
+  };
+
   const dec = computeSavDecision(data);
   const nowTs = Date.now();
 
@@ -1947,6 +1948,47 @@ scratchCode: ($("#savScratchCode").value||"").trim()
     decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
     reasons: dec.reasons
   };
+
+  state.sav.lastSavSheet = savSheet;
+  audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
+  saveState();
+
+  if(dec.ok){
+    printSavSheet(savSheet);
+    closeSavModal();
+  } else {
+    $("#savDecisionBox").innerHTML =
+      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+  }
+}
+
+function previewSavEligibility(){
+  const data = {
+    clientName: ($("#savClientName").value||"").trim(),
+    purchaseDate: $("#savPurchaseDate").value,
+    productRef: ($("#savProductRef").value||"").trim(),
+    productColor: ($("#savProductColor").value||"").trim(),
+    scratchCode: ($("#savScratchCode").value||"").trim(),
+    goodState: $("#savGoodState").value,
+    portOk: $("#savPortOk").value,
+    boxPresent: $("#savBoxPresent").value,
+    cablePresent: $("#savCablePresent").value,
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
+  };
+
+  const dec = computeSavDecision(data);
+
+  if(dec.ok){
+    $("#savDecisionBox").innerHTML =
+      `<span class="goodText"><b>SAV RECEVABLE</b></span> – fiche imprimable autorisée ✅`;
+  } else {
+    $("#savDecisionBox").innerHTML =
+      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+  }
+}
 
   state.sav.lastSavSheet = savSheet;
   audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
