@@ -591,7 +591,7 @@
           <div class="pb">
             <div class="result" id="sheetBox">
               <h3>En attente…</h3>
-              <p class="muted">Réponds aux questions pour générer la fiche.</p>
+              Réponds aux questions pour générer la fiche.</p>
             </div>
 
             <div class="hr"></div>
@@ -622,13 +622,13 @@
           <div class="pb">
             <div class="q">
               <h3>Quel problème principal ?</h3>
-              <p class="muted">Choisis le symptôme dominant.</p>
+              Choisis le symptôme dominant.</p>
               <div class="choices cols3" id="savChoices"></div>
             </div>
 
             <div class="q" style="margin-top:12px">
               <h3>Problème constaté (par le vendeur)</h3>
-              <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
+              Ce texte sera repris automatiquement dans la fiche SAV.</p>
               <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
               <div class="btnrow" style="margin-top:10px">
                 <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
@@ -639,7 +639,7 @@
 
             <div class="q" id="savResult" style="margin-top:12px">
               <h3>En attente…</h3>
-              <p class="muted">Sélectionne un symptôme.</p>
+              Sélectionne un symptôme.</p>
             </div>
           </div>
         </section>
@@ -664,7 +664,7 @@
               </ul>
               <div class="hr"></div>
               <h3>Conclusion</h3>
-              <p class="muted">“On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
+              “On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
             </div>
           </div>
         </section>
@@ -718,7 +718,7 @@
               <div class="hr"></div>
               <div class="result" id="bottleResult">
                 <h3>Résultat</h3>
-                <p class="muted">Renseigne les champs puis “Calculer”.</p>
+                Renseigne les champs puis “Calculer”.</p>
               </div>
             </div>
           </div>
@@ -763,7 +763,7 @@
               <div class="hr"></div>
               <div class="result" id="savingsResult">
                 <h3>Résultat</h3>
-                <p class="muted">Renseigne puis “Calculer”.</p>
+                Renseigne puis “Calculer”.</p>
               </div>
             </div>
           </div>
@@ -847,7 +847,7 @@
           <div class="pb">
             <div class="q">
               <h3>Règles de recommandation</h3>
-              <p class="muted">Modifiable par responsable.</p>
+              Modifiable par responsable.</p>
               <div id="rulesEditor"></div>
               <div class="btnrow">
                 <button class="btn primary" onclick="saveRulesFromUI()">Enregistrer règles</button>
@@ -903,7 +903,7 @@
 
             <div class="q" style="margin-top:12px">
               <h3>Audit (journal d’utilisation)</h3>
-              <p class="muted">Filtrable + export.</p>
+              Filtrable + export.</p>
               <div class="two">
                 <div>
                   <label>Filtrer</label>
@@ -1786,7 +1786,7 @@ function previewSavEligibility(){
   };
   const dec = computeSavDecision(data);
   if(dec.ok){
-    $("#savDecisionBox").innerHTML = `<span class="goodText"><b>SAV RECEVABLE</b></span> ✅`;
+    $("#savDecisionBox").innerHTML = `<span class="goodText"><b>SAV RECEVABLE, Vous pouvez maintenant imprimer la fiche a joindre au produit</b></span> ✅`;
   } else {
     $("#savDecisionBox").innerHTML = `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
   }
