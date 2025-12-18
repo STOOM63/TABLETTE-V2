@@ -2005,6 +2005,14 @@ function printSavSheet(s){
     </div>
   </div>
 
+  <div class="card">
+  <b>Produit :</b><br>
+  <b>Référence :</b> ${escapeHtml(s.productRef || "—")}<br>
+  <b>Couleur :</b> ${escapeHtml(s.productColor || "—")}<br>
+  <b>Scratch code :</b> ${escapeHtml(s.scratchCode || "Non communiqué")}
+</div>
+
+
   <div class="hr"></div>
   <div class="row">
     <div class="col"><p class="k">Symptôme</p><p class="v">${escapeHtml(s.symptomLabel)}</p></div>
