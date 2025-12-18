@@ -1009,7 +1009,23 @@
           <label>Date d’achat</label>
           <input id="savPurchaseDate" type="date" />
         </div>
+        
       </div>
+<div class="two" style="margin-top:10px">
+  <div>
+    <label>Référence produit *</label>
+    <input id="savProductRef" type="text" placeholder="Ex: XROS-3 / Aegis Boost / Wenax..." />
+  </div>
+  <div>
+    <label>Couleur *</label>
+    <input id="savProductColor" type="text" placeholder="Ex: Noir, Silver, Gunmetal..." />
+  </div>
+</div>
+
+<div style="margin-top:10px">
+  <label>Scratch code (optionnel)</label>
+  <input id="savScratchCode" type="text" placeholder="Code d’authentification (si présent)" />
+</div>
 
       <div class="two" style="margin-top:10px">
         <div>
@@ -1859,13 +1875,15 @@ function computeSavDecision(data){
 
   if(!data.clientName) reasons.push("Nom/prénom client manquant");
   if(!data.purchaseDate) reasons.push("Date d’achat manquante");
+  if(!data.productRef) reasons.push("Référence produit manquante");
+  if(!data.productColor) reasons.push("Couleur du produit manquante");
+
   if(data.goodState !== "yes") reasons.push("Produit non en bon état");
   if(data.portOk !== "yes") reasons.push("Port de charge non intact");
   if(data.boxPresent !== "yes") reasons.push("Boîte absente");
   if(data.cablePresent !== "yes") reasons.push("Câble absent");
 
   const symptom = savMap.find(s => s.id === data.symptom);
-
   if(symptom?.autoRefuse){
     reasons.push("Symptôme exclu de garantie (liquide / autofire)");
   }
@@ -1875,17 +1893,21 @@ function computeSavDecision(data){
 }
 
 
-function previewSavEligibility(){
-  const data = {
-    clientName: ($("#savClientName").value||"").trim(),
-    purchaseDate: $("#savPurchaseDate").value,
-    goodState: $("#savGoodState").value,
-    portOk: $("#savPortOk").value,
-    boxPresent: $("#savBoxPresent").value,
-    cablePresent: $("#savCablePresent").value,
-    problem: ($("#savProblemText").value||"").trim(),
-    symptom: state.sav.symptom
-  };
+
+const data = {
+  clientName: ($("#savClientName").value||"").trim(),
+  purchaseDate: $("#savPurchaseDate").value,
+  productRef: ($("#savProductRef").value||"").trim(),
+  productColor: ($("#savProductColor").value||"").trim(),
+  scratchCode: ($("#savScratchCode").value||"").trim(),
+  goodState: $("#savGoodState").value,
+  portOk: $("#savPortOk").value,
+  boxPresent: $("#savBoxPresent").value,
+  cablePresent: $("#savCablePresent").value,
+  problem: ($("#savProblemText").value||"").trim(),
+  symptom: state.sav.symptom
+};
+
   const dec = computeSavDecision(data);
   if(dec.ok){
     $("#savDecisionBox").innerHTML = `<span class="goodText"><b>SAV RECEVABLE, Vous pouvez maintenant imprimer la fiche a joindre au produit</b></span> ✅`;
@@ -1899,13 +1921,17 @@ function validateSavAndPrint(){
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
     purchaseDate: $("#savPurchaseDate").value,
+     productRef: ($("#savProductRef").value||"").trim(),
+productColor: ($("#savProductColor").value||"").trim(),
+scratchCode: ($("#savScratchCode").value||"").trim()
     goodState: $("#savGoodState").value,
     portOk: $("#savPortOk").value,
     boxPresent: $("#savBoxPresent").value,
     cablePresent: $("#savCablePresent").value,
     problem: ($("#savProblemText").value||"").trim(),
     symptom: state.sav.symptom
-  };
+    productRef: ($("#savProductRef").value||"").trim(),
+ };
   const dec = computeSavDecision(data);
   const nowTs = Date.now();
 
