@@ -1872,7 +1872,7 @@ function renderSavResult(){
     r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme.</p>`;
     return;
   }
- r.innerHTML = `
+r.innerHTML = `
   <h3>✅ ${escapeHtml(it.t)}</h3>
   <p class="muted">${escapeHtml(it.tip)}</p>
 
@@ -1897,7 +1897,7 @@ function renderSavResult(){
   <div class="hr"></div>
 
   <div class="q">
-    <h3>🧾 Problème constaté par le vendeur</h3>
+    <h3>📝 Problème constaté par le vendeur</h3>
     <p class="muted">
       ${escapeHtml(state.sav.vendorProblem || "—")}
     </p>
