@@ -1845,14 +1845,19 @@ function renderSav(){
     const d = document.createElement("div");
     d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
     d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
-    d.onclick = ()=> {
-      state.sav.symptom = it.id;
-      audit("SAV_SYMPTOM", it.id);
-      saveState();
-      renderSavResult();
-      // auto-fill symptom label in modal
-      $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===it.id)?.t || it.id);
-    };
+  d.onclick = ()=> {
+  state.sav.symptom = it.id;
+  audit("SAV_SYMPTOM", it.id);
+
+  // ✅ met à jour le bouton sélectionné visuellement
+  $all("#savChoices .choice").forEach(x => x.classList.remove("selected"));
+  d.classList.add("selected");
+
+  saveState();
+  renderSavResult();
+
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===it.id)?.t || it.id);
+};
     box.appendChild(d);
   });
   $("#savVendorProblem").value = state.sav.vendorProblem || "";
