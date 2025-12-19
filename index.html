@@ -1872,26 +1872,38 @@ function renderSavResult(){
     r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme.</p>`;
     return;
   }
-  r.innerHTML = `
-    <h3>✅ ${escapeHtml(it.t)}</h3>
-    <p class="muted">${escapeHtml(it.tip)}</p>
-    <div class="hr"></div>
-    <div class="two">
-      <div>
-        <h3>Causes probables</h3>
-        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-          ${it.causes.map(c=>`<li>${escapeHtml(c)}</li>`).join("")}
-        </ul>
-      </div>
-      <div>
-        <h3>Actions recommandées</h3>
-        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-          ${it.actions.map(a=>`<li>${escapeHtml(a)}</li>`).join("")}
-        </ul>
-      </div>
+ r.innerHTML = `
+  <h3>✅ ${escapeHtml(it.t)}</h3>
+  <p class="muted">${escapeHtml(it.tip)}</p>
+
+  <div class="hr"></div>
+
+  <div class="two">
+    <div>
+      <h3>Causes probables</h3>
+      <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+        ${it.causes.map(c=>`<li>${escapeHtml(c)}</li>`).join("")}
+      </ul>
     </div>
-  `;
-}
+
+    <div>
+      <h3>Actions recommandées</h3>
+      <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+        ${it.actions.map(a=>`<li>${escapeHtml(a)}</li>`).join("")}
+      </ul>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+
+  <div class="q">
+    <h3>🧾 Problème constaté par le vendeur</h3>
+    <p class="muted">
+      ${escapeHtml(state.sav.vendorProblem || "—")}
+    </p>
+  </div>
+`;
+
 
 function openSavForm(){
   if(!requireAuth()) return;
