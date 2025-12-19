@@ -1897,16 +1897,24 @@ function openSavForm(){
     toast("SAV", "Choisis d’abord un symptôme.");
     return;
   }
-  // sync vendor problem
+
   state.sav.vendorProblem = ($("#savVendorProblem").value || "").trim();
   saveState();
 
+  // reset
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
+
+  // ✅ AJOUT : reset champs produit
+  $("#savProductRef").value = "";
+  $("#savProductColor").value = "";
+  $("#savScratchCode").value = "";
+
   $("#savGoodState").value = "yes";
   $("#savPortOk").value = "yes";
   $("#savBoxPresent").value = "yes";
   $("#savCablePresent").value = "yes";
+
   $("#savProblemText").value = state.sav.vendorProblem || "";
   $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
@@ -1914,6 +1922,7 @@ function openSavForm(){
   $("#savModal").classList.add("show");
   audit("SAV_OPEN_FORM", state.sav.symptom);
 }
+
 function closeSavModal(){ $("#savModal").classList.remove("show"); }
 
 function computeSavDecision(data){
