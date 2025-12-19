@@ -688,6 +688,23 @@ pour un usage interne uniquement.
               <h3>Conclusion</h3>
               “On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
             </div>
+            <div class="q" style="margin-top:12px">
+  <h3>Historique SAV</h3>
+  <p class="muted">Recherche + ré-impression. Suppression/Export : responsable.</p>
+
+  <label>Filtrer (produit, raison, opérateur...)</label>
+  <input id="savHistoryFilter" type="text" placeholder="Ex: XROS, fuite, Evan..." />
+
+  <div class="btnrow" style="margin-top:10px">
+    <button class="btn" onclick="renderSavHistory()">Appliquer</button>
+    <button class="btn primary" onclick="exportSavHistoryCSV()">Exporter CSV</button>
+    <button class="btn danger" onclick="clearSavHistory()">Vider historique</button>
+  </div>
+
+  <div class="hr"></div>
+  <div id="savHistoryList" class="list"></div>
+</div>
+
           </div>
         </section>
       </div>
@@ -1128,11 +1145,12 @@ const DEFAULT_STATE = {
   view: "home",
   audit: [],
   notes: [],
-  sav: {
-    symptom: null,
-    vendorProblem: "",
-    lastSavSheet: null
-  },
+ sav: {
+  symptom: null,
+  vendorProblem: "",
+  lastSavSheet: null,
+  history: []   // ✅ historique SAV
+},
   client: {
     step: 0,
     answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
@@ -1947,8 +1965,22 @@ function validateSavAndPrint(){
   };
 
   state.sav.lastSavSheet = savSheet;
+  // ✅ Ajout historique UNIQUEMENT si SAV recevalble + imprimé
+if (dec.ok) {
+  state.sav.history = state.sav.history || [];
+  state.sav.history.push(savSheet);
+  if (state.sav.history.length > 800) state.sav.history.shift(); // limite sécurité
+}
   audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
   saveState();
+  if(dec.ok){
+  printSavSheet(savSheet);
+  closeSavModal();
+  renderSavHistory(); // ✅ refresh liste
+} else {
+  ...
+}
+
 
   if(dec.ok){
     printSavSheet(savSheet);
@@ -2088,6 +2120,13 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
+  function renderSavHistory(){
+  const box = $("#savHistoryList");
+  if(!box) return;
+
+  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+ 
+
 
 /* ---------- Notes ---------- */
 function maskPhone(p){
