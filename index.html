@@ -1996,12 +1996,12 @@ if (state.sav.history.length > 800) state.sav.history.shift();
     printSavSheet(savSheet);
     closeSavModal();
     renderSavHistory(); // refresh liste
-  } else {
-    $("#savDecisionBox").innerHTML =
-      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
-       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
-  }
+ } else {
+  $("#savDecisionBox").innerHTML =
+    `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+     Raisons : ${dec.reasons.map(r => escapeHtml(r)).join(" • ")}`;
 }
+
 
 function previewSavEligibility(){
   const data = {
