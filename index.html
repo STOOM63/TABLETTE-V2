@@ -1983,10 +1983,9 @@ function validateSavAndPrint(){
   state.sav.lastSavSheet = savSheet;
 
   // ✅ Historique uniquement si recevable
-  if(dec.ok){
-    state.sav.history = state.sav.history || [];
-    state.sav.history.push(savSheet);
-    if(state.sav.history.length > 800) state.sav.history.shift();
+  state.sav.history = state.sav.history || [];
+state.sav.history.push(savSheet);
+if (state.sav.history.length > 800) state.sav.history.shift();
   }
 
   audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
