@@ -2134,71 +2134,42 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
-  function renderSavHistory(){
+ function renderSavHistory(){
   const box = $("#savHistoryList");
   if(!box) return;
 
   const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+  const list = (state.sav.history || []).slice().reverse();
 
-  const rows = (state.sav.history || [])
-    .slice()
-    .sort((a,b)=> (b.ts||0) - (a.ts||0))
-    .filter(s=>{
-      if(!q) return true;
-      const hay = [
-        s.clientName, s.productRef, s.productColor, s.scratchCode,
-        s.symptomLabel, s.problem, s.vendor, s.decision,
-        (s.reasons||[]).join(" ")
-      ].join(" ").toLowerCase();
-      return hay.includes(q);
-    });
+  const filtered = list.filter(s =>
+    !q ||
+    (s.productRef||"").toLowerCase().includes(q) ||
+    (s.symptomLabel||"").toLowerCase().includes(q) ||
+    (s.vendor||"").toLowerCase().includes(q) ||
+    (s.decision||"").toLowerCase().includes(q)
+  );
 
-  if(rows.length === 0){
-    box.innerHTML = `<div class="small">Aucun SAV dans l’historique.</div>`;
+  if(filtered.length === 0){
+    box.innerHTML = `<p class="muted">Aucun SAV enregistré.</p>`;
     return;
   }
 
-  box.innerHTML = rows.map(s=>{
-    const when = s.when || (s.ts ? formatDateTimeFR(s.ts) : "—");
-    const ok = (s.decision === "SAV RECEVABLE") || s.ok === true;
-
-    const badge = ok
-      ? `<span class="goodText"><b>RECEVABLE</b></span>`
-      : `<span class="dangerText"><b>NON RECEVABLE</b></span>`;
-
-    const reasons = (!ok && (s.reasons||[]).length)
-      ? `<div class="small" style="margin-top:6px">${(s.reasons||[]).map(r=>escapeHtml(r)).join(" • ")}</div>`
-      : ``;
-
-    return `
-      <div class="item">
-        <div class="top">
-          <div>
-            <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.productColor || "—")}</strong>
-            <div class="small">Par ${escapeHtml(s.vendor || "—")} • ${escapeHtml(when)}</div>
-          </div>
-          <div style="text-align:right">
-            <span>${badge}</span>
-            <div class="small mono">${escapeHtml(s.symptomLabel || "—")}</div>
-          </div>
-        </div>
-
-        <p>${escapeHtml(s.problem || "")}</p>
-
-        <div class="small" style="margin-top:6px">
-          Client : <b>${escapeHtml(s.clientName || "—")}</b> • Achat : ${escapeHtml(s.purchaseDate || "—")}
-          ${s.scratchCode ? ` • Scratch : <span class="mono">${escapeHtml(s.scratchCode)}</span>` : ``}
-        </div>
-
-        ${reasons}
-
-        <div class="btnrow" style="margin-top:10px">
-          <button class="btn" onclick="reprintSavFromHistory(${Number(s.ts||0)})">Ré-imprimer</button>
-          ${isManager() ? `<button class="btn danger" onclick="deleteSavFromHistory(${Number(s.ts||0)})">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
-        </div>
+  box.innerHTML = filtered.map(s => `
+    <div class="item">
+      <div class="top">
+        <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.symptomLabel || "—")}</strong>
+        <span>${escapeHtml(s.when || "")}</span>
       </div>
-    `;
-  }).join("");
+      <p class="muted">
+        ${escapeHtml(s.decision)} — par ${escapeHtml(s.vendor || "—")}
+      </p>
+      <div class="btnrow">
+        <button class="btn" onclick="printSavSheet(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+          Ré-imprimer
+        </button>
+      </div>
+    </div>
+  `).join("");
 }
 
 
