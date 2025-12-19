@@ -1983,11 +1983,12 @@ function validateSavAndPrint(){
 
   state.sav.lastSavSheet = savSheet;
 
-  // ✅ Historique uniquement si recevable
+  // ✅ Historique des Sav (Recevables ou non)
   state.sav.history = state.sav.history || [];
-state.sav.history.push(savSheet);
+state.sav.history.push({ ...savSheet, ts: nowTs, ok: dec.ok });
 if (state.sav.history.length > 800) state.sav.history.shift();
-  }
+
+  
 
   audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
   saveState();
@@ -1996,11 +1997,12 @@ if (state.sav.history.length > 800) state.sav.history.shift();
     printSavSheet(savSheet);
     closeSavModal();
     renderSavHistory(); // refresh liste
- } else {
+} else {
   $("#savDecisionBox").innerHTML =
     `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
      Raisons : ${dec.reasons.map(r => escapeHtml(r)).join(" • ")}`;
 }
+
 
 
 function previewSavEligibility(){
