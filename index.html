@@ -1977,16 +1977,17 @@ function validateSavAndPrint(){
     symptomLabel,
     vendor,
     when,
-    decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
-    reasons: dec.reasons
-  };
+    ts: nowTs, // Ajout
+  decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
+  reasons: dec.reasons
+};
 
   state.sav.lastSavSheet = savSheet;
 
   // ✅ Historique des Sav (Recevables ou non)
-  state.sav.history = state.sav.history || [];
-state.sav.history.push({ ...savSheet, ts: nowTs, ok: dec.ok });
-if (state.sav.history.length > 800) state.sav.history.shift();
+state.sav.history = state.sav.history || [];
+state.sav.history.push(savSheet);
+if(state.sav.history.length > 800) state.sav.history.shift();
 
   
 
@@ -2133,7 +2134,73 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
-  V
+  function renderSavHistory(){
+  const box = $("#savHistoryList");
+  if(!box) return;
+
+  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+
+  const rows = (state.sav.history || [])
+    .slice()
+    .sort((a,b)=> (b.ts||0) - (a.ts||0))
+    .filter(s=>{
+      if(!q) return true;
+      const hay = [
+        s.clientName, s.productRef, s.productColor, s.scratchCode,
+        s.symptomLabel, s.problem, s.vendor, s.decision,
+        (s.reasons||[]).join(" ")
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+
+  if(rows.length === 0){
+    box.innerHTML = `<div class="small">Aucun SAV dans l’historique.</div>`;
+    return;
+  }
+
+  box.innerHTML = rows.map(s=>{
+    const when = s.when || (s.ts ? formatDateTimeFR(s.ts) : "—");
+    const ok = (s.decision === "SAV RECEVABLE") || s.ok === true;
+
+    const badge = ok
+      ? `<span class="goodText"><b>RECEVABLE</b></span>`
+      : `<span class="dangerText"><b>NON RECEVABLE</b></span>`;
+
+    const reasons = (!ok && (s.reasons||[]).length)
+      ? `<div class="small" style="margin-top:6px">${(s.reasons||[]).map(r=>escapeHtml(r)).join(" • ")}</div>`
+      : ``;
+
+    return `
+      <div class="item">
+        <div class="top">
+          <div>
+            <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.productColor || "—")}</strong>
+            <div class="small">Par ${escapeHtml(s.vendor || "—")} • ${escapeHtml(when)}</div>
+          </div>
+          <div style="text-align:right">
+            <span>${badge}</span>
+            <div class="small mono">${escapeHtml(s.symptomLabel || "—")}</div>
+          </div>
+        </div>
+
+        <p>${escapeHtml(s.problem || "")}</p>
+
+        <div class="small" style="margin-top:6px">
+          Client : <b>${escapeHtml(s.clientName || "—")}</b> • Achat : ${escapeHtml(s.purchaseDate || "—")}
+          ${s.scratchCode ? ` • Scratch : <span class="mono">${escapeHtml(s.scratchCode)}</span>` : ``}
+        </div>
+
+        ${reasons}
+
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="reprintSavFromHistory(${Number(s.ts||0)})">Ré-imprimer</button>
+          ${isManager() ? `<button class="btn danger" onclick="deleteSavFromHistory(${Number(s.ts||0)})">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
 
 /* ---------- Notes ---------- */
 function maskPhone(p){
