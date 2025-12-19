@@ -1718,7 +1718,7 @@ const savMap = [
     causes:[
       "Résistance en fin de vie ou mal amorcée",
       "Airflow trop ouvert + aspiration trop forte",
-      "Liquide trop fluide / chaleur",
+      "Liquide trop fluide / chaleur (adapter le PG/VG, Preconiser des boosters plus epais",
       "Joint ou cartouche usé"
     ],
     actions:[
@@ -1736,7 +1736,7 @@ const savMap = [
     t:"Goût brûlé",
     s:"dry hit",
     causes:[
-      "Résistance cramée",
+      "Résistance cramée ou en fin de vie",
       "Puissance trop élevée",
       "Chaîne de bouffées"
     ],
@@ -1746,7 +1746,7 @@ const savMap = [
       "Espacer les bouffées"
     ],
     tip:"Résistance brûlée = non garantie.",
-    autoRefuse:false
+    autoRefuse:true
   },
 
   {
@@ -1762,6 +1762,7 @@ const savMap = [
       "Test avec autre cartouche",
       "Redémarrage",
       "Diagnostic SAV"
+      "En cas d'odeur de brulé : NE PAS INSISTER ET SECURISER LE MATERIEL !"
     ],
     tip:"Garantie possible si aucun signe de liquide.",
     autoRefuse:false
@@ -1802,14 +1803,14 @@ const savMap = [
 
   {
     id:"autofire",
-    t:"AUTOFIRE",
-    s:"déclenche seul",
+    t:"Autofire",
+    s:"déclenche seul sans tirer sur le matériel",
     causes:[
       "Liquide dans le chipset",
       "Capteur aspiration noyé"
     ],
     actions:[
-      "Aucune réparation possible"
+      "Aucune réparation possible, enlever immédiatement la cartouche / résistance du matériel"
     ],
     tip:"AUTOFIRE = refus automatique.",
     autoRefuse:true
@@ -1818,7 +1819,7 @@ const savMap = [
   {
     id:"liquideAspire",
     t:"Liquide aspiré",
-    s:"liquide dans l’électronique",
+    s:"Remontée de liquide dans la bouche",
     causes:[
       "Aspiration trop forte",
       "Condensation excessive"
