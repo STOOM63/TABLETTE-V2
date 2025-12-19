@@ -1270,6 +1270,7 @@ function go(view){
 
   if(view === "client") renderClient();
   if(view === "sav") renderSav();
+  if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
@@ -1971,15 +1972,20 @@ if (dec.ok) {
   state.sav.history.push(savSheet);
   if (state.sav.history.length > 800) state.sav.history.shift(); // limite sécurité
 }
-  audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
+    audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
   saveState();
+
   if(dec.ok){
-  printSavSheet(savSheet);
-  closeSavModal();
-  renderSavHistory(); // ✅ refresh liste
-} else {
-  ...
+    printSavSheet(savSheet);
+    closeSavModal();
+    renderSavHistory(); // refresh liste
+  } else {
+    $("#savDecisionBox").innerHTML =
+      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+  }
 }
+
 
 
   if(dec.ok){
@@ -2121,10 +2127,96 @@ function reprintLastSav(){
   printSavSheet(state.sav.lastSavSheet);
 }
   function renderSavHistory(){
+  function renderSavHistory(){
   const box = $("#savHistoryList");
   if(!box) return;
 
   const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+  const items = (state.sav.history || [])
+    .slice()
+    .reverse()
+    .filter(h=>{
+      if(!q) return true;
+      const hay = [
+        h.when, h.vendor, h.symptomLabel, h.problem,
+        h.clientName, h.purchaseDate, h.productRef, h.productColor, h.scratchCode,
+        h.decision, (h.reasons||[]).join(" ")
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+
+  if(items.length === 0){
+    box.innerHTML = `<div class="small">Aucun SAV dans l’historique.</div>`;
+    return;
+  }
+
+  box.innerHTML = items.map(h=>`
+    <div class="item">
+      <div class="top">
+        <strong>${escapeHtml(h.productRef || "—")} • ${escapeHtml(h.symptomLabel || "—")}</strong>
+        <span>${escapeHtml(h.when || "")}</span>
+      </div>
+      <p>
+        <b>Client :</b> ${escapeHtml(h.clientName || "—")} •
+        <b>Couleur :</b> ${escapeHtml(h.productColor || "—")} •
+        <b>Vendeur :</b> ${escapeHtml(h.vendor || "—")}
+        <br/>
+        <b>Décision :</b> ${escapeHtml(h.decision || "—")}
+      </p>
+      <div class="btnrow" style="margin-top:10px">
+        <button class="btn" onclick="printSavSheet(state.sav.history[${(state.sav.history||[]).length - 1 - items.indexOf(h)}])">Ré-imprimer</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function exportSavHistoryCSV(){
+  if(!requireAuth()) return;
+  if(!isManager()){
+    toast("Accès refusé", "Export réservé responsable.");
+    audit("DENY_SAV_HISTORY_EXPORT", "");
+    return;
+  }
+
+  const rows = (state.sav.history || []);
+  const header = ["when","vendor","decision","symptomLabel","clientName","purchaseDate","productRef","productColor","scratchCode","problem","reasons"];
+  const lines = [header.join(",")];
+
+  for(const h of rows){
+    const row = [
+      `"${String(h.when||"").replace(/"/g,'""')}"`,
+      `"${String(h.vendor||"").replace(/"/g,'""')}"`,
+      `"${String(h.decision||"").replace(/"/g,'""')}"`,
+      `"${String(h.symptomLabel||"").replace(/"/g,'""')}"`,
+      `"${String(h.clientName||"").replace(/"/g,'""')}"`,
+      `"${String(h.purchaseDate||"").replace(/"/g,'""')}"`,
+      `"${String(h.productRef||"").replace(/"/g,'""')}"`,
+      `"${String(h.productColor||"").replace(/"/g,'""')}"`,
+      `"${String(h.scratchCode||"").replace(/"/g,'""')}"`,
+      `"${String(h.problem||"").replace(/"/g,'""')}"`,
+      `"${String((h.reasons||[]).join(" | ")).replace(/"/g,'""')}"`,
+    ];
+    lines.push(row.join(","));
+  }
+
+  download(`stoom-sav-historique-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("SAV_HISTORY_EXPORT_CSV", "");
+}
+
+function clearSavHistory(){
+  if(!requireAuth()) return;
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_SAV_HISTORY_CLEAR", "");
+    return;
+  }
+  if(!confirm("Vider l’historique SAV ?")) return;
+  state.sav.history = [];
+  audit("SAV_HISTORY_CLEARED", "");
+  saveState();
+  renderSavHistory();
+}
+
  
 
 
