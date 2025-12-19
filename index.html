@@ -2003,6 +2003,7 @@ function validateSavAndPrint(){
   }
 }
 
+
 function previewSavEligibility(){
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
@@ -2167,6 +2168,128 @@ function reprintLastSav(){
       </div>
     </div>
   `).join("");
+}
+function renderSavHistory(){
+  const box = $("#savHistoryList");
+  if(!box) return;
+
+  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+  const rows = (state.sav.history || []).slice().reverse();
+
+  const filtered = rows.filter(s=>{
+    if(!q) return true;
+    const hay = [
+      s.when, s.vendor, s.decision, s.symptomLabel,
+      s.clientName, s.purchaseDate,
+      s.productRef, s.productColor, s.scratchCode,
+      s.problem,
+      ...(s.reasons || [])
+    ].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+
+  if(filtered.length === 0){
+    box.innerHTML = `<p class="muted">Aucun SAV dans l’historique.</p>`;
+    return;
+  }
+
+  box.innerHTML = filtered.map((s, idx)=>{
+    const decisionClass = (s.decision === "SAV RECEVABLE") ? "goodText" : "dangerText";
+    const reasons = (s.reasons && s.reasons.length) ? s.reasons.join(" • ") : "—";
+    const productLine = `${s.productRef || "—"} • ${s.productColor || "—"}${s.scratchCode ? " • " + s.scratchCode : ""}`;
+
+    return `
+      <div class="item">
+        <div class="top">
+          <strong>${escapeHtml(s.symptomLabel || "SAV")}</strong>
+          <span>${escapeHtml(s.when || "")}</span>
+        </div>
+
+        <p class="small">
+          <b class="${decisionClass}">${escapeHtml(s.decision || "")}</b>
+          • ${escapeHtml(s.vendor || "—")}
+        </p>
+
+        <p class="muted">
+          <b>Produit :</b> ${escapeHtml(productLine)}<br/>
+          <b>Client :</b> ${escapeHtml(s.clientName || "—")} • <b>Achat :</b> ${escapeHtml(s.purchaseDate || "—")}<br/>
+          <b>Problème :</b> ${escapeHtml(s.problem || "—")}<br/>
+          <b>Raisons :</b> ${escapeHtml(reasons)}
+        </p>
+
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="printSavSheet(state.sav.history[${(state.sav.history || []).length - 1 - idx}])">Ré-imprimer</button>
+          ${isManager() ? `<button class="btn danger" onclick="deleteSavHistoryItem(${(state.sav.history || []).length - 1 - idx})">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function deleteSavHistoryItem(index){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_SAV_HISTORY_DELETE", String(index));
+    return;
+  }
+  state.sav.history = state.sav.history || [];
+  if(index < 0 || index >= state.sav.history.length) return;
+  state.sav.history.splice(index, 1);
+  audit("SAV_HISTORY_DELETE", String(index));
+  saveState();
+  renderSavHistory();
+}
+
+function clearSavHistory(){
+  if(!isManager()){
+    toast("Accès refusé", "Vider l’historique = responsable.");
+    audit("DENY_SAV_HISTORY_CLEAR", "");
+    return;
+  }
+  if(!confirm("Vider tout l’historique SAV sur cette tablette ?")) return;
+  state.sav.history = [];
+  audit("SAV_HISTORY_CLEARED", "");
+  saveState();
+  renderSavHistory();
+}
+
+function exportSavHistoryCSV(){
+  if(!isManager()){
+    toast("Accès refusé", "Export historique = responsable.");
+    audit("DENY_SAV_HISTORY_EXPORT", "");
+    return;
+  }
+
+  const hist = state.sav.history || [];
+  const esc = (v)=> `"${String(v ?? "").replace(/"/g,'""')}"`;
+
+  const header = [
+    "when","vendor","decision","symptomLabel",
+    "clientName","purchaseDate",
+    "productRef","productColor","scratchCode",
+    "problem","reasons"
+  ];
+
+  const lines = [header.join(",")];
+
+  for(const s of hist){
+    lines.push([
+      esc(s.when),
+      esc(s.vendor),
+      esc(s.decision),
+      esc(s.symptomLabel),
+      esc(s.clientName),
+      esc(s.purchaseDate),
+      esc(s.productRef),
+      esc(s.productColor),
+      esc(s.scratchCode),
+      esc(s.problem),
+      esc((s.reasons || []).join(" • "))
+    ].join(","));
+  }
+
+  download(`stoom-sav-historique-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("SAV_HISTORY_EXPORT_CSV", "");
 }
 
 
