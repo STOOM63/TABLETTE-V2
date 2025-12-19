@@ -1941,7 +1941,7 @@ function computeSavDecision(data){
 
   const symptom = savMap.find(s => s.id === data.symptom);
   if(symptom?.autoRefuse){
-    reasons.push("Symptôme exclu de garantie (liquide / autofire)");
+    reasons.push("Symptôme exclu de garantie (liquide / autofire / Résistance non garantie)");
   }
 
   return { ok: reasons.length === 0, reasons };
