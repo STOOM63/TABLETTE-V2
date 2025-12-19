@@ -1270,6 +1270,7 @@ function go(view){
 
   if(view === "client") renderClient();
   if(view === "sav") renderSav();
+  if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
@@ -2130,44 +2131,7 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
-  function renderSavHistory(){
-  const box = $("#savHistoryList");
-  if(!box) return;
-
-  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
-  const rows = (state.sav.history || []).slice().reverse().filter(h=>{
-    if(!q) return true;
-    const blob = [
-      h.productRef, h.productColor, h.scratchCode, h.symptomLabel, h.problem,
-      h.vendor, h.when, h.decision, (h.reasons||[]).join(" ")
-    ].join(" ").toLowerCase();
-    return blob.includes(q);
-  });
-
-  if(rows.length === 0){
-    box.innerHTML = `<div class="small">Aucun SAV dans l’historique.</div>`;
-    return;
-  }
-
-  box.innerHTML = rows.map(h=>`
-    <div class="item">
-      <div class="top">
-        <strong>${escapeHtml(h.productRef || "—")} • ${escapeHtml(h.symptomLabel || "—")}</strong>
-        <span>${escapeHtml(h.when || "")}</span>
-      </div>
-      <p>
-        <b>${escapeHtml(h.decision || "")}</b><br/>
-        Couleur: ${escapeHtml(h.productColor || "—")} • Vendeur: ${escapeHtml(h.vendor || "—")}<br/>
-        Problème: ${escapeHtml(h.problem || "")}
-      </p>
-      <div class="small">${(h.reasons||[]).length ? ("Raisons: " + escapeHtml(h.reasons.join(" • "))) : ""}</div>
-      <div class="btnrow" style="margin-top:10px">
-        <button class="btn" onclick='printSavSheet(${JSON.stringify(h).replace(/</g,"\\u003c")})'>Ré-imprimer</button>
-      </div>
-    </div>
-  `).join("");
-}
-
+  V
 
 /* ---------- Notes ---------- */
 function maskPhone(p){
