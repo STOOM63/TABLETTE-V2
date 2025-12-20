@@ -751,91 +751,87 @@
       </div>
     </div>
 
-    <!-- SAV -->
-    <div id="view-sav" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>SAV guidé</h2>
-              <p>Symptôme → causes → actions → fiche imprimable.</p>
-            </div>
-            <span class="badge">SAV</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Quel problème principal ?</h3>
-              Choisis le symptôme dominant.</p>
-              <div class="choices cols3" id="savChoices"></div>
-            </div>
-
-           <div class="q" id="savResult" style="margin-top:12px">
-  <h3>En attente…</h3>
-  Sélectionne un symptôme.</p>
-</div>
-
-
-  <h3>Problème constaté (par le vendeur)</h3>
-  Ce texte sera repris automatiquement dans la fiche SAV.</p>
-  <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
-  <div class="btnrow" style="margin-top:10px">
-    <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
-    <button class="btn" onclick="clearSavProblem()">Effacer</button>
-  </div>
-  <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
-</div>
-
-
-     
-              <h3>En attente…</h3>
-              Sélectionne un symptôme.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Checklist SAV</h2>
-              <p>Trame simple (60 secondes).</p>
-            </div>
-            <span class="badge">Pro</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Questions à poser</h3>
-              <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-                <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
-                <li>Liquide : taux / ratio / nouveauté ?</li>
-                <li>Résistance : neuve ? amorçage ? puissance ?</li>
-                <li>Airflow : trop ouvert ? tirage trop fort ?</li>
-                <li>Choc / chaleur / fuite dans la poche ?</li>
-              </ul>
-              <div class="hr"></div>
-              <h3>Conclusion</h3>
-              “On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
-            </div>
-            <div class="q" style="margin-top:12px">
-  <h3>Historique SAV</h3>
-  <p class="muted">Recherche + ré-impression. Suppression/Export : responsable.</p>
-
-  <label>Filtrer (produit, raison, opérateur...)</label>
-  <input id="savHistoryFilter" type="text" placeholder="Ex: XROS, fuite, Evan..." />
-
-  <div class="btnrow" style="margin-top:10px">
-    <button class="btn" onclick="renderSavHistory()">Appliquer</button>
-    <button class="btn primary" onclick="exportSavHistoryCSV()">Exporter CSV</button>
-    <button class="btn danger" onclick="clearSavHistory()">Vider historique</button>
-  </div>
-
-  <div class="hr"></div>
-  <div id="savHistoryList" class="list"></div>
-</div>
-
-          </div>
-        </section>
+   <!-- SAV -->
+<div id="view-sav" class="view" style="display:none">
+  <div class="grid cols2">
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>SAV guidé</h2>
+          <p>Symptôme → causes → actions → fiche imprimable.</p>
+        </div>
+        <span class="badge">SAV</span>
       </div>
-    </div>
+
+      <div class="pb">
+        <div class="q">
+          <h3>Quel problème principal ?</h3>
+          <p class="muted">Choisis le symptôme dominant.</p>
+          <div class="choices cols3" id="savChoices"></div>
+        </div>
+
+        <div class="q" id="savResult" style="margin-top:12px">
+          <h3>En attente…</h3>
+          <p class="muted">Sélectionne un symptôme.</p>
+        </div>
+
+        <div class="q" style="margin-top:12px">
+          <h3>Problème constaté (par le vendeur)</h3>
+          <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
+          <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
+          <div class="btnrow" style="margin-top:10px">
+            <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
+            <button class="btn" onclick="clearSavProblem()">Effacer</button>
+          </div>
+          <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Checklist SAV</h2>
+          <p>Trame simple (60 secondes).</p>
+        </div>
+        <span class="badge">Pro</span>
+      </div>
+
+      <div class="pb">
+        <div class="q">
+          <h3>Questions à poser</h3>
+          <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+            <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
+            <li>Liquide : taux / ratio / nouveauté ?</li>
+            <li>Résistance : neuve ? amorçage ? puissance ?</li>
+            <li>Airflow : trop ouvert ? tirage trop fort ?</li>
+            <li>Choc / chaleur / fuite dans la poche ?</li>
+          </ul>
+          <div class="hr"></div>
+          <h3>Conclusion</h3>
+          <p class="muted">“On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
+        </div>
+
+        <div class="q" style="margin-top:12px">
+          <h3>Historique SAV</h3>
+          <p class="muted">Recherche + ré-impression. Suppression/Export : responsable.</p>
+
+          <label>Filtrer (produit, raison, opérateur...)</label>
+          <input id="savHistoryFilter" type="text" placeholder="Ex: XROS, fuite, Evan..." />
+
+          <div class="btnrow" style="margin-top:10px">
+            <button class="btn" onclick="renderSavHistory()">Appliquer</button>
+            <button class="btn primary" onclick="exportSavHistoryCSV()">Exporter CSV</button>
+            <button class="btn danger" onclick="clearSavHistory()">Vider historique</button>
+          </div>
+
+          <div class="hr"></div>
+          <div id="savHistoryList" class="list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
     <!-- CALC -->
     <div id="view-calc" class="view" style="display:none">
@@ -2444,51 +2440,16 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
- function renderSavHistory(){
-  const box = $("#savHistoryList");
-  if(!box) return;
-
-  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
-  const list = (state.sav.history || []).slice().reverse();
-
-  const filtered = list.filter(s =>
-    !q ||
-    (s.productRef||"").toLowerCase().includes(q) ||
-    (s.symptomLabel||"").toLowerCase().includes(q) ||
-    (s.vendor||"").toLowerCase().includes(q) ||
-    (s.decision||"").toLowerCase().includes(q)
-  );
-
-  if(filtered.length === 0){
-    box.innerHTML = `<p class="muted">Aucun SAV enregistré.</p>`;
-    return;
-  }
-
-  box.innerHTML = filtered.map(s => `
-    <div class="item">
-      <div class="top">
-        <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.symptomLabel || "—")}</strong>
-        <span>${escapeHtml(s.when || "")}</span>
-      </div>
-      <p class="muted">
-        ${escapeHtml(s.decision)} — par ${escapeHtml(s.vendor || "—")}
-      </p>
-      <div class="btnrow">
-        <button class="btn" onclick="printSavSheet(${JSON.stringify(s).replace(/"/g,'&quot;')})">
-          Ré-imprimer
-        </button>
-      </div>
-    </div>
-  `).join("");
-}
 function renderSavHistory(){
   const box = $("#savHistoryList");
   if(!box) return;
 
   const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
-  const rows = (state.sav.history || []).slice().reverse();
+  const history = (state.sav.history || []);
+  const histRev = history.slice().reverse();
+  const total = history.length;
 
-  const filtered = rows.filter(s=>{
+  const filtered = histRev.filter(s=>{
     if(!q) return true;
     const hay = [
       s.when, s.vendor, s.decision, s.symptomLabel,
@@ -2510,6 +2471,9 @@ function renderSavHistory(){
     const reasons = (s.reasons && s.reasons.length) ? s.reasons.join(" • ") : "—";
     const productLine = `${s.productRef || "—"} • ${s.productColor || "—"}${s.scratchCode ? " • " + s.scratchCode : ""}`;
 
+    // index réel dans state.sav.history (filtered vient d’un reverse)
+    const originalIndex = total - 1 - idx;
+
     return `
       <div class="item">
         <div class="top">
@@ -2530,13 +2494,18 @@ function renderSavHistory(){
         </p>
 
         <div class="btnrow" style="margin-top:10px">
-          <button class="btn" onclick="printSavSheet(state.sav.history[${(state.sav.history || []).length - 1 - idx}])">Ré-imprimer</button>
-          ${isManager() ? `<button class="btn danger" onclick="deleteSavHistoryItem(${(state.sav.history || []).length - 1 - idx})">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
+          <button class="btn" onclick="printSavSheet(state.sav.history[${originalIndex}])">Ré-imprimer</button>
+          ${
+            isManager()
+              ? `<button class="btn danger" onclick="deleteSavHistoryItem(${originalIndex})">Supprimer</button>`
+              : `<span class="small">Suppression : responsable</span>`
+          }
         </div>
       </div>
     `;
   }).join("");
 }
+
 
 function deleteSavHistoryItem(index){
   if(!isManager()){
