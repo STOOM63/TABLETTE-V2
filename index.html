@@ -496,6 +496,12 @@
         <div class="kbd">N</div>
       </div>
 
+      <div class="navbtn" data-view="followup" tabindex="0">
+        <div class="icon">📞</div>
+        <div class="navtxt"><div class="t">Suivi client</div><div class="s">rappel + vente</div></div>
+        <div class="kbd">R</div>
+      </div>
+
       <div class="navbtn" data-view="manager" tabindex="0" id="managerNav" style="display:none">
         <div class="icon">AD</div>
         <div class="navtxt"><div class="t">Responsable</div><div class="s">règles + audit + users</div></div>
@@ -522,7 +528,7 @@
       <div class="small" style="margin-top:10px">
         ⚠️ Export/Import/Reset : <b>Responsable uniquement</b>.<br/>
         Offline : OK (stockage appareil).<br/>
-        Raccourcis : H C S K N A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
+        Raccourcis : H C S K N R A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
       </div>
       <div class="small" style="margin-top:12px; opacity:.55">
   Logiciel développé par <b>Arnaud BLANC</b><br/>
@@ -933,6 +939,100 @@
       </div>
     </div>
 
+    <!-- FOLLOWUP -->
+    <div id="view-followup" class="view" style="display:none">
+      <div class="grid cols2">
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Suivi client</h2>
+              <p>Planifier un rappel après vente.</p>
+            </div>
+            <span class="badge">CRM</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <div class="two">
+                <div>
+                  <label>Nom / prénom client *</label>
+                  <input id="followName" type="text" placeholder="Ex: Jean Dupont" />
+                </div>
+                <div>
+                  <label>Téléphone (optionnel)</label>
+                  <input id="followPhone" type="text" placeholder="Ex: 06..." />
+                </div>
+              </div>
+
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Profil fumeur</label>
+                  <input id="followSmoker" type="text" placeholder="Ex: 15 cig/j, roulées" />
+                </div>
+                <div>
+                  <label>Matériel proposé</label>
+                  <input id="followHardware" type="text" placeholder="Ex: XROS 3, résist. 0.8" />
+                </div>
+              </div>
+
+              <div style="margin-top:10px">
+                <label>Liquide choisi + taux + type de nicotine</label>
+                <input id="followLiquid" type="text" placeholder="Ex: 50/50, menthol, 10 mg sels" />
+              </div>
+
+              <div class="two" style="margin-top:10px">
+                <div>
+                  <label>Date de vente</label>
+                  <input id="followSaleDate" type="date" />
+                </div>
+                <div>
+                  <label>Date de rappel prévue</label>
+                  <input id="followNextDate" type="date" />
+                </div>
+              </div>
+
+              <div style="margin-top:10px">
+                <label>Statut</label>
+                <select id="followStatus">
+                  <option value="todo">À faire</option>
+                  <option value="done">Fait</option>
+                  <option value="reschedule">À reprogrammer</option>
+                </select>
+              </div>
+
+              <div style="margin-top:10px">
+                <label>Notes de suivi</label>
+                <textarea id="followNotes" placeholder="Ex: rappeler à J+7, vérifier confort, proposer pack résistances."></textarea>
+              </div>
+
+              <div class="btnrow" style="margin-top:10px">
+                <button class="btn primary" onclick="saveFollowup()">Enregistrer suivi</button>
+                <button class="btn" onclick="clearFollowupForm()">Nouvelle fiche</button>
+              </div>
+              <div class="small" style="margin-top:8px">Vendeurs : création / modification OK. Suppression : responsable uniquement.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="ph">
+            <div>
+              <h2>Liste des suivis</h2>
+              <p>Filtrer + rappeler.</p>
+            </div>
+            <span class="badge">Agenda</span>
+          </div>
+          <div class="pb">
+            <div class="q">
+              <label>Recherche</label>
+              <input id="followFilter" type="text" placeholder="Nom, téléphone, produit, note..." />
+              <div class="hr"></div>
+              <div id="followList" class="list"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
     <!-- MANAGER -->
     <div id="view-manager" class="view" style="display:none">
       <div class="grid cols2">
@@ -1206,12 +1306,13 @@ const DEFAULT_STATE = {
   view: "home",
   audit: [],
   notes: [],
- sav: {
-  symptom: null,
-  vendorProblem: "",
-  lastSavSheet: null,
-  history: []   // ✅ historique SAV
-},
+  followups: [],
+  sav: {
+    symptom: null,
+    vendorProblem: "",
+    lastSavSheet: null,
+    history: []   // ✅ historique SAV
+  },
   client: {
     step: 0,
     answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
@@ -1334,6 +1435,7 @@ function go(view){
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
+  if(view === "followup") renderFollowups();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
   audit("NAVIGATE", view);
@@ -2121,7 +2223,7 @@ function printSavSheet(s){
   .v{font-size:13px; margin:6px 0 0}
   .badge{display:inline-block; padding:8px 12px; border-radius:999px; color:white; font-weight:700; font-size:12px; background:${badgeColor}}
   .muted{color:#475569; font-size:12px; line-height:1.45}
-  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;}
   .hr{height:1px; background:#e2e8f0; margin:12px 0}
   ul{margin:8px 0 0; padding-left:18px}
 </style></head><body>
@@ -2433,7 +2535,173 @@ function renderNotes(){
         </div>
         <p>${escapeHtml(n.text||"")}</p>
         <div class="btnrow" style="margin-top:10px">
-          ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
+      ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* ---------- Suivi client ---------- */
+let followupEditingId = null;
+const FOLLOWUP_STATUS_LABELS = {
+  todo: "À faire",
+  done: "Fait",
+  reschedule: "À reprogrammer"
+};
+function ensureFollowups(){
+  if(!Array.isArray(state.followups)) state.followups = [];
+}
+function clearFollowupForm(){
+  $("#followName").value = "";
+  $("#followPhone").value = "";
+  $("#followSmoker").value = "";
+  $("#followHardware").value = "";
+  $("#followLiquid").value = "";
+  $("#followSaleDate").value = "";
+  $("#followNextDate").value = "";
+  $("#followStatus").value = "todo";
+  $("#followNotes").value = "";
+  followupEditingId = null;
+}
+function saveFollowup(){
+  if(!requireAuth()) return;
+  ensureFollowups();
+
+  const name = ($("#followName").value||"").trim();
+  if(!name){ toast("Suivi", "Nom/prénom obligatoire."); return; }
+
+  const payload = {
+    name,
+    phone: ($("#followPhone").value||"").trim(),
+    smoker: ($("#followSmoker").value||"").trim(),
+    hardware: ($("#followHardware").value||"").trim(),
+    liquid: ($("#followLiquid").value||"").trim(),
+    saleDate: $("#followSaleDate").value,
+    nextDate: $("#followNextDate").value,
+    status: $("#followStatus").value || "todo",
+    notes: ($("#followNotes").value||"").trim(),
+  };
+
+  if(followupEditingId){
+    const idx = state.followups.findIndex(f=>f.id===followupEditingId);
+    if(idx !== -1){
+      state.followups[idx] = {
+        ...state.followups[idx],
+        ...payload,
+        updatedAt: Date.now(),
+        updatedBy: state.currentUser?.name || "INCONNU"
+      };
+      audit("FOLLOWUP_EDIT", `${payload.name} (${followupEditingId})`);
+    }
+  } else {
+    const id = crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+    state.followups.push({
+      id,
+      ...payload,
+      createdAt: Date.now(),
+      createdBy: state.currentUser?.name || "INCONNU"
+    });
+    audit("FOLLOWUP_ADD", payload.name);
+  }
+
+  saveState();
+  renderFollowups();
+  clearFollowupForm();
+  toast("OK", "Suivi enregistré.");
+}
+function editFollowup(id){
+  const f = (state.followups||[]).find(x=>x.id===id);
+  if(!f) return;
+  $("#followName").value = f.name || "";
+  $("#followPhone").value = f.phone || "";
+  $("#followSmoker").value = f.smoker || "";
+  $("#followHardware").value = f.hardware || "";
+  $("#followLiquid").value = f.liquid || "";
+  $("#followSaleDate").value = f.saleDate || "";
+  $("#followNextDate").value = f.nextDate || "";
+  $("#followStatus").value = f.status || "todo";
+  $("#followNotes").value = f.notes || "";
+  followupEditingId = id;
+  toast("Mode édition", "Modifie puis enregistre.");
+}
+function deleteFollowup(id){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_FOLLOWUP_DELETE", id);
+    return;
+  }
+  ensureFollowups();
+  const f = state.followups.find(x=>x.id===id);
+  if(!f) return;
+  if(!confirm(`Supprimer le suivi de ${f.name || "ce client"} ?`)) return;
+  state.followups = state.followups.filter(x=>x.id!==id);
+  audit("FOLLOWUP_DELETE", `${f.name} (${id})`);
+  saveState();
+  renderFollowups();
+}
+function callFollowup(id){
+  const f = (state.followups||[]).find(x=>x.id===id);
+  if(!f || !f.phone){
+    toast("Téléphone", "Aucun numéro enregistré.");
+    return;
+  }
+  copyToClipboard(f.phone);
+  audit("FOLLOWUP_CALL", `${f.name||""} (${f.phone})`);
+}
+function renderFollowups(){
+  ensureFollowups();
+  const list = $("#followList");
+  if(!list) return;
+  const filter = ($("#followFilter")?.value || "").toLowerCase().trim();
+
+  const rows = state.followups.slice().sort((a,b)=>{
+    const aDate = a.nextDate || "";
+    const bDate = b.nextDate || "";
+    if(aDate && bDate && aDate !== bDate) return aDate.localeCompare(bDate);
+    return (b.createdAt||0) - (a.createdAt||0);
+  }).filter(f=>{
+    if(!filter) return true;
+    const hay = [
+      f.name, f.phone, f.smoker, f.hardware, f.liquid, f.notes,
+      f.saleDate, f.nextDate, FOLLOWUP_STATUS_LABELS[f.status] || f.status,
+      f.createdBy, f.updatedBy
+    ].join(" ").toLowerCase();
+    return hay.includes(filter);
+  });
+
+  if(rows.length === 0){
+    list.innerHTML = `<p class="muted">Aucun suivi enregistré.</p>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(f=>{
+    const statusLabel = FOLLOWUP_STATUS_LABELS[f.status] || "—";
+    const phoneShown = state.settings.maskPhones ? maskPhone(f.phone) : (f.phone || "");
+    const meta = [
+      f.createdBy ? `Par ${f.createdBy}` : null,
+      f.createdAt ? formatDateTimeFR(f.createdAt) : null,
+      f.updatedBy ? `Modifié par ${f.updatedBy}` : null
+    ].filter(Boolean).join(" • ");
+
+    return `
+      <div class="item">
+        <div class="top">
+          <div>
+            <strong>${escapeHtml(f.name || "Sans nom")}</strong>
+            <div class="small">Statut : ${escapeHtml(statusLabel)} • Rappel : ${escapeHtml(f.nextDate || "—")}</div>
+            ${meta ? `<div class="small">${escapeHtml(meta)}</div>` : ""}
+          </div>
+          <div><span>${escapeHtml(phoneShown)}</span></div>
+        </div>
+        <p class="muted"><b>Profil fumeur :</b> ${escapeHtml(f.smoker || "—")}</p>
+        <p class="muted"><b>Matériel :</b> ${escapeHtml(f.hardware || "—")} • <b>Liquide :</b> ${escapeHtml(f.liquid || "—")}</p>
+        <p class="muted"><b>Date vente :</b> ${escapeHtml(f.saleDate || "—")} • <b>Rappel prévu :</b> ${escapeHtml(f.nextDate || "—")}</p>
+        <p>${escapeHtml(f.notes || "")}</p>
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="callFollowup('${f.id}')">Appeler</button>
+          <button class="btn" onclick="editFollowup('${f.id}')">Modifier</button>
+          ${isManager() ? `<button class="btn danger" onclick="deleteFollowup('${f.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
         </div>
       </div>
     `;
@@ -2789,6 +3057,7 @@ function bindKeys(){
     if(k==="s") go("sav");
     if(k==="k") go("calc");
     if(k==="n") go("notes");
+    if(k==="r") go("followup");
     if(k==="a") isManager() ? go("manager") : null;
 
     if((e.ctrlKey || e.metaKey) && k==="p"){
@@ -2814,6 +3083,7 @@ function bindButtons(){
   });
 
   $("#noteFilter").addEventListener("input", renderNotes);
+  $("#followFilter")?.addEventListener("input", renderFollowups);
 
   $("#printBtn").addEventListener("click", printSheet);
 
@@ -2836,6 +3106,8 @@ function init(){
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
+  ensureFollowups();
+  clearFollowupForm();
   renderAuditPeek();
   bindNav();
   bindButtons();
