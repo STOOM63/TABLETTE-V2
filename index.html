@@ -25,13 +25,13 @@
   <title>STOOM · Outil Tablette PRO</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="/TABLETTE-V2/manifest.json">
 
   <!-- iOS (iPad / iPhone) -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="STOOM SAV">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="/TABLETTE-V2/icon-192.png">
 
 
   <title>STOOM • Outil Tablette PRO</title>
@@ -530,12 +530,6 @@
         <div class="kbd">K</div>
       </div>
 
-      <div class="navbtn" data-view="batt" tabindex="0">
-        <div class="icon">Ω</div>
-        <div class="navtxt"><div class="t">Accus</div><div class="s">sécurité & charge</div></div>
-        <div class="kbd">B</div>
-      </div>
-
       <div class="navbtn" data-view="notes" tabindex="0">
         <div class="icon">📝</div>
         <div class="navtxt"><div class="t">Notes client</div><div class="s">suivi (protégé)</div></div>
@@ -575,7 +569,7 @@
       <div class="small" style="margin-top:10px">
         ⚠️ Export/Import/Reset : <b>Responsable uniquement</b>.<br/>
         Offline : OK (stockage appareil).<br/>
-        Raccourcis : H C S K B N R A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
+        Raccourcis : H C S K N R A • <span class="mono">Ctrl/Cmd+P</span> • <span class="mono">/</span> recherche • <span class="mono">Esc</span>.
       </div>
       <div class="small" style="margin-top:12px; opacity:.55">
   Logiciel développé par <b>Arnaud BLANC</b><br/>
@@ -933,114 +927,6 @@
       </div>
     </div>
 
-    <!-- BATT -->
-    <div id="view-batt" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Accus & sécurité</h2>
-              <p>Dimensionner selon la puissance réglée.</p>
-            </div>
-            <span class="badge">Sécurité</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <div class="two">
-                <div>
-                  <label>Type de box</label>
-                  <select id="battBoxType">
-                    <option value="single">Simple accu</option>
-                    <option value="dual" selected>Double accus (série typique)</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Mode</label>
-                  <div class="pill">Wattage (TC non géré)</div>
-                </div>
-              </div>
-
-              <div class="two" style="margin-top:10px">
-                <div>
-                  <label>Puissance réglée (W)</label>
-                  <input id="battPower" type="number" min="1" step="1" placeholder="Ex: 60" />
-                </div>
-                <div>
-                  <label>Résistance (Ω) <span class="muted">(optionnel)</span></label>
-                  <input id="battRes" type="number" min="0.05" step="0.01" placeholder="Ex: 0.18" />
-                </div>
-              </div>
-
-              <div class="two" style="margin-top:10px">
-                <div>
-                  <label>Niveau batterie minimal (V)</label>
-                  <input id="battMinV" type="number" min="2.8" max="3.4" step="0.05" />
-                </div>
-                <div>
-                  <label>Marge sécurité (ratio CDR)</label>
-                  <input id="battMargin" type="number" min="0.5" max="1" step="0.05" />
-                </div>
-              </div>
-
-              <div class="btnrow">
-                <button class="btn primary" id="battCalcBtn">Calculer / Conseiller</button>
-                <button class="btn" onclick="copyBatteryAdvice()">Copier résultats</button>
-              </div>
-
-              <div class="small" style="margin-top:6px">Pédagogique uniquement. Valeurs indicatives, vérifier fiche fabricant. Outil offline (stockage local).</div>
-
-              <div class="hr"></div>
-              <div class="result" id="battResults">
-                <h3>Prêt</h3>
-                Renseigne la puissance pour obtenir des accus adaptés + rappels de sécurité.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Charge & entretien</h2>
-              <p>Charge externe, adaptateur et checklist.</p>
-            </div>
-            <span class="badge">Conseils</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Chargeurs recommandés</h3>
-              <p class="muted">Préférence : chargeur externe 0.5–1A, slots adaptés. Éviter charge directe si port abîmé.</p>
-              <div id="chargerList" class="list"></div>
-              <div class="chip" style="margin-top:10px"><b>Adaptateur secteur</b> 5V / 2A ou + (marque fiable, câble intact)</div>
-            </div>
-
-            <div class="hr"></div>
-
-            <div class="q">
-              <h3>Entretien & sécurité</h3>
-              <div class="list">
-                <label class="checkbox"><input type="checkbox" id="wrapOk" checked /> <span>Wrap intact (sinon <b>ne pas utiliser</b>)</span></label>
-                <label class="checkbox"><input type="checkbox" id="wrapDamaged" /> <span>Wrap abîmé / percé</span></label>
-                <label class="checkbox"><input type="checkbox" id="transportCase" /> <span>Transport en boîtier dédié (aucune pièce métallique)</span></label>
-                <label class="checkbox"><input type="checkbox" id="pocketWarning" /> <span>Jamais en poche avec clés/monnaie</span></label>
-                <label class="checkbox"><input type="checkbox" id="tempWarning" /> <span>Température : éviter soleil / voiture chaude</span></label>
-                <label class="checkbox"><input type="checkbox" id="storageMid" /> <span>Stockage long : 40–60% / recharger tous les 2–3 mois</span></label>
-              </div>
-              <div class="alertBanner danger" id="wrapAlert" style="display:none; margin-top:10px">
-                <div>
-                  <strong>Wrap abîmé = <u>usage interdit</u></strong>
-                  <div class="small">Ne pas insérer dans une box. Remplacer ou re-wrapper avant toute utilisation.</div>
-                </div>
-              </div>
-              <div class="small" style="margin-top:10px">
-                Authentique uniquement, éviter rewraps douteux. Vérifier CDR, pas de promesse médicale, outil pédagogique.
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-
     <!-- NOTES -->
     <div id="view-notes" class="view" style="display:none">
       <div class="tabSwitch" id="notesTabSwitch">
@@ -1204,74 +1090,6 @@
                 <button class="btn" onclick="resetRules()">Réinitialiser règles</button>
               </div>
             </div>
-
-            <div class="hr"></div>
-
-            <div class="q" id="battAdminBox">
-              <h3>Base accus & chargeurs</h3>
-              <p class="muted">Catalogue local, responsable uniquement. Valeurs CDR indicatives, vérifier fiche constructeur.</p>
-
-              <div class="two">
-                <div>
-                  <label>Vmin (pire cas)</label>
-                  <input id="adminBattMin" type="number" min="2.8" max="3.4" step="0.05" />
-                </div>
-                <div>
-                  <label>Marge sécurité (ex: 0.8)</label>
-                  <input id="adminBattMargin" type="number" min="0.5" max="1" step="0.05" />
-                </div>
-              </div>
-              <div class="btnrow">
-                <button class="btn" id="saveBattSettingsBtn">Sauver paramètres</button>
-                <button class="btn" id="exportBattCsvBtn">Exporter Accus CSV</button>
-                <button class="btn" id="exportChargerCsvBtn">Exporter Chargeurs CSV</button>
-              </div>
-
-              <div class="hr"></div>
-              <h4>Accus</h4>
-              <div class="two">
-                <div>
-                  <label>Marque</label><input id="battBrand" type="text" placeholder="Ex: Molicel" />
-                  <label>Modèle</label><input id="battModel" type="text" placeholder="Ex: P26A" />
-                </div>
-                <div>
-                  <label>Format</label><input id="battSize" type="text" placeholder="18650 / 21700" />
-                  <label>Chimie</label><input id="battChem" type="text" placeholder="INR/IMR..." />
-                </div>
-              </div>
-              <div class="two" style="margin-top:10px">
-                <div><label>CDR (A)</label><input id="battCdr" type="number" min="5" max="50" step="1" /></div>
-                <div><label>Capacité (mAh)</label><input id="battCapacity" type="number" min="1000" max="6000" step="50" /></div>
-              </div>
-              <div style="margin-top:10px">
-                <label>Notes</label><input id="battNotes" type="text" placeholder="Ex: privilégier vendeur officiel" />
-              </div>
-              <label class="checkbox" style="margin-top:8px"><input type="checkbox" id="battTrusted" checked /> <span>Source fiable (authentique)</span></label>
-              <div class="btnrow">
-                <button class="btn primary" id="addBattBtn">Ajouter/mettre à jour</button>
-              </div>
-              <div id="battCatalogList" class="list"></div>
-
-              <div class="hr"></div>
-              <h4>Chargeurs / adaptateurs</h4>
-              <div class="two">
-                <div>
-                  <label>Marque</label><input id="chargerBrand" type="text" placeholder="Ex: Nitecore" />
-                  <label>Modèle</label><input id="chargerModel" type="text" placeholder="Ex: i4" />
-                </div>
-                <div>
-                  <label>Slots</label><input id="chargerSlots" type="number" min="1" max="8" step="1" />
-                  <label>Courant max (A)</label><input id="chargerCurrent" type="number" min="0.5" max="4" step="0.1" />
-                </div>
-              </div>
-              <div style="margin-top:10px">
-                <label>Notes</label><input id="chargerNotes" type="text" placeholder="Ex: privilégier 0.5–1A" />
-              </div>
-              <div class="btnrow">
-                <button class="btn primary" id="addChargerBtn">Ajouter/mettre à jour</button>
-              </div>
-              <div id="chargerCatalogList" class="list"></div>
-            </div>
           </div>
         </section>
 
@@ -1381,35 +1199,124 @@
         <button class="btn primary" onclick="login()">Se connecter</button>
         <button class="btn" onclick="logout()">Déconnexion</button>
       </div>
+
+      <div class="hr"></div>
+      <p class="small mono">
+        Responsable = accès règles + audit + export/import.
+      </p>
     </div>
   </div>
 </div>
 
-<!-- IMPORT MODAL -->
+<!-- IMPORT MODAL (manager only) -->
 <div class="modal" id="importModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <div class="modal-h">
-      <h3>Importer un état complet</h3>
+      <h3>Importer un export</h3>
       <button class="xbtn" onclick="closeImportModal()">Fermer</button>
     </div>
     <div class="modal-b">
-      <p class="muted">Responsable uniquement. Colle le JSON exporté.</p>
-      <textarea id="importText" placeholder="{...}"></textarea>
-      <div class="btnrow" style="margin-top:10px">
-        <button class="btn primary" onclick="importState()">Importer</button>
+      <p class="muted">Colle ici le JSON exporté (état complet). Cela remplacera les données locales.</p>
+      <label>JSON</label>
+      <textarea id="importText" placeholder='{"exportedAt":"...","state":{...}}'></textarea>
+      <div class="btnrow" style="margin-top:12px">
+        <button class="btn primary" onclick="importState()">Importer maintenant</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- SAV MODAL (PRINTABLE FORM) -->
+<!-- SAV FORM MODAL -->
 <div class="modal" id="savModal" role="dialog" aria-modal="true">
   <div class="modal-card">
     <div class="modal-h">
-      <h3>Fiche SAV imprimable</h3>
+      <h3>Fiche SAV</h3>
       <button class="xbtn" onclick="closeSavModal()">Fermer</button>
     </div>
-    <div class="modal-b" id="savForm"></div>
+    <div class="modal-b">
+      <p class="muted">Cette fiche est imprimable et sert d’appui vendeur (acceptation/refus de garantie).</p>
+
+      <div class="two">
+        <div>
+          <label>Nom & prénom client</label>
+          <input id="savClientName" type="text" placeholder="Ex: DUPONT Jean" />
+        </div>
+        <div>
+          <label>Date d’achat</label>
+          <input id="savPurchaseDate" type="date" />
+        </div>
+        
+      </div>
+<div class="two" style="margin-top:10px">
+  <div>
+    <label>Référence produit *</label>
+    <input id="savProductRef" type="text" placeholder="Ex: XROS-3 / Aegis Boost / Wenax..." />
+  </div>
+  <div>
+    <label>Couleur *</label>
+    <input id="savProductColor" type="text" placeholder="Ex: Noir, Silver, Gunmetal..." />
+  </div>
+</div>
+
+<div style="margin-top:10px">
+  <label>Scratch code (optionnel)</label>
+  <input id="savScratchCode" type="text" placeholder="Code d’authentification (si présent)" />
+</div>
+
+      <div class="two" style="margin-top:10px">
+        <div>
+          <label>Produit en bon état (pas de chute / casse) ?</label>
+          <select id="savGoodState">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+        <div>
+          <label>Port de charge intact ?</label>
+          <select id="savPortOk">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="two" style="margin-top:10px">
+        <div>
+          <label>Boîte produit présente ?</label>
+          <select id="savBoxPresent">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+        <div>
+          <label>Câble de charge présent ?</label>
+          <select id="savCablePresent">
+            <option value="yes">Oui</option>
+            <option value="no">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <label>Problème constaté (repris SAV)</label>
+        <textarea id="savProblemText" placeholder="(repris automatiquement, modifiable si besoin)"></textarea>
+        <div class="small" style="margin-top:6px">
+          Symptôme sélectionné : <span class="mono" id="savSymptomLabel">—</span>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+      <div class="btnrow">
+        <button class="btn primary" onclick="validateSavAndPrint()">Valider & Imprimer fiche SAV</button>
+        <button class="btn" onclick="previewSavEligibility()">Voir décision</button>
+      </div>
+
+      <div class="q" style="margin-top:12px">
+        <h3>Décision</h3>
+        <p class="muted" id="savDecisionBox">—</p>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -1437,26 +1344,6 @@ const DEFAULT_STATE = {
   audit: [],
   notes: [],
   followups: [],
-  battSettings: { battMinV: 3.2, safetyMargin: 0.8 },
-  batt: { boxType:"dual", powerW:60, resistance:0.18, battMinV:3.2, safetyMargin:0.8, lastResult:null },
-  batteriesCatalog: [
-    { id:"molicel-p26a", brand:"Molicel", model:"P26A", size:"18650", chemistry:"INR", cdrA:25, capacitymAh:2600, notes:"Bon compromis, courant élevé", trusted:true },
-    { id:"molicel-p28a", brand:"Molicel", model:"P28A", size:"18650", chemistry:"INR", cdrA:25, capacitymAh:2800, notes:"Polyvalent, vérifier authenticité", trusted:true },
-    { id:"sony-vtc5a", brand:"Sony/Murata", model:"VTC5A", size:"18650", chemistry:"INR", cdrA:25, capacitymAh:2600, notes:"Référence courant fort", trusted:true },
-    { id:"samsung-25r", brand:"Samsung", model:"25R", size:"18650", chemistry:"INR", cdrA:20, capacitymAh:2500, notes:"Classique robuste", trusted:true },
-    { id:"samsung-30q", brand:"Samsung", model:"30Q", size:"18650", chemistry:"INR", cdrA:15, capacitymAh:3000, notes:"Usage modéré <50W", trusted:true },
-    { id:"molicel-p42a", brand:"Molicel", model:"P42A", size:"21700", chemistry:"INR", cdrA:30, capacitymAh:4200, notes:"Très bon courant + autonomie", trusted:true },
-    { id:"samsung-40t", brand:"Samsung", model:"40T", size:"21700", chemistry:"INR", cdrA:30, capacitymAh:4000, notes:"Rester raisonnable <30A", trusted:true },
-    { id:"sony-vtc6a", brand:"Sony/Murata", model:"VTC6A", size:"21700", chemistry:"INR", cdrA:25, capacitymAh:4100, notes:"Capacité élevée, courant correct", trusted:true },
-    { id:"rewrap-generic", brand:"Rewrap", model:"40A marketing", size:"18650", chemistry:"?", cdrA:10, capacitymAh:2000, notes:"Données marketing douteuses", trusted:false }
-  ],
-  chargersCatalog: [
-    { id:"nitecore-i2", brand:"Nitecore", model:"i2", slots:2, maxCurrentA:1, usbInput:"5V", notes:"Charge douce sécuritaire" },
-    { id:"nitecore-i4", brand:"Nitecore", model:"i4", slots:4, maxCurrentA:1, usbInput:"5V", notes:"4 slots pratique, rester à 1A" },
-    { id:"xtar-vc2s", brand:"XTAR", model:"VC2S", slots:2, maxCurrentA:2, usbInput:"5V", notes:"Préférer 0.5–1A par prudence" },
-    { id:"xtar-x4", brand:"XTAR", model:"X4", slots:4, maxCurrentA:2, usbInput:"5V", notes:"Mode 1A conseillé" },
-    { id:"liitokala-lii500", brand:"LiitoKala", model:"Lii-500", slots:4, maxCurrentA:1, usbInput:"5V", notes:"Polyvalent, rester 0.5–1A" }
-  ],
   sav: {
     symptom: null,
     vendorProblem: "",
@@ -1513,12 +1400,6 @@ function loadState(){
   deepMerge(s, parsed);
   return s;
 }
-function ensureBattState(){
-  if(!state.batt) state.batt = structuredClone(DEFAULT_STATE.batt);
-  if(!state.battSettings) state.battSettings = structuredClone(DEFAULT_STATE.battSettings);
-  if(!state.batteriesCatalog) state.batteriesCatalog = structuredClone(DEFAULT_STATE.batteriesCatalog);
-  if(!state.chargersCatalog) state.chargersCatalog = structuredClone(DEFAULT_STATE.chargersCatalog);
-}
 function formatDateFR(d){
   try{ return new Intl.DateTimeFormat('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(d); }
   catch(e){ return d.toLocaleDateString('fr-FR'); }
@@ -1530,8 +1411,7 @@ function formatDateTimeFR(ts){
   }catch(e){ return d.toLocaleString('fr-FR'); }
 }
 function escapeHtml(s){
-  const map = { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" };
-  return String(s||"").replace(/[&<>"']/g, (m)=> map[m] || m);
+  return (s||"").replace(/[&<>"']/g, (m)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 }
 function toast(t, s){
   const el = $("#toast");
@@ -1598,8 +1478,7 @@ function go(view){
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
-  if(view === "batt") renderBattView();
-  if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); renderBatteryAdmin(); }
+  if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
   audit("NAVIGATE", requestedView);
   saveState();
@@ -2013,27 +1892,33 @@ function printSheet(){
     <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
     <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
   </div>
-  <p class="muted">${escapeHtml(sh.explain)}</p>
   <div class="hr"></div>
-  <div class="chips">
-    ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${escapeHtml(a)}</span>`).join("")}
-  </div>
+  <p class="muted">${escapeHtml(sh.explain)}</p>
 </div>
 
 <div class="card">
-  <h3>Phrase prête</h3>
-  <p class="muted mono">${escapeHtml(sh.salesLine)}</p>
-</div>
-
-<div class="card">
-  <h3>Profil client</h3>
-  <p class="muted">
-    Cigs/j: ${escapeHtml(a.cigs||"—")} • Type: ${escapeHtml(a.cigType||"—")} • Moment: ${escapeHtml(a.moments||"—")} • Objectif: ${escapeHtml(a.goal||"—")} • Expérience: ${escapeHtml(a.tried||"—")}
+  <h2 style="font-size:14px; margin:0 0 8px">Profil (résumé)</h2>
+  <p class="muted mono" style="margin:0">
+    Conso: ${escapeHtml(a.cigs||"—")} • Type: ${escapeHtml(a.cigType||"—")} • Moment: ${escapeHtml(a.moments||"—")} • Objectif: ${escapeHtml(a.goal||"—")} • Déjà essayé: ${escapeHtml(a.tried||"—")}
   </p>
 </div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Phrase prête à dire</h2>
+  <p class="muted mono" style="margin:0">${escapeHtml(sh.salesLine)}</p>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">À proposer (anti-panne)</h2>
+  <ul class="muted" style="margin:0; padding-left:18px">
+    ${sh.addons.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}
+  </ul>
+</div>
+
 </body></html>`;
 
-  const w = window.open("", "sheetPrint");
+  const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée."); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
@@ -2041,469 +1926,1060 @@ function printSheet(){
 }
 
 /* ---------- SAV ---------- */
-const SAV_CHOICES = [
-  { key:"leak",   label:"Fuite / glouglou", tips:["Vérifier joint, airflow ouvert ?", "Résistance trop vieille ?", "Liquide trop fluide / pod saturé ?"] },
-  { key:"burnt",  label:"Goût brûlé",       tips:["Résistance neuve amorcée ?", "Puissance trop haute ?", "Airflow trop fermé ?"] },
-  { key:"weak",   label:"Peu de vapeur",    tips:["Airflow trop fermé ?", "Puissance trop basse ?", "Résistance en fin de vie ?"] },
-  { key:"hit",    label:"Hit trop fort",    tips:["Baisser nicotine ?", "Changer ratio PG/VG ?", "Airflow + ouvert / baisser puissance"] },
-  { key:"charge", label:"Problème charge",  tips:["Câble/port OK ?", "Nettoyer port ?", "Changer adaptateur 5V/2A ?"] },
-  { key:"other",  label:"Autre",            tips:["Préciser le symptôme", "Tester une autre cartouche/résistance", "Tester autre liquide"] },
+const savMap = [
+  {
+    id:"fuite",
+    t:"Fuite",
+    s:"liquide / glouglou",
+    causes:[
+      "Résistance en fin de vie ou mal amorcée",
+      "Airflow trop ouvert + aspiration trop forte",
+      "Liquide trop fluide / chaleur (adapter le PG/VG, Preconiser des boosters plus epais",
+      "Joint ou cartouche usé"
+    ],
+    actions:[
+      "Changer résistance + amorcer (5–10 min)",
+      "Réduire airflow / aspiration",
+      "Nettoyer et vérifier joints",
+      "Tester autre cartouche"
+    ],
+    tip:"Toujours 1 changement à la fois.",
+    autoRefuse:false
+  },
+
+  {
+    id:"goutBrule",
+    t:"Goût brûlé",
+    s:"dry hit",
+    causes:[
+      "Résistance cramée ou en fin de vie",
+      "Puissance trop élevée",
+      "Chaîne de bouffées"
+    ],
+    actions:[
+      "Changer résistance",
+      "Baisser la puissance",
+      "Espacer les bouffées"
+    ],
+    tip:"Résistance brûlée = non garantie.",
+    autoRefuse:true
+  },
+
+  {
+    id:"chipset",
+    t:"Chipset HS",
+    s:"ne répond plus / bug",
+    causes:[
+      "Court-circuit",
+      "Surtension",
+      "Défaut électronique"
+    ],
+    actions:[
+      "Redémarrage 5 Pression",
+      "Verifier que la box n'a pas un bouton lock / OFF",
+      "En cas d'odeur de brulé : NE PAS INSISTER ET SECURISER LE MATERIEL !"
+    ],
+    tip:"Garantie possible si aucun signe de liquide.",
+    autoRefuse:false
+  },
+
+  {
+    id:"bouton",
+    t:"Bouton HS",
+    s:"ne clique plus / reste bloqué",
+    causes:[
+      "Usure mécanique",
+      "Liquide infiltré"
+    ],
+    actions:[
+      "Inspection bouton",
+      "Test fonctionnel"
+    ],
+    tip:"Liquide visible = refus garantie.",
+    autoRefuse:false
+  },
+
+  {
+    id:"ecran",
+    t:"Écran HS",
+    s:"noir / figé",
+    causes:[
+      "Choc",
+      "Défaut électronique",
+      "Humidité"
+    ],
+    actions:[
+      "Vérification chocs",
+      "Diagnostic visuel"
+    ],
+    tip:"Trace de choc = refus.",
+    autoRefuse:false
+  },
+
+  {
+    id:"autofire",
+    t:"Autofire",
+    s:"déclenche seul sans tirer sur le matériel",
+    causes:[
+      "Liquide dans le chipset",
+      "Capteur aspiration noyé"
+    ],
+    actions:[
+      "Aucune réparation possible, enlever immédiatement la cartouche / résistance du matériel"
+    ],
+    tip:"AUTOFIRE = refus automatique.",
+    autoRefuse:true
+  },
+
+  {
+    id:"liquideAspire",
+    t:"Liquide aspiré",
+    s:"Remontée de liquide dans la bouche",
+    causes:[
+      "Aspiration trop forte",
+      "Condensation excessive"
+    ],
+    actions:[
+      "Si l'aspiration est trop forte, faire un test de tirage et ajuster le matériel"
+    ],
+    tip:"Liquide aspiré = exclusion de garantie.",
+    autoRefuse:true
+  }
 ];
 
+
+function clearSavProblem(){
+  $("#savVendorProblem").value = "";
+  state.sav.vendorProblem = "";
+  audit("SAV_CLEAR_PROBLEM", "");
+  saveState();
+}
 function renderSav(){
   const box = $("#savChoices");
-  box.innerHTML = SAV_CHOICES.map(c=>`
-    <div class="choice" onclick="selectSav('${c.key}')">
-      <div class="ct">${escapeHtml(c.label)}</div>
-      <div class="cs">${escapeHtml(c.tips.join(" • "))}</div>
-    </div>
-  `).join("");
-  renderSavResult();
-}
+  box.innerHTML = "";
+  savMap.forEach(it=>{
+    const d = document.createElement("div");
+    d.className = "choice" + (state.sav.symptom === it.id ? " selected":"");
+    d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
+  d.onclick = ()=> {
+  state.sav.symptom = it.id;
+  audit("SAV_SYMPTOM", it.id);
 
-function selectSav(key){
-  state.sav.symptom = key;
-  renderSavResult();
+  // ✅ met à jour le bouton sélectionné visuellement
+  $all("#savChoices .choice").forEach(x => x.classList.remove("selected"));
+  d.classList.add("selected");
+
   saveState();
-  audit("SAV_SELECT", key);
-}
+  renderSavResult();
 
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===it.id)?.t || it.id);
+};
+    box.appendChild(d);
+  });
+  $("#savVendorProblem").value = state.sav.vendorProblem || "";
+  renderSavResult();
+}
 function renderSavResult(){
-  const box = $("#savResult");
-  if(!state.sav.symptom){
-    box.innerHTML = `<h3>En attente…</h3> Sélectionne un symptôme.</p>`;
+  const r = $("#savResult");
+  const it = savMap.find(x=>x.id===state.sav.symptom);
+  if(!it){
+    r.innerHTML = `<h3>En attente…</h3><p class="muted">Sélectionne un symptôme.</p>`;
     return;
   }
-  const c = SAV_CHOICES.find(x=>x.key===state.sav.symptom);
-  const tips = c?.tips || [];
-  box.innerHTML = `
-    <h3>${escapeHtml(c.label)}</h3>
-    <div class="chips">${tips.map(t=>`<span class="chip">${escapeHtml(t)}</span>`).join("")}</div>
+
+  r.innerHTML = `
+    <h3>✅ ${escapeHtml(it.t)}</h3>
+    <p class="muted">${escapeHtml(it.tip)}</p>
+
+    <div class="hr"></div>
+
+    <div class="two">
+      <div>
+        <h3>Causes probables</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.causes.map(c=>`<li>${escapeHtml(c)}</li>`).join("")}
+        </ul>
+      </div>
+      <div>
+        <h3>Actions recommandées</h3>
+        <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+          ${it.actions.map(a=>`<li>${escapeHtml(a)}</li>`).join("")}
+        </ul>
+      </div>
+    </div>
   `;
 }
+
+
 
 function openSavForm(){
   if(!requireAuth()) return;
-  if(!state.sav.symptom){ toast("SAV", "Choisis un symptôme."); return; }
-  const c = SAV_CHOICES.find(x=>x.key===state.sav.symptom);
-  const problem = state.sav.vendorProblem || "";
-  const now = formatDateFR(new Date());
+  if(!state.sav.symptom){
+    toast("SAV", "Choisis d’abord un symptôme.");
+    return;
+  }
 
-  $("#savForm").innerHTML = `
-    <p class="muted">Impression directe. Conserver une copie dans le colis fournisseur.</p>
-    <div class="two">
-      <div><label>Produit</label><input id="savProduct" type="text" placeholder="Ex: XROS 3 / Zlide..." /></div>
-      <div><label>Numéro de série (si dispo)</label><input id="savSerial" type="text" placeholder="SN..." /></div>
-    </div>
-    <div class="two" style="margin-top:10px">
-      <div><label>Client</label><input id="savClient" type="text" placeholder="Nom client" /></div>
-      <div><label>Contact</label><input id="savContact" type="text" placeholder="Tel ou email (optionnel)" /></div>
-    </div>
-    <div style="margin-top:10px">
-      <label>Problème (vendeur)</label>
-      <textarea id="savProblem">${escapeHtml(problem)}</textarea>
-    </div>
-    <div style="margin-top:10px">
-      <label>Actions faites en boutique</label>
-      <textarea id="savActions" placeholder="Test câble, changement résistance, nettoyage..."></textarea>
-    </div>
-    <div class="btnrow" style="margin-top:10px">
-      <button class="btn primary" onclick="printSav()">Imprimer fiche SAV</button>
-      <button class="btn" onclick="closeSavModal()">Fermer</button>
-    </div>
-    <p class="small" style="margin-top:8px">Date: ${escapeHtml(now)} • Symptom: ${escapeHtml(c.label)}</p>
-  `;
+  state.sav.vendorProblem = ($("#savVendorProblem").value || "").trim();
+  saveState();
+
+  // reset
+  $("#savClientName").value = "";
+  $("#savPurchaseDate").value = "";
+
+  // ✅ AJOUT : reset champs produit
+  $("#savProductRef").value = "";
+  $("#savProductColor").value = "";
+  $("#savScratchCode").value = "";
+
+  $("#savGoodState").value = "yes";
+  $("#savPortOk").value = "yes";
+  $("#savBoxPresent").value = "yes";
+  $("#savCablePresent").value = "yes";
+
+  $("#savProblemText").value = state.sav.vendorProblem || "";
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
+  $("#savDecisionBox").textContent = "—";
+
   $("#savModal").classList.add("show");
+  audit("SAV_OPEN_FORM", state.sav.symptom);
 }
 
 function closeSavModal(){ $("#savModal").classList.remove("show"); }
 
-function printSav(){
-  const product = ($("#savProduct").value||"").trim();
-  const serial = ($("#savSerial").value||"").trim();
-  const client = ($("#savClient").value||"").trim();
-  const contact = ($("#savContact").value||"").trim();
-  const problem = ($("#savProblem").value||"").trim();
-  const actions = ($("#savActions").value||"").trim();
+function computeSavDecision(data){
+  const reasons = [];
 
-  const now = new Date();
-  const html = `
-  <!doctype html><html><head><meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Fiche SAV</title>
-  <style>
-    body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
-    h1{margin:0 0 6px; font-size:18px}
-    .sub{color:#334155; margin:0 0 12px; font-size:12px}
-    .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
-    .muted{color:#475569; font-size:12px; line-height:1.45}
-    .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{border:1px solid #e2e8f0; border-radius:999px; padding:6px 10px; font-size:12px}
-  </style></head><body>
-  <h1>STOOM • Fiche SAV</h1>
-  <p class="sub">Imprimé le ${escapeHtml(formatDateTimeFR(now))}</p>
+  if(!data.clientName) reasons.push("Nom / prénom client manquant");
+  if(!data.purchaseDate) reasons.push("Date d’achat manquante");
+  if(!data.productRef) reasons.push("Référence produit manquante");
+  if(!data.productColor) reasons.push("Couleur du produit manquante");
+
+  if(data.goodState !== "yes") reasons.push("Produit non en bon état");
+  if(data.portOk !== "yes") reasons.push("Port de charge non intact");
+  if(data.boxPresent !== "yes") reasons.push("Boîte absente");
+  if(data.cablePresent !== "yes") reasons.push("Câble de charge absent");
+
+  const symptom = savMap.find(s => s.id === data.symptom);
+  if(symptom?.autoRefuse){
+    reasons.push("Symptôme exclu de garantie (liquide / autofire / Résistance non garantie)");
+  }
+
+  return { ok: reasons.length === 0, reasons };
+}
+
+function validateSavAndPrint(){
+  if(!requireAuth()) return;
+
+  const data = {
+    clientName: ($("#savClientName").value||"").trim(),
+    purchaseDate: $("#savPurchaseDate").value,
+    productRef: ($("#savProductRef").value||"").trim(),
+    productColor: ($("#savProductColor").value||"").trim(),
+    scratchCode: ($("#savScratchCode").value||"").trim(),
+    goodState: $("#savGoodState").value,
+    portOk: $("#savPortOk").value,
+    boxPresent: $("#savBoxPresent").value,
+    cablePresent: $("#savCablePresent").value,
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
+  };
+
+  const dec = computeSavDecision(data);
+  const nowTs = Date.now();
+
+  const symptomLabel = (savMap.find(x=>x.id===data.symptom)?.t || data.symptom);
+  const vendor = state.currentUser?.name || "INCONNU";
+  const when = formatDateTimeFR(nowTs);
+
+  const savSheet = {
+    ...data,
+    symptomLabel,
+    vendor,
+    when,
+    decision: dec.ok ? "SAV RECEVABLE" : "PRISE EN GARANTIE IMPOSSIBLE",
+    reasons: dec.reasons
+  };
+
+  state.sav.lastSavSheet = savSheet;
+
+  // ✅ Historique : ON GARDE TOUT (recevable + non recevable)
+  state.sav.history = state.sav.history || [];
+  state.sav.history.push(savSheet);
+  if(state.sav.history.length > 800) state.sav.history.shift();
+
+  audit("SAV_DECISION", `${savSheet.decision} | ${symptomLabel}`);
+  saveState();
+
+  if(dec.ok){
+    printSavSheet(savSheet);
+    closeSavModal();
+    renderSavHistory();
+  } else {
+    $("#savDecisionBox").innerHTML =
+      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+    renderSavHistory();
+  }
+}
+
+
+function previewSavEligibility(){
+  const data = {
+    clientName: ($("#savClientName").value||"").trim(),
+    purchaseDate: $("#savPurchaseDate").value,
+    productRef: ($("#savProductRef").value||"").trim(),
+    productColor: ($("#savProductColor").value||"").trim(),
+    scratchCode: ($("#savScratchCode").value||"").trim(),
+    goodState: $("#savGoodState").value,
+    portOk: $("#savPortOk").value,
+    boxPresent: $("#savBoxPresent").value,
+    cablePresent: $("#savCablePresent").value,
+    problem: ($("#savProblemText").value||"").trim(),
+    symptom: state.sav.symptom
+  };
+
+  const dec = computeSavDecision(data);
+
+  if(dec.ok){
+    $("#savDecisionBox").innerHTML =
+      `<span class="goodText"><b>SAV RECEVABLE</b></span> – fiche imprimable autorisée ✅`;
+  } else {
+    $("#savDecisionBox").innerHTML =
+      `<span class="dangerText"><b>PRISE EN GARANTIE IMPOSSIBLE</b></span> ❌<br/>
+       Raisons : ${dec.reasons.map(r=>escapeHtml(r)).join(" • ")}`;
+  }
+}
+  
+function printSavSheet(s){
+  audit("PRINT_SAV_SHEET", s.decision);
+
+  const yesNo = v => (v==="yes" ? "Oui" : "Non");
+  const reasonsHtml = (s.reasons||[]).length
+    ? `<ul>${s.reasons.map(r=>`<li>${escapeHtml(r)}</li>`).join("")}</ul>`
+    : `<p>Aucune.</p>`;
+
+  const badgeColor = (s.decision === "SAV RECEVABLE") ? "#16a34a" : "#dc2626";
+
+  const html =
+`<!doctype html><html><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fiche SAV STOOM</title>
+<style>
+  body{font-family: Arial, sans-serif; padding:24px; color:#0b1220}
+  h1{margin:0 0 6px; font-size:18px}
+  .sub{color:#334155; margin:0 0 16px; font-size:12px}
+  .card{border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin:12px 0}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .col{flex:1; min-width:220px}
+  .k{color:#334155; font-size:12px; margin:0}
+  .v{font-size:13px; margin:6px 0 0}
+  .badge{display:inline-block; padding:8px 12px; border-radius:999px; color:white; font-weight:700; font-size:12px; background:${badgeColor}}
+  .muted{color:#475569; font-size:12px; line-height:1.45}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;}
+  .hr{height:1px; background:#e2e8f0; margin:12px 0}
+  ul{margin:8px 0 0; padding-left:18px}
+</style></head><body>
+
+<h1>${escapeHtml(state.settings.shopName)} • FICHE SAV</h1>
+<p class="sub">Pris en charge par <b>${escapeHtml(s.vendor)}</b> • ${escapeHtml(s.when)}</p>
+
+<div class="card">
+  <span class="badge">${escapeHtml(s.decision)}</span>
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col">
+      <p class="k">Client</p>
+      <p class="v"><b>${escapeHtml(s.clientName || "—")}</b></p>
+    </div>
+    <div class="col">
+      <p class="k">Date d’achat</p>
+      <p class="v">${escapeHtml(s.purchaseDate || "—")}</p>
+    </div>
+  </div>
 
   <div class="card">
-    <p class="muted"><b>Produit:</b> ${escapeHtml(product||"—")} • <b>SN:</b> ${escapeHtml(serial||"—")}</p>
-    <p class="muted"><b>Client:</b> ${escapeHtml(client||"—")} • <b>Contact:</b> ${escapeHtml(contact||"—")}</p>
-    <p class="muted"><b>Symptôme:</b> ${escapeHtml(SAV_CHOICES.find(x=>x.key===state.sav.symptom)?.label || "—")}</p>
-    <p class="muted"><b>Problème vendeur:</b><br/>${escapeHtml(problem||"—")}</p>
-    <p class="muted"><b>Actions boutique:</b><br/>${escapeHtml(actions||"—")}</p>
-  </div>
-  </body></html>
-  `;
+  <b>Produit :</b><br>
+  <b>Référence :</b> ${escapeHtml(s.productRef || "—")}<br>
+  <b>Couleur :</b> ${escapeHtml(s.productColor || "—")}<br>
+  <b>Scratch code :</b> ${escapeHtml(s.scratchCode || "Non communiqué")}
+</div>
 
-  const w = window.open("", "savPrint");
+
+  <div class="hr"></div>
+  <div class="row">
+    <div class="col"><p class="k">Symptôme</p><p class="v">${escapeHtml(s.symptomLabel)}</p></div>
+    <div class="col"><p class="k">Problème constaté</p><p class="v">${escapeHtml(s.problem || "—")}</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Vérifications garantie</h2>
+  <div class="row">
+    <div class="col"><p class="k">Bon état (pas de chute)</p><p class="v">${escapeHtml(yesNo(s.goodState))}</p></div>
+    <div class="col"><p class="k">Port de charge intact</p><p class="v">${escapeHtml(yesNo(s.portOk))}</p></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="col"><p class="k">Boîte présente</p><p class="v">${escapeHtml(yesNo(s.boxPresent))}</p></div>
+    <div class="col"><p class="k">Câble de charge présent</p><p class="v">${escapeHtml(yesNo(s.cablePresent))}</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-size:14px; margin:0 0 8px">Raisons / Justification</h2>
+  <p class="muted">Si un élément requis est manquant ou non conforme : <b>prise en garantie impossible</b>.</p>
+  ${reasonsHtml}
+  <div class="hr"></div>
+  <p class="muted mono">Signature vendeur : _____________________</p>
+  <p class="muted mono">Signature client : ______________________</p>
+</div>
+
+</body></html>`;
+
+  const w = window.open("", "_blank");
+  if(!w){ toast("Impression", "Pop-up bloquée."); return; }
   w.document.write(html);
   w.document.close();
   w.focus();
   w.print();
-
-  state.sav.lastSavSheet = {
-    ts: Date.now(),
-    product, serial, client, contact,
-    symptom: state.sav.symptom,
-    problem, actions
-  };
-  state.sav.history.push({ ...state.sav.lastSavSheet });
-  if(state.sav.history.length > 400) state.sav.history.shift();
-  audit("SAV_PRINT", state.sav.symptom);
-  saveState();
-  renderSavHistory();
-  closeSavModal();
 }
 
-function clearSavProblem(){
-  state.sav.vendorProblem = "";
-  $("#savVendorProblem").value = "";
-  saveState();
-}
-function closeSavModal(){ $("#savModal").classList.remove("show"); }
-
-function renderSavHistory(filter=""){
-  const box = $("#savHistoryList");
-  const query = (filter || $("#savHistoryFilter").value || "").toLowerCase();
-  let rows = state.sav.history.slice().reverse();
-  if(query){
-    rows = rows.filter(r=>
-      (r.product||"").toLowerCase().includes(query) ||
-      (r.symptom||"").toLowerCase().includes(query) ||
-      (r.problem||"").toLowerCase().includes(query) ||
-      (r.actions||"").toLowerCase().includes(query) ||
-      (r.client||"").toLowerCase().includes(query)
-    );
-  }
-  if(rows.length === 0){
-    box.innerHTML = `<div class="small">Aucun SAV enregistré.</div>`;
+function reprintLastSav(){
+  if(!requireAuth()) return;
+  if(!state.sav.lastSavSheet){
+    toast("SAV", "Aucune fiche SAV récente.");
     return;
   }
-  box.innerHTML = rows.map(r=>{
-    const symLabel = SAV_CHOICES.find(x=>x.key===r.symptom)?.label || r.symptom;
+  printSavSheet(state.sav.lastSavSheet);
+}
+ function renderSavHistory(){
+  const box = $("#savHistoryList");
+  if(!box) return;
+
+  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+  const list = (state.sav.history || []).slice().reverse();
+
+  const filtered = list.filter(s =>
+    !q ||
+    (s.productRef||"").toLowerCase().includes(q) ||
+    (s.symptomLabel||"").toLowerCase().includes(q) ||
+    (s.vendor||"").toLowerCase().includes(q) ||
+    (s.decision||"").toLowerCase().includes(q)
+  );
+
+  if(filtered.length === 0){
+    box.innerHTML = `<p class="muted">Aucun SAV enregistré.</p>`;
+    return;
+  }
+
+  box.innerHTML = filtered.map(s => `
+    <div class="item">
+      <div class="top">
+        <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.symptomLabel || "—")}</strong>
+        <span>${escapeHtml(s.when || "")}</span>
+      </div>
+      <p class="muted">
+        ${escapeHtml(s.decision)} — par ${escapeHtml(s.vendor || "—")}
+      </p>
+      <div class="btnrow">
+        <button class="btn" onclick="printSavSheet(${JSON.stringify(s).replace(/"/g,'&quot;')})">
+          Ré-imprimer
+        </button>
+      </div>
+    </div>
+  `).join("");
+}
+function renderSavHistory(){
+  const box = $("#savHistoryList");
+  if(!box) return;
+
+  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
+  const rows = (state.sav.history || []).slice().reverse();
+
+  const filtered = rows.filter(s=>{
+    if(!q) return true;
+    const hay = [
+      s.when, s.vendor, s.decision, s.symptomLabel,
+      s.clientName, s.purchaseDate,
+      s.productRef, s.productColor, s.scratchCode,
+      s.problem,
+      ...(s.reasons || [])
+    ].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+
+  if(filtered.length === 0){
+    box.innerHTML = `<p class="muted">Aucun SAV dans l’historique.</p>`;
+    return;
+  }
+
+  box.innerHTML = filtered.map((s, idx)=>{
+    const decisionClass = (s.decision === "SAV RECEVABLE") ? "goodText" : "dangerText";
+    const reasons = (s.reasons && s.reasons.length) ? s.reasons.join(" • ") : "—";
+    const productLine = `${s.productRef || "—"} • ${s.productColor || "—"}${s.scratchCode ? " • " + s.scratchCode : ""}`;
+
     return `
       <div class="item">
         <div class="top">
-          <strong>${escapeHtml(r.product||"—")}</strong>
-          <span>${escapeHtml(formatDateTimeFR(r.ts))}</span>
+          <strong>${escapeHtml(s.symptomLabel || "SAV")}</strong>
+          <span>${escapeHtml(s.when || "")}</span>
         </div>
-        <p class="small">Symptôme: ${escapeHtml(symLabel||"—")} • Client: ${escapeHtml(r.client||"—")} • Contact: ${escapeHtml(r.contact||"—")}</p>
-        <p class="small">Problème: ${escapeHtml(r.problem||"—")}</p>
-        <p class="small">Actions: ${escapeHtml(r.actions||"—")}</p>
+
+        <p class="small">
+          <b class="${decisionClass}">${escapeHtml(s.decision || "")}</b>
+          • ${escapeHtml(s.vendor || "—")}
+        </p>
+
+        <p class="muted">
+          <b>Produit :</b> ${escapeHtml(productLine)}<br/>
+          <b>Client :</b> ${escapeHtml(s.clientName || "—")} • <b>Achat :</b> ${escapeHtml(s.purchaseDate || "—")}<br/>
+          <b>Problème :</b> ${escapeHtml(s.problem || "—")}<br/>
+          <b>Raisons :</b> ${escapeHtml(reasons)}
+        </p>
+
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="printSavSheet(state.sav.history[${(state.sav.history || []).length - 1 - idx}])">Ré-imprimer</button>
+          ${isManager() ? `<button class="btn danger" onclick="deleteSavHistoryItem(${(state.sav.history || []).length - 1 - idx})">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
+        </div>
       </div>
     `;
   }).join("");
 }
 
-function exportSavHistoryCSV(){
-  if(!isManager()) return;
-  const header = ["timestamp","date","produit","symptome","client","contact","probleme","actions"];
-  const lines = [header.join(",")];
-  for(const r of state.sav.history){
-    lines.push([
-      r.ts,
-      `"${formatDateTimeFR(r.ts).replace(/"/g,'""')}"`,
-      `"${String(r.product||"").replace(/"/g,'""')}"`,
-      `"${String(r.symptom||"").replace(/"/g,'""')}"`,
-      `"${String(r.client||"").replace(/"/g,'""')}"`,
-      `"${String(r.contact||"").replace(/"/g,'""')}"`,
-      `"${String(r.problem||"").replace(/"/g,'""')}"`,
-      `"${String(r.actions||"").replace(/"/g,'""')}"`,
-    ].join(","));
+function deleteSavHistoryItem(index){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_SAV_HISTORY_DELETE", String(index));
+    return;
   }
-  download(`stoom-sav-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
-  audit("SAV_HISTORY_EXPORT", "");
-}
-function clearSavHistory(){
-  if(!isManager()) return;
-  if(!confirm("Vider l’historique SAV ?")) return;
-  state.sav.history = [];
-  audit("SAV_HISTORY_CLEAR", "");
+  if(!Array.isArray(state.sav.history)) state.sav.history = [];
+  if(index < 0 || index >= state.sav.history.length) return;
+  state.sav.history.splice(index, 1);
+  audit("SAV_HISTORY_DELETE", String(index));
   saveState();
   renderSavHistory();
 }
 
-/* ---------- Notes & Followups ---------- */
+function clearSavHistory(){
+  if(!isManager()){
+    toast("Accès refusé", "Vider l’historique = responsable.");
+    audit("DENY_SAV_HISTORY_CLEAR", "");
+    return;
+  }
+  if(!confirm("Vider tout l’historique SAV sur cette tablette ?")) return;
+  state.sav.history = [];
+  audit("SAV_HISTORY_CLEARED", "");
+  saveState();
+  renderSavHistory();
+}
+
+function exportSavHistoryCSV(){
+  if(!isManager()){
+    toast("Accès refusé", "Export historique = responsable.");
+    audit("DENY_SAV_HISTORY_EXPORT", "");
+    return;
+  }
+
+  const hist = state.sav.history || [];
+  const esc = (v)=> `"${String(v ?? "").replace(/"/g,'""')}"`;
+
+  const header = [
+    "when","vendor","decision","symptomLabel",
+    "clientName","purchaseDate",
+    "productRef","productColor","scratchCode",
+    "problem","reasons"
+  ];
+
+  const lines = [header.join(",")];
+
+  for(const s of hist){
+    lines.push([
+      esc(s.when),
+      esc(s.vendor),
+      esc(s.decision),
+      esc(s.symptomLabel),
+      esc(s.clientName),
+      esc(s.purchaseDate),
+      esc(s.productRef),
+      esc(s.productColor),
+      esc(s.scratchCode),
+      esc(s.problem),
+      esc((s.reasons || []).join(" • "))
+    ].join(","));
+  }
+
+  download(`stoom-sav-historique-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("SAV_HISTORY_EXPORT_CSV", "");
+}
+
+
+/* ---------- Notes ---------- */
+function maskPhone(p){
+  if(!p) return "";
+  const s = String(p).replace(/\s+/g,"");
+  if(s.length <= 4) return "••••";
+  return "••••••" + s.slice(-2);
+}
+function toggleMaskPhones(){
+  if(!isManager()){ toast("Accès", "Réservé responsable."); return; }
+  state.settings.maskPhones = !state.settings.maskPhones;
+  audit("TOGGLE_MASK_PHONES", String(state.settings.maskPhones));
+  saveState();
+  renderNotes();
+}
 function saveNote(){
   if(!requireAuth()) return;
   const name = ($("#noteName").value||"").trim();
   const phone = ($("#notePhone").value||"").trim();
   const text = ($("#noteText").value||"").trim();
-  if(!name || !text){ toast("Note", "Nom + note requis."); return; }
-  state.notes.push({ id: crypto.randomUUID(), name, phone, text, ts: Date.now() });
-  audit("NOTE_SAVE", name);
-  saveState();
-  renderNotes();
-  clearNoteForm();
-}
+  if(!name && !phone && !text){ toast("Note", "Rien à enregistrer."); return; }
 
+  const id = (crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2));
+  state.notes.push({ id, name, phone, text, createdAt: Date.now(), createdBy: state.currentUser?.name || "INCONNU" });
+  audit("NOTE_ADD", `${name} ${phone}`.trim());
+  saveState();
+  clearNoteForm();
+  renderNotes();
+  toast("OK", "Note enregistrée.");
+}
 function clearNoteForm(){
   $("#noteName").value = "";
   $("#notePhone").value = "";
   $("#noteText").value = "";
 }
-function toggleMaskPhones(){
-  state.settings.maskPhones = !state.settings.maskPhones;
+function deleteNote(id){
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_NOTE_DELETE", id);
+    return;
+  }
+  state.notes = state.notes.filter(n=>n.id!==id);
+  audit("NOTE_DELETE", id);
   saveState();
   renderNotes();
 }
-function renderNotes(){
-  const tab = state.notesTab || "notes";
-  setNotesTab(tab);
-  if(tab === "notes") renderNotesList();
-  else renderFollowups();
-}
-function setNotesTab(tab){
-  state.notesTab = tab;
-  $("#notesTab-notes").style.display = tab==="notes" ? "block" : "none";
-  $("#notesTab-followups").style.display = tab==="followups" ? "block" : "none";
-  $all("#notesTabSwitch .tabBtn").forEach(btn=> btn.classList.toggle("active", btn.dataset.tab === tab));
-  saveState();
-}
 function renderNotesList(){
-  const box = $("#notesList");
+  const list = $("#notesList");
+  if(!list) return;
   const filter = ($("#noteFilter").value||"").toLowerCase().trim();
-  let rows = state.notes.slice().reverse();
-  if(filter){
-    rows = rows.filter(n=>
-      (n.name||"").toLowerCase().includes(filter) ||
-      (n.phone||"").toLowerCase().includes(filter) ||
-      (n.text||"").toLowerCase().includes(filter)
-    );
-  }
-  if(rows.length === 0){
-    box.innerHTML = `<div class="small">Aucune note.</div>`;
+  const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
+    if(!filter) return true;
+    return (n.name||"").toLowerCase().includes(filter)
+      || (n.phone||"").toLowerCase().includes(filter)
+      || (n.text||"").toLowerCase().includes(filter)
+      || (n.createdBy||"").toLowerCase().includes(filter);
+  });
+
+  if(items.length === 0){
+    list.innerHTML = `<p class="muted">Aucune note.</p>`;
     return;
   }
-  const mask = state.settings.maskPhones;
-  box.innerHTML = rows.map(n=>{
-    const phone = mask ? (n.phone ? n.phone.replace(/\d/g,"•") : "") : n.phone;
+
+  list.innerHTML = items.map(n=>{
+    const d = formatDateTimeFR(n.createdAt);
+    const phoneShown = state.settings.maskPhones ? maskPhone(n.phone) : (n.phone||"");
     return `
       <div class="item">
         <div class="top">
-          <strong>${escapeHtml(n.name)}</strong>
-          <span>${escapeHtml(formatDateTimeFR(n.ts))}</span>
+          <div>
+            <strong>${escapeHtml(n.name||"Sans nom")}</strong>
+            <div class="small">Par ${escapeHtml(n.createdBy||"—")} • ${escapeHtml(d)}</div>
+          </div>
+          <div><span>${escapeHtml(phoneShown)}</span></div>
         </div>
-        <p class="small">${escapeHtml(phone||"")}</p>
-        <p>${escapeHtml(n.text)}</p>
-        <div class="btnrow">
-          <button class="btn" onclick="editNote('${n.id}')">Modifier</button>
-          ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : ``}
+        <p>${escapeHtml(n.text||"")}</p>
+        <div class="btnrow" style="margin-top:10px">
+      ${isManager() ? `<button class="btn danger" onclick="deleteNote('${n.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable uniquement</span>`}
         </div>
       </div>
     `;
   }).join("");
 }
-
-function editNote(id){
-  const n = state.notes.find(x=>x.id===id);
-  if(!n) return;
-  const name = prompt("Nom", n.name);
-  if(name === null) return;
-  const phone = prompt("Téléphone", n.phone);
-  if(phone === null) return;
-  const text = prompt("Note", n.text);
-  if(text === null) return;
-  n.name = name.trim() || n.name;
-  n.phone = phone.trim();
-  n.text = text.trim() || n.text;
-  audit("NOTE_EDIT", id);
-  saveState();
+function setNotesTab(tab){
+  state.notesTab = tab || "notes";
   renderNotes();
+  saveState();
 }
-function deleteNote(id){
-  if(!isManager()) return toast("Suppression", "Responsable uniquement.");
-  if(!confirm("Supprimer cette note ?")) return;
-  state.notes = state.notes.filter(n=> n.id !== id);
-  audit("NOTE_DELETE", id);
-  saveState();
-  renderNotes();
+function renderNotes(){
+  const tab = state.notesTab || "notes";
+  $("#notesTab-notes")?.style.setProperty("display", tab === "notes" ? "block" : "none");
+  $("#notesTab-followups")?.style.setProperty("display", tab === "followups" ? "block" : "none");
+  $all("#notesTabSwitch .tabBtn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+  if(tab === "notes") renderNotesList();
+  if(tab === "followups") renderFollowups();
 }
 
-/* ---------- Followups ---------- */
+/* ---------- Suivi client / Rappels ---------- */
+let followupEditingId = null;
+function openFollowupsTab(){
+  state.notesTab = "followups";
+  renderNotes();
+  go("notes");
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
 function ensureFollowups(){
-  if(!state.followups) state.followups = [];
+  if(!Array.isArray(state.followups)) state.followups = [];
+  state.followups = state.followups.map(f=>{
+    const id = f.id || crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+    const baseStatus = f.status === "done" ? "done" : "wait";
+    return {
+      id,
+      name: f.name || "",
+      phone: f.phone || "",
+      dueDate: f.dueDate || f.nextDate || "",
+      dueTime: f.dueTime || f.nextTime || "",
+      summary: f.summary ?? f.notes ?? "",
+      status: baseStatus,
+      createdAt: f.createdAt || Date.now(),
+      createdBy: f.createdBy || state.currentUser?.name || "INCONNU",
+      lastCallAt: f.lastCallAt || null,
+      lastCallBy: f.lastCallBy || null,
+      lastResult: f.lastResult || "",
+      history: Array.isArray(f.history) ? f.history : []
+    };
+  });
+}
+function getFollowupStatus(f){
+  if(f.status === "done") return "done";
+  if(f.dueDate && f.dueDate < todayStr()) return "over";
+  return "wait";
+}
+function followupStatusLabel(f){
+  const s = getFollowupStatus(f);
+  if(s === "done") return "🟢 Rappel fait";
+  if(s === "over") return "🔴 En retard";
+  return f.dueDate === todayStr() ? "🟡 À faire aujourd’hui" : "🟡 En attente";
+}
+function formatDue(f){
+  if(!f.dueDate) return "—";
+  return f.dueTime ? `${f.dueDate} ${f.dueTime}` : f.dueDate;
 }
 function clearFollowupForm(){
-  ensureFollowups();
   $("#followName").value = "";
   $("#followPhone").value = "";
   $("#followDueDate").value = "";
   $("#followDueTime").value = "";
   $("#followSummary").value = "";
-  $("#followResult").value = "";
-  $("#followDone").checked = false;
+  followupEditingId = null;
+  const btn = $("#followSaveBtn");
+  if(btn) btn.textContent = "Créer le rappel";
 }
 function saveFollowup(){
   if(!requireAuth()) return;
   ensureFollowups();
+
   const name = ($("#followName").value||"").trim();
   const phone = ($("#followPhone").value||"").trim();
-  const date = $("#followDueDate").value;
-  const time = $("#followDueTime").value;
+  const dueDate = $("#followDueDate").value;
+  const dueTime = $("#followDueTime").value;
   const summary = ($("#followSummary").value||"").trim();
-  const done = $("#followDone").checked;
-  const result = ($("#followResult").value||"").trim();
+  if(!name){ toast("Suivi", "Nom obligatoire."); return; }
+  if(!dueDate){ toast("Suivi", "Date de rappel obligatoire."); return; }
 
-  if(!name || !date){
-    toast("Rappel", "Nom + date obligatoires.");
-    return;
+  const base = { name, phone, dueDate, dueTime, summary };
+
+  if(followupEditingId){
+    const idx = state.followups.findIndex(f=>f.id===followupEditingId);
+    if(idx !== -1){
+      const prev = state.followups[idx];
+      state.followups[idx] = {
+        ...prev,
+        ...base,
+        updatedAt: Date.now(),
+        updatedBy: state.currentUser?.name || "INCONNU"
+      };
+      audit("FOLLOWUP_EDIT", `${name} (${followupEditingId})`);
+    }
+  } else {
+    const id = crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+    state.followups.push({
+      id,
+      ...base,
+      status: "wait",
+      createdAt: Date.now(),
+      createdBy: state.currentUser?.name || "INCONNU",
+      lastCallAt: null,
+      lastCallBy: null,
+      lastResult: "",
+      history: []
+    });
+    audit("FOLLOWUP_ADD", name);
   }
-  const id = crypto.randomUUID();
-  state.followups.push({
-    id, name, phone, date, time, summary, result, done,
-    createdBy: state.currentUser?.name || "—",
-    ts: Date.now()
-  });
-  audit("FOLLOWUP_ADD", name);
+
   saveState();
-  clearFollowupForm();
   renderFollowups();
-  updateFollowUpAlerts(true);
+  clearFollowupForm();
+  toast("OK", "Rappel enregistré.");
 }
-
-function renderFollowups(){
+function openFollowup(id){
+  const f = (state.followups||[]).find(x=>x.id===id);
+  if(!f) return;
+  $("#followName").value = f.name || "";
+  $("#followPhone").value = f.phone || "";
+  $("#followDueDate").value = f.dueDate || "";
+  $("#followDueTime").value = f.dueTime || "";
+  $("#followSummary").value = f.summary || "";
+  followupEditingId = id;
+  const btn = $("#followSaveBtn");
+  if(btn) btn.textContent = "Mettre à jour";
+  toast("Mode édition", "Modifie puis enregistre.");
+}
+function markFollowupDone(id){
+  if(!requireAuth()) return;
   ensureFollowups();
-  const box = $("#followList");
-  const filter = ($("#followupFilter").value||"").toLowerCase().trim();
-  let rows = state.followups.slice().reverse();
-  if(filter){
-    rows = rows.filter(f=>
-      (f.name||"").toLowerCase().includes(filter) ||
-      (f.phone||"").toLowerCase().includes(filter) ||
-      (f.summary||"").toLowerCase().includes(filter) ||
-      (f.result||"").toLowerCase().includes(filter)
-    );
-  }
-  if(rows.length === 0){
-    box.innerHTML = `<div class="small">Aucun rappel.</div>`;
-    return;
-  }
-  box.innerHTML = rows.map(f=>{
-    const due = [f.date, f.time].filter(Boolean).join(" ");
-    return `
-      <div class="item">
-        <div class="top">
-          <strong>${escapeHtml(f.name)}</strong>
-          <span>${escapeHtml(due||"—")}</span>
-        </div>
-        <p class="small">${escapeHtml(f.summary||"")}</p>
-        <p class="small">Créé par ${escapeHtml(f.createdBy||"—")}</p>
-        <div class="btnrow">
-          <button class="btn" onclick="editFollowup('${f.id}')">Modifier</button>
-          ${isManager() ? `<button class="btn danger" onclick="deleteFollowup('${f.id}')">Supprimer</button>` : ``}
-        </div>
-      </div>
-    `;
-  }).join("");
-}
-
-function editFollowup(id){
   const f = state.followups.find(x=>x.id===id);
   if(!f) return;
-  const name = prompt("Nom", f.name);
-  if(name === null) return;
-  const phone = prompt("Téléphone", f.phone);
-  if(phone === null) return;
-  const date = prompt("Date (YYYY-MM-DD)", f.date);
-  if(date === null) return;
-  const time = prompt("Heure", f.time);
-  if(time === null) return;
-  const summary = prompt("Résumé", f.summary);
-  if(summary === null) return;
-  const result = prompt("Résultat", f.result);
-  if(result === null) return;
-  const done = confirm("Marquer comme fait ?");
-  f.name = name.trim() || f.name;
-  f.phone = phone.trim();
-  f.date = date.trim() || f.date;
-  f.time = time.trim();
-  f.summary = summary.trim() || f.summary;
-  f.result = result.trim();
-  f.done = done;
-  audit("FOLLOWUP_EDIT", id);
+  const note = prompt("Compte-rendu de l’appel ?", f.lastResult || "");
+  if(note === null) return;
+  const now = Date.now();
+  const by = state.currentUser?.name || "INCONNU";
+  f.status = "done";
+  f.lastCallAt = now;
+  f.lastCallBy = by;
+  f.lastResult = (note||"").trim();
+  f.history.push({ at: now, by, action:"done", note: f.lastResult });
+  audit("FOLLOWUP_DONE", `${f.name} (${id})`);
+  saveState();
+  renderFollowups();
+}
+function reprogramFollowup(id){
+  if(!requireAuth()) return;
+  ensureFollowups();
+  const f = state.followups.find(x=>x.id===id);
+  if(!f) return;
+  const newDate = prompt("Nouvelle date (YYYY-MM-DD)", f.dueDate || todayStr());
+  if(newDate === null) return;
+  if(!newDate.match(/^\d{4}-\d{2}-\d{2}$/)){ toast("Date", "Format attendu : YYYY-MM-DD."); return; }
+  const newTime = prompt("Heure (HH:MM, optionnel)", f.dueTime || "");
+  if(newTime === null) return;
+  if(newTime && !newTime.match(/^\d{2}:\d{2}$/)){ toast("Heure", "Format attendu : HH:MM."); return; }
+  f.dueDate = newDate;
+  f.dueTime = newTime || "";
+  f.status = "wait";
+  const now = Date.now();
+  const by = state.currentUser?.name || "INCONNU";
+  f.history.push({ at: now, by, action:"reschedule", note:`Reprogrammé au ${newDate}${newTime ? " "+newTime : ""}` });
+  audit("FOLLOWUP_RESCHEDULE", `${f.name} -> ${newDate} ${newTime||""}`);
   saveState();
   renderFollowups();
 }
 function deleteFollowup(id){
-  if(!isManager()){ toast("Suppression", "Responsable uniquement."); return; }
-  if(!confirm("Supprimer ce rappel ?")) return;
-  state.followups = state.followups.filter(f=> f.id !== id);
-  audit("FOLLOWUP_DELETE", id);
+  if(!isManager()){
+    toast("Accès refusé", "Suppression réservée responsable.");
+    audit("DENY_FOLLOWUP_DELETE", id);
+    return;
+  }
+  ensureFollowups();
+  const f = state.followups.find(x=>x.id===id);
+  if(!f) return;
+  if(!confirm(`Supprimer le suivi de ${f.name || "ce client"} ?`)) return;
+  state.followups = state.followups.filter(x=>x.id!==id);
+  audit("FOLLOWUP_DELETE", `${f.name} (${id})`);
   saveState();
   renderFollowups();
-  updateFollowUpAlerts(true);
-}
-function exportFollowupsCSV(){
-  if(!isManager()) return;
-  ensureFollowups();
-  const header = ["id","name","phone","date","time","summary","result","done","createdBy","ts"];
-  const lines = [header.join(",")];
-  for(const f of state.followups){
-    lines.push([
-      f.id,
-      `"${(f.name||"").replace(/"/g,'""')}"`,
-      `"${(f.phone||"").replace(/"/g,'""')}"`,
-      f.date,
-      f.time,
-      `"${(f.summary||"").replace(/"/g,'""')}"`,
-      `"${(f.result||"").replace(/"/g,'""')}"`,
-      f.done ? "yes" : "no",
-      `"${(f.createdBy||"").replace(/"/g,'""')}"`,
-      f.ts
-    ].join(","));
-  }
-  download(`stoom-followups-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
-  audit("FOLLOWUP_EXPORT", "");
 }
 function clearFollowups(){
-  if(!isManager()) return;
-  if(!confirm("Vider tous les suivis ?")) return;
+  if(!isManager()){
+    toast("Accès refusé", "Vider = responsable.");
+    audit("DENY_FOLLOWUP_CLEAR", "");
+    return;
+  }
+  if(!confirm("Supprimer tous les rappels sur cette tablette ?")) return;
   state.followups = [];
-  audit("FOLLOWUP_CLEAR", "");
+  audit("FOLLOWUP_CLEAR_ALL", "");
   saveState();
   renderFollowups();
-  updateFollowUpAlerts(true);
+}
+function exportFollowupsCSV(){
+  if(!isManager()){
+    toast("Accès refusé", "Export = responsable.");
+    audit("DENY_FOLLOWUP_EXPORT", "");
+    return;
+  }
+  ensureFollowups();
+  const esc = (v)=> `"${String(v ?? "").replace(/"/g,'""')}"`;
+  const lines = [["id","nom","phone","dueDate","dueTime","status","createdAt","createdBy","lastCallAt","lastCallBy","lastResult","summary"].join(",")];
+  state.followups.forEach(f=>{
+    lines.push([
+      esc(f.id),
+      esc(f.name),
+      esc(f.phone),
+      esc(f.dueDate),
+      esc(f.dueTime),
+      esc(getFollowupStatus(f)),
+      esc(f.createdAt ? formatDateTimeFR(f.createdAt) : ""),
+      esc(f.createdBy),
+      esc(f.lastCallAt ? formatDateTimeFR(f.lastCallAt) : ""),
+      esc(f.lastCallBy || ""),
+      esc(f.lastResult || ""),
+      esc(f.summary || "")
+    ].join(","));
+  });
+  download(`stoom-suivis-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("FOLLOWUP_EXPORT_CSV", "");
+}
+function renderFollowups(){
+  ensureFollowups();
+  const list = $("#followList");
+  if(!list) return;
+  const filter = ($("#followupFilter")?.value || "").toLowerCase().trim();
+
+  const rows = state.followups.slice().sort((a,b)=>{
+    const aDate = a.dueDate || "";
+    const bDate = b.dueDate || "";
+    if(aDate && bDate && aDate !== bDate) return aDate.localeCompare(bDate);
+    return (b.createdAt||0) - (a.createdAt||0);
+  }).filter(f=>{
+    if(!filter) return true;
+    const hay = [
+      f.name, f.phone, f.summary, f.lastResult, f.createdBy, f.lastCallBy,
+      f.dueDate, f.dueTime, followupStatusLabel(f)
+    ].join(" ").toLowerCase();
+    return hay.includes(filter);
+  });
+
+  if(rows.length === 0){
+    list.innerHTML = `<p class="muted">Aucun rappel enregistré.</p>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(f=>{
+    const status = getFollowupStatus(f);
+    const statusLabel = followupStatusLabel(f);
+    const phoneShown = state.settings.maskPhones ? maskPhone(f.phone) : (f.phone || "");
+    const lastLine = f.lastCallAt
+      ? `Dernier appel : ${formatDateTimeFR(f.lastCallAt)} • ${f.lastResult || "—"} (${f.lastCallBy || "—"})`
+      : "Dernier appel : —";
+    return `
+      <div class="item">
+        <div class="top">
+          <div>
+            <strong>${escapeHtml(f.name || "Sans nom")}</strong>
+            <div class="small">${escapeHtml(formatDue(f))}</div>
+            <div class="small">${statusLabel ? `<span class="statusPill ${status}">${escapeHtml(statusLabel)}</span>` : ""}</div>
+          </div>
+          <div><span>${escapeHtml(phoneShown)}</span></div>
+        </div>
+        <p class="muted">${escapeHtml(f.summary || "—")}</p>
+        <p class="small">${escapeHtml(lastLine)}</p>
+        <div class="btnrow" style="margin-top:10px">
+          <button class="btn" onclick="openFollowup('${f.id}')">Ouvrir</button>
+          <button class="btn" onclick="reprogramFollowup('${f.id}')">Reprogrammer</button>
+          ${status !== "done" ? `<button class="btn primary" onclick="markFollowupDone('${f.id}')">Rappel fait</button>` : `<span class="small goodText">✅ Fait</span>`}
+          ${isManager() ? `<button class="btn danger" onclick="deleteFollowup('${f.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const btn = $("#followSaveBtn");
+  if(btn && followupEditingId) btn.textContent = "Mettre à jour";
+}
+function updateFollowUpAlerts(showToast=false){
+  ensureFollowups();
+  const today = todayStr();
+  let overdue = 0;
+  let dueToday = 0;
+  let waitCount = 0;
+
+  state.followups.forEach(f=>{
+    const status = getFollowupStatus(f);
+    if(status === "done") return;
+    if(status === "over") overdue += 1;
+    if(status === "wait") waitCount += 1;
+    if(status === "wait" && f.dueDate === today) dueToday += 1;
+  });
+
+  const banner = $("#homeFollowupBanner");
+  if(banner){
+    if(overdue > 0 || dueToday > 0){
+      banner.style.display = "flex";
+      const txt = overdue > 0
+        ? `🔴 ${overdue} rappel(s) en retard${dueToday ? " + 🟡 " + dueToday + " à faire aujourd’hui" : ""}`
+        : `📞 ${dueToday} rappel(s) à faire aujourd’hui`;
+      const txtEl = $("#homeFollowupText");
+      if(txtEl) txtEl.textContent = txt;
+    } else {
+      banner.style.display = "none";
+    }
+  }
+
+  const mini = $("#followupMini");
+  if(mini){
+    const pending = overdue + waitCount;
+    mini.textContent = pending ? `${pending} (🔴${overdue} / 🟡${waitCount})` : "0";
+  }
+
+  if(showToast && (overdue || dueToday)){
+    const t = overdue ? "Rappels en retard" : "Rappels du jour";
+    const s = overdue
+      ? `${overdue} en retard${dueToday ? ` • ${dueToday} aujourd’hui` : ""}`
+      : `${dueToday} à faire aujourd’hui`;
+    toast(t, s);
+  }
 }
 
-/* ---------- Followup alerts ---------- */
-function updateFollowUpAlerts(skipSave=false){
-  ensureFollowups();
-  const today = new Date().toISOString().slice(0,10);
-  const due = state.followups.filter(f=> !f.done && f.date && f.date <= today);
-  const banner = $("#homeFollowupBanner");
-  const text = $("#homeFollowupText");
-  const mini = $("#followupMini");
-  mini.textContent = String(due.length || 0);
-  if(due.length === 0){
-    banner.style.display = "none";
-  } else {
-    banner.style.display = "flex";
-    text.textContent = `${due.length} rappel(s) à traiter ou en retard.`;
-  }
-  if(!skipSave) saveState();
+/* ---------- Calculators ---------- */
+function fillExample(){
+  $("#cigsPerDay").value = 20;
+  $("#days").value = 30;
+  $("#mlPerDayAt20").value = 4;
+  $("#price10ml").value = 5.9;
+  audit("CALC_FILL_EXAMPLE", "");
+  toast("Exemple", "Valeurs remplies.");
 }
-function openFollowupsTab(){
-  state.notesTab = "followups";
-  go("notes");
+function calcBottles(){
+  const cigs = Number($("#cigsPerDay").value||0);
+  const days = Number($("#days").value||0);
+  const mlAt20 = Number($("#mlPerDayAt20").value||4);
+  const price = Number($("#price10ml").value||0);
+  if(days <= 0){ toast("Erreur", "Durée invalide."); return; }
+
+  const mlPerDay = (cigs/20) * mlAt20;
+  const totalMl = mlPerDay * days;
+  const bottles = totalMl / 10;
+  const bottlesCeil = Math.max(0, Math.ceil(bottles));
+  const bottlesRound = Math.max(0, Math.round(bottles*10)/10);
+  let cost = null;
+  if(price>0) cost = bottlesCeil * price;
+
+  const offerText = (bottlesCeil >= 15) ? "Astuce : 15+2 offert (si applicable)." :
+                    (bottlesCeil >= 10) ? "Astuce : 10+1 offert (si applicable)." :
+                    "Astuce : prévoir 1 flacon de sécurité.";
+
+  $("#bottleResult").innerHTML = `
+    <h3>Résultat (estimation)</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>ml/j</b> ${mlPerDay.toFixed(1)}</span>
+      <span class="chip"><b>Total</b> ${totalMl.toFixed(0)} ml</span>
+      <span class="chip"><b>Flacons</b> ~${bottlesRound}</span>
+      <span class="chip"><b>À prévoir</b> ${bottlesCeil}</span>
+    </div>
+    <p class="muted">${offerText}</p>
+    ${cost !== null ? `<p class="muted"><b>Budget :</b> ~${cost.toFixed(2)} €</p>` : ``}
+  `;
+  audit("CALC_BOTTLES", `cigs=${cigs},days=${days},mlAt20=${mlAt20}`);
+}
+function calcSavings(){
+  const packPrice = Number($("#packPrice").value||0);
+  const packsPerDay = Number($("#packsPerDay").value||0);
+  const vapeMonthly = Number($("#vapeMonthly").value||0);
+  const months = Number($("#months").value||0);
+  if(months <= 0){ toast("Erreur", "Durée invalide."); return; }
+  const tobaccoMonthly = packPrice * packsPerDay * 30;
+  const tobaccoTotal = tobaccoMonthly * months;
+  const vapeTotal = vapeMonthly * months;
+  const save = tobaccoTotal - vapeTotal;
+
+  $("#savingsResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Tabac/mois</b> ${tobaccoMonthly.toFixed(2)} €</span>
+      <span class="chip"><b>Tabac</b> ${tobaccoTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Vape</b> ${vapeTotal.toFixed(2)} €</span>
+      <span class="chip"><b>Économie</b> ${save.toFixed(2)} €</span>
+    </div>
+  `;
+  audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
 }
 
 /* ---------- Manager: Rules editor ---------- */
@@ -2658,200 +3134,6 @@ function openEditUser(id){
   refreshAuthUI();
 }
 
-/* ---------- Admin accus/chargeurs ---------- */
-function saveBattSettings(){
-  if(!isManager()) return;
-  ensureBattState();
-  const minV = Number($("#adminBattMin").value||state.battSettings.battMinV||3.2);
-  const margin = Number($("#adminBattMargin").value||state.battSettings.safetyMargin||0.8);
-  state.battSettings.battMinV = Math.min(Math.max(minV, 2.8), 3.4);
-  state.battSettings.safetyMargin = Math.min(Math.max(margin, 0.5), 1);
-  state.batt.battMinV = state.battSettings.battMinV;
-  state.batt.safetyMargin = state.battSettings.safetyMargin;
-  audit("BATT_ADMIN_SETTINGS", `minV=${state.battSettings.battMinV},margin=${state.battSettings.safetyMargin}`);
-  saveState();
-  toast("Accus", "Paramètres mis à jour.");
-  renderBattView();
-}
-function exportBatteriesCSV(){
-  if(!isManager()) return;
-  const header = ["id","brand","model","size","chemistry","cdrA","capacitymAh","notes","trusted"];
-  const rows = [header.join(",")];
-  state.batteriesCatalog.forEach(b=>{
-    rows.push([
-      b.id,
-      `"${(b.brand||"").replace(/"/g,'""')}"`,
-      `"${(b.model||"").replace(/"/g,'""')}"`,
-      `"${(b.size||"").replace(/"/g,'""')}"`,
-      `"${(b.chemistry||"").replace(/"/g,'""')}"`,
-      b.cdrA,
-      b.capacitymAh,
-      `"${(b.notes||"").replace(/"/g,'""')}"`,
-      b.trusted ? "yes" : "no"
-    ].join(","));
-  });
-  download(`stoom-accus-${new Date().toISOString().slice(0,10)}.csv`, rows.join("\n"), "text/csv");
-  audit("BATT_ADMIN_EXPORT", `count=${state.batteriesCatalog.length}`);
-}
-function exportChargersCSV(){
-  if(!isManager()) return;
-  const header = ["id","brand","model","slots","maxCurrentA","usbInput","notes"];
-  const rows = [header.join(",")];
-  state.chargersCatalog.forEach(c=>{
-    rows.push([
-      c.id,
-      `"${(c.brand||"").replace(/"/g,'""')}"`,
-      `"${(c.model||"").replace(/"/g,'""')}"`,
-      c.slots,
-      c.maxCurrentA,
-      `"${(c.usbInput||"").replace(/"/g,'""')}"`,
-      `"${(c.notes||"").replace(/"/g,'""')}"`,
-    ].join(","));
-  });
-  download(`stoom-chargeurs-${new Date().toISOString().slice(0,10)}.csv`, rows.join("\n"), "text/csv");
-  audit("BATT_ADMIN_EXPORT_CHARGER", `count=${state.chargersCatalog.length}`);
-}
-function addBatteryFromForm(){
-  if(!isManager()) return;
-  ensureBattState();
-  const brand = ($("#battBrand").value||"").trim();
-  const model = ($("#battModel").value||"").trim();
-  const size = ($("#battSize").value||"").trim();
-  const chemistry = ($("#battChem").value||"").trim();
-  const cdrA = Number($("#battCdr").value||0);
-  const capacitymAh = Number($("#battCapacity").value||0);
-  const notes = ($("#battNotes").value||"").trim();
-  const trusted = $("#battTrusted").checked;
-  if(!brand || !model || !cdrA || !capacitymAh){ toast("Accus", "Marque, modèle, CDR et capacité requis."); return; }
-  const baseId = slugifyName(`${brand}-${model}`);
-  const editingId = $("#addBattBtn").dataset.editing || baseId;
-  let existing = state.batteriesCatalog.find(b=> b.id === editingId);
-  const payload = { id: editingId, brand, model, size, chemistry, cdrA, capacitymAh, notes, trusted };
-  const action = existing ? "BATT_ADMIN_EDIT" : "BATT_ADMIN_ADD";
-  if(existing){
-    Object.assign(existing, payload);
-  } else {
-    state.batteriesCatalog.push(payload);
-  }
-  $("#addBattBtn").dataset.editing = "";
-  ["battBrand","battModel","battSize","battChem","battCdr","battCapacity","battNotes"].forEach(id=> $("#"+id).value = "");
-  $("#battTrusted").checked = true;
-  saveState();
-  audit(action, payload.id);
-  renderBatteryAdmin();
-  renderBattView();
-  toast("Accus", existing ? "Accu modifié." : "Accu ajouté.");
-}
-function editBattery(id){
-  if(!isManager()) return;
-  const b = state.batteriesCatalog.find(x=>x.id===id);
-  if(!b) return;
-  $("#battBrand").value = b.brand||"";
-  $("#battModel").value = b.model||"";
-  $("#battSize").value = b.size||"";
-  $("#battChem").value = b.chemistry||"";
-  $("#battCdr").value = b.cdrA||"";
-  $("#battCapacity").value = b.capacitymAh||"";
-  $("#battNotes").value = b.notes||"";
-  $("#battTrusted").checked = !!b.trusted;
-  $("#addBattBtn").dataset.editing = b.id;
-  toast("Edition", "Modifier puis cliquer sur Ajouter/mettre à jour.");
-}
-function removeBattery(id){
-  if(!isManager()) return;
-  if(!confirm("Supprimer cet accu ?")) return;
-  state.batteriesCatalog = state.batteriesCatalog.filter(b=> b.id !== id);
-  audit("BATT_ADMIN_REMOVE", id);
-  saveState();
-  renderBatteryAdmin();
-  renderBattView();
-}
-function addChargerFromForm(){
-  if(!isManager()) return;
-  ensureBattState();
-  const brand = ($("#chargerBrand").value||"").trim();
-  const model = ($("#chargerModel").value||"").trim();
-  const slots = Number($("#chargerSlots").value||0);
-  const maxCurrentA = Number($("#chargerCurrent").value||0);
-  const notes = ($("#chargerNotes").value||"").trim();
-  if(!brand || !model || !slots || !maxCurrentA){ toast("Chargeur", "Marque, modèle, slots, courant requis."); return; }
-  const baseId = slugifyName(`${brand}-${model}`);
-  const editingId = $("#addChargerBtn").dataset.editing || baseId;
-  const payload = { id: editingId, brand, model, slots, maxCurrentA, usbInput:"5V", notes };
-  const existing = state.chargersCatalog.find(c=> c.id === editingId);
-  const action = existing ? "BATT_ADMIN_EDIT_CHARGER" : "BATT_ADMIN_ADD_CHARGER";
-  if(existing){ Object.assign(existing, payload); } else { state.chargersCatalog.push(payload); }
-  $("#addChargerBtn").dataset.editing = "";
-  ["chargerBrand","chargerModel","chargerSlots","chargerCurrent","chargerNotes"].forEach(id=> $("#"+id).value = "");
-  saveState();
-  audit(action, payload.id);
-  renderBatteryAdmin();
-  renderChargerAdvice();
-  toast("Chargeur", existing ? "Modifié." : "Ajouté.");
-}
-function editCharger(id){
-  if(!isManager()) return;
-  const c = state.chargersCatalog.find(x=>x.id===id);
-  if(!c) return;
-  $("#chargerBrand").value = c.brand||"";
-  $("#chargerModel").value = c.model||"";
-  $("#chargerSlots").value = c.slots||"";
-  $("#chargerCurrent").value = c.maxCurrentA||"";
-  $("#chargerNotes").value = c.notes||"";
-  $("#addChargerBtn").dataset.editing = c.id;
-  toast("Edition", "Modifier puis cliquer sur Ajouter/mettre à jour.");
-}
-function removeCharger(id){
-  if(!isManager()) return;
-  if(!confirm("Supprimer ce chargeur ?")) return;
-  state.chargersCatalog = state.chargersCatalog.filter(c=> c.id !== id);
-  audit("BATT_ADMIN_REMOVE_CHARGER", id);
-  saveState();
-  renderBatteryAdmin();
-  renderChargerAdvice();
-}
-function renderBatteryAdmin(){
-  const box = $("#battAdminBox");
-  if(!box) return;
-  if(!isManager()){
-    box.innerHTML = `<p class="small">Réservé aux responsables.</p>`;
-    return;
-  }
-  ensureBattState();
-  $("#adminBattMin").value = state.battSettings?.battMinV || 3.2;
-  $("#adminBattMargin").value = state.battSettings?.safetyMargin || 0.8;
-
-  const battList = $("#battCatalogList");
-  battList.innerHTML = state.batteriesCatalog.map(b=>`
-    <div class="item">
-      <div class="top">
-        <strong>${escapeHtml(b.brand)} ${escapeHtml(b.model)}</strong>
-        <span>${b.size || "—"} • ${b.cdrA}A • ${b.capacitymAh}mAh</span>
-      </div>
-      <p class="small">${escapeHtml(b.notes||"")} ${b.trusted ? "• Source fiable" : "• ⚠️ Rewrap à vérifier"}</p>
-      <div class="btnrow">
-        <button class="btn" onclick="editBattery('${b.id}')">Modifier</button>
-        <button class="btn danger" onclick="removeBattery('${b.id}')">Supprimer</button>
-      </div>
-    </div>
-  `).join("") || `<div class="item"><p class="muted">Aucun accu en base.</p></div>`;
-
-  const chargerList = $("#chargerCatalogList");
-  chargerList.innerHTML = state.chargersCatalog.map(c=>`
-    <div class="item">
-      <div class="top">
-        <strong>${escapeHtml(c.brand)} ${escapeHtml(c.model)}</strong>
-        <span>${c.slots} slots • ${c.maxCurrentA}A</span>
-      </div>
-      <p class="small">${escapeHtml(c.notes||"")} • ${escapeHtml(c.usbInput||"5V")}</p>
-      <div class="btnrow">
-        <button class="btn" onclick="editCharger('${c.id}')">Modifier</button>
-        <button class="btn danger" onclick="removeCharger('${c.id}')">Supprimer</button>
-      </div>
-    </div>
-  `).join("") || `<div class="item"><p class="muted">Aucun chargeur en base.</p></div>`;
-}
-
 /* ---------- Audit peek + full (manager only) ---------- */
 function renderAuditPeek(){
   const box = $("#auditPeek");
@@ -2937,157 +3219,6 @@ function clearAudit(){
   renderAudit();
 }
 
-/* ---------- Accus & sécurité ---------- */
-function calcBatteryAdvice(){
-  if(!requireAuth()) return;
-  ensureBattState();
-  const boxType = ($("#battBoxType").value||state.batt.boxType||"single");
-  const powerW = Number($("#battPower").value||state.batt.powerW||0);
-  const res = Number($("#battRes").value||state.batt.resistance||0) || null;
-  let battMinV = Number($("#battMinV").value||state.batt.battMinV||state.battSettings?.battMinV||3.2);
-  let safetyMargin = Number($("#battMargin").value||state.batt.safetyMargin||state.battSettings?.safetyMargin||0.8);
-  if(powerW <= 0){ toast("Accus", "Puissance requise."); return; }
-  battMinV = Math.min(Math.max(battMinV, 2.8), 3.4);
-  safetyMargin = Math.min(Math.max(safetyMargin, 0.5), 1);
-
-  state.batt.boxType = boxType;
-  state.batt.powerW = powerW;
-  state.batt.resistance = res;
-  state.batt.battMinV = battMinV;
-  state.batt.safetyMargin = safetyMargin;
-
-  const cells = boxType === "dual" ? 2 : 1;
-  const rawCurrent = powerW / (battMinV * cells);
-  const effectiveCurrent = rawCurrent / safetyMargin;
-  const perCellPower = powerW / cells;
-  const ohm = res ? { voltage: Math.sqrt(powerW * res), current: Math.sqrt(powerW * res) / res } : null;
-
-  const recList = state.batteriesCatalog.map(b=>{
-    const marginA = (Number(b.cdrA)||0) - effectiveCurrent;
-    return { ...b, marginA, safe: marginA >= 0 };
-  });
-  const recommended = recList.filter(r=> r.safe)
-    .sort((a,b)=> b.marginA - a.marginA || (Number(b.capacitymAh||0) - Number(a.capacitymAh||0)));
-  const avoid = recList.filter(r=> !r.safe).sort((a,b)=> a.marginA - b.marginA);
-
-  const bestCdr = Math.max(...state.batteriesCatalog.map(b=> Number(b.cdrA)||0), 0);
-  let safety = "OK";
-  if(effectiveCurrent > bestCdr){ safety = "DANGEREUX"; }
-  else if(effectiveCurrent > bestCdr * 0.85){ safety = "À surveiller"; }
-
-  state.batt.lastResult = {
-    boxType, powerW, res, battMinV, safetyMargin,
-    rawCurrent, effectiveCurrent, perCellPower, ohm,
-    recommended, avoid, safety
-  };
-  audit("BATT_CALC", `P=${powerW}W,type=${boxType},res=${res||"na"},minV=${battMinV},result=${safety}`);
-  saveState();
-  renderBatteryResults();
-  renderChargerAdvice();
-}
-function buildBatteryChips(list, ok=true){
-  if(!list || list.length===0) return `<p class="muted">${ok ? "Aucun accu ne dépasse la marge demandée." : "Aucun à éviter."}</p>`;
-  return `<div class="chips">${list.map(b=>{
-    const trust = b.trusted ? "" : "⚠️ rewrap/à vérifier";
-    const marginLabel = b.marginA !== undefined ? ` • marge ${b.marginA.toFixed(1)}A` : "";
-    return `<span class="chip"><b>${escapeHtml(b.brand)} ${escapeHtml(b.model)}</b> ${escapeHtml(b.size||"")} • ${b.cdrA}A CDR${marginLabel}${trust ? " "+trust:""}${b.notes ? ` • ${escapeHtml(b.notes)}`:""}</span>`;
-  }).join("")}</div>`;
-}
-function renderBatteryResults(){
-  ensureBattState();
-  const box = $("#battResults");
-  const r = state.batt.lastResult;
-  if(!box) return;
-  if(!r){
-    box.innerHTML = `<h3>Prêt</h3><p class="muted">Puissance + type de box → accus conseillés + rappel charge.</p>`;
-    return;
-  }
-  const safetyColor = r.safety === "OK" ? "good" : (r.safety === "À surveiller" ? "warn" : "bad");
-  box.innerHTML = `
-    <h3>Calculs</h3>
-    <div class="chips">
-      <span class="chip"><b>Type</b> ${escapeHtml(r.boxType==="dual"?"Double (série)":"Simple")}</span>
-      <span class="chip"><b>Puissance</b> ${r.powerW} W</span>
-      <span class="chip"><b>Courant / accu (pire cas)</b> ${r.rawCurrent.toFixed(2)} A</span>
-      <span class="chip"><b>Exigence avec marge</b> ${r.effectiveCurrent.toFixed(2)} A</span>
-      <span class="chip"><b>Puissance / accu</b> ${r.perCellPower.toFixed(1)} W</span>
-      <span class="chip"><b>Indice sécurité</b> <span style="color:var(--${safetyColor});font-weight:700">${escapeHtml(r.safety)}</span></span>
-    </div>
-    ${r.ohm ? `<p class="small mono">Loi d’Ohm: V≈${r.ohm.voltage.toFixed(2)} V • I coil≈${r.ohm.current.toFixed(2)} A</p>` : ""}
-    <div class="hr"></div>
-    <h3>Accus recommandés</h3>
-    ${buildBatteryChips(r.recommended, true)}
-    <div class="hr"></div>
-    <h3>Accus à éviter (CDR insuffisant)</h3>
-    ${buildBatteryChips(r.avoid, false)}
-    <div class="hr"></div>
-    <div class="alertBanner warn">
-      <div>
-        <strong>Rappels sécurité</strong>
-        <div class="small">Wrap intact, accus authentiques, éviter rewraps marketing douteux. Pas de charge dans la box si port endommagé. Remplacer en cas de chute, odeur, chauffe anormale.</div>
-      </div>
-    </div>
-  `;
-}
-function renderChargerAdvice(){
-  ensureBattState();
-  const list = $("#chargerList");
-  if(!list) return;
-  const isDual = (state.batt.boxType || $("#battBoxType")?.value || "single") === "dual";
-  const minSlots = 2;
-  const preferSlots = isDual ? 4 : 2;
-  const targetCharge = `0.5–1A conseillé (${preferSlots} slots idéal${preferSlots>2?" en double":""})`;
-  const rows = state.chargersCatalog
-    .filter(c=> Number(c.slots||0) >= minSlots)
-    .sort((a,b)=> Number(b.slots||0) - Number(a.slots||0) || (b.maxCurrentA||0) - (a.maxCurrentA||0));
-  if(rows.length === 0){
-    list.innerHTML = `<div class="item"><p class="muted">Aucun chargeur en base. Demande au responsable d’en ajouter.</p></div>`;
-    return;
-  }
-  list.innerHTML = rows.map(c=>{
-    return `
-      <div class="item">
-        <div class="top">
-          <strong>${escapeHtml(c.brand)} ${escapeHtml(c.model)}</strong>
-          <span>${c.slots} slots • ${c.maxCurrentA}A max</span>
-        </div>
-        <p class="small">${escapeHtml(c.notes||"")} • ${targetCharge}</p>
-      </div>
-    `;
-  }).join("");
-}
-function renderWrapAlert(){
-  const alertBox = $("#wrapAlert");
-  if(!alertBox) return;
-  const damaged = $("#wrapDamaged")?.checked;
-  alertBox.style.display = damaged ? "block" : "none";
-}
-function copyBatteryAdvice(){
-  const r = state.batt?.lastResult;
-  if(!r){ toast("Copie", "Calcul d’abord."); return; }
-  const top = r.recommended?.[0];
-  const summary = [
-    `Box: ${r.boxType==="dual"?"double":"simple"}`,
-    `Puissance: ${r.powerW}W`,
-    `Courant cible: ${r.effectiveCurrent.toFixed(2)}A/accu (min ${r.battMinV}V, marge ${r.safetyMargin})`,
-    top ? `Proposition: ${top.brand} ${top.model} (${top.cdrA}A, ${top.capacitymAh}mAh)` : "Aucun accu en base ne passe la marge."
-  ].join(" • ");
-  copyToClipboard(summary);
-}
-function renderBattView(){
-  ensureBattState();
-  const minV = state.batt.battMinV || state.battSettings.battMinV || 3.2;
-  const margin = state.batt.safetyMargin || state.battSettings.safetyMargin || 0.8;
-  $("#battBoxType").value = state.batt.boxType || "single";
-  $("#battPower").value = state.batt.powerW || "";
-  $("#battRes").value = state.batt.resistance || "";
-  $("#battMinV").value = minV;
-  $("#battMargin").value = margin;
-  renderBatteryResults();
-  renderChargerAdvice();
-  renderWrapAlert();
-}
-
 /* ---------- Sidebar mini + home last sheet ---------- */
 function refreshSidebarMini(){
   $("#today").textContent = formatDateFR(new Date());
@@ -3135,7 +3266,6 @@ function bindKeys(){
     if(k==="c") go("client");
     if(k==="s") go("sav");
     if(k==="k") go("calc");
-    if(k==="b") go("batt");
     if(k==="n"){ state.notesTab = "notes"; go("notes"); }
     if(k==="r"){ state.notesTab = "followups"; go("notes"); }
     if(k==="a") isManager() ? go("manager") : null;
@@ -3176,21 +3306,6 @@ function bindButtons(){
     saveState();
   });
 
-  $("#battCalcBtn")?.addEventListener("click", calcBatteryAdvice);
-  $("#battBoxType")?.addEventListener("change", (e)=>{ ensureBattState(); state.batt.boxType = e.target.value; saveState(); renderChargerAdvice(); });
-  $("#battPower")?.addEventListener("input", (e)=>{ ensureBattState(); state.batt.powerW = Number(e.target.value||0); saveState(); });
-  $("#battRes")?.addEventListener("input", (e)=>{ ensureBattState(); state.batt.resistance = Number(e.target.value||0); saveState(); });
-  $("#battMinV")?.addEventListener("input", (e)=>{ ensureBattState(); state.batt.battMinV = Number(e.target.value||0); saveState(); });
-  $("#battMargin")?.addEventListener("input", (e)=>{ ensureBattState(); state.batt.safetyMargin = Number(e.target.value||0); saveState(); });
-  $("#wrapDamaged")?.addEventListener("change", renderWrapAlert);
-  $("#wrapOk")?.addEventListener("change", renderWrapAlert);
-
-  $("#saveBattSettingsBtn")?.addEventListener("click", saveBattSettings);
-  $("#addBattBtn")?.addEventListener("click", addBatteryFromForm);
-  $("#addChargerBtn")?.addEventListener("click", addChargerFromForm);
-  $("#exportBattCsvBtn")?.addEventListener("click", exportBatteriesCSV);
-  $("#exportChargerCsvBtn")?.addEventListener("click", exportChargersCSV);
-
   $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
@@ -3198,7 +3313,6 @@ function bindButtons(){
 
 /* ---------- Init ---------- */
 function init(){
-  ensureBattState();
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
