@@ -443,6 +443,46 @@
     .dangerText{color: rgba(239,68,68,.92)}
     .goodText{color: rgba(34,197,94,.92)}
     .warnText{color: rgba(245,158,11,.92)}
+    .tabSwitch{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
+    .tabBtn{
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      cursor:pointer;
+      font-size:12px;
+      user-select:none;
+      transition: background .12s ease, border-color .12s ease, transform .08s ease;
+    }
+    .tabBtn:hover{background: rgba(255,255,255,.06)}
+    .tabBtn:active{transform:scale(.99)}
+    .tabBtn.active{border-color: rgba(59,130,246,.35); background: rgba(59,130,246,.14);}
+    .statusPill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+    }
+    .statusPill.wait{background: rgba(245,158,11,.12); border-color: rgba(245,158,11,.32); color:var(--warn);}
+    .statusPill.over{background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.32); color:var(--bad);}
+    .statusPill.done{background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.32); color:var(--good);}
+    .alertBanner{
+      padding:12px;
+      border-radius: var(--radius);
+      border:1px solid rgba(239,68,68,.25);
+      background: linear-gradient(135deg, rgba(239,68,68,.18), rgba(245,158,11,.14));
+      box-shadow: var(--shadow);
+      margin-bottom:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .alertBanner strong{font-size:13px}
+    .alertBanner .btnrow{margin:0}
   </style>
 </head>
 <body>
@@ -498,7 +538,7 @@
 
       <div class="navbtn" data-view="followup" tabindex="0">
         <div class="icon">📞</div>
-        <div class="navtxt"><div class="t">Suivi client</div><div class="s">rappel + vente</div></div>
+        <div class="navtxt"><div class="t">Rappels</div><div class="s">suivi téléphonique</div></div>
         <div class="kbd">R</div>
       </div>
 
@@ -515,6 +555,7 @@
       <div class="row"><span>Utilisateur</span> <strong id="userMini">—</strong></div>
       <div class="row"><span>Rôle</span> <strong id="roleMini">—</strong></div>
       <div class="row"><span>Dernière fiche</span> <strong id="sheetMini">—</strong></div>
+      <div class="row"><span>Rappels</span> <strong id="followupMini">0</strong></div>
 
       <div class="btnrow">
         <button class="btn primary" id="printBtn">Imprimer fiche client</button>
@@ -562,6 +603,15 @@
             <span class="badge">Pro</span>
           </div>
           <div class="pb">
+            <div class="alertBanner" id="homeFollowupBanner" style="display:none">
+              <div>
+                <strong id="homeFollowupText">—</strong>
+                <div class="small">Les rappels en retard ou à faire aujourd’hui sont listés dans l’onglet Suivis.</div>
+              </div>
+              <div class="btnrow">
+                <button class="btn primary" onclick="openFollowupsTab()">Voir les rappels</button>
+              </div>
+            </div>
             <div class="two">
               <div class="result">
                 <h3>✅ Raccourcis</h3>
@@ -576,7 +626,7 @@
                 <div class="btnrow">
                   <button class="btn primary" onclick="go('client')">Démarrer diagnostic</button>
                   <button class="btn" onclick="go('sav')">Démarrer SAV</button>
-                  <button class="btn" onclick="go('notes')">Notes</button>
+                  <button class="btn" onclick="setNotesTab('notes'); go('notes')">Notes</button>
                 </div>
               </div>
 
@@ -879,157 +929,143 @@
 
     <!-- NOTES -->
     <div id="view-notes" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Notes client</h2>
-              <p>Suivi local (protégé).</p>
-            </div>
-            <span class="badge">Local</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <div class="two">
-                <div>
-                  <label>Nom / pseudo client</label>
-                  <input id="noteName" type="text" placeholder="Ex: M. Dupont" />
-                </div>
-                <div>
-                  <label>Téléphone (optionnel)</label>
-                  <input id="notePhone" type="text" placeholder="Ex: 06..." />
-                </div>
-              </div>
-
-              <div style="margin-top:10px">
-                <label>Note</label>
-                <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible → baisser puissance."></textarea>
-              </div>
-
-              <div class="btnrow">
-                <button class="btn primary" onclick="saveNote()">Enregistrer</button>
-                <button class="btn" onclick="clearNoteForm()">Effacer</button>
-                <button class="btn" id="toggleMaskBtn" style="display:none" onclick="toggleMaskPhones()">Masquer/afficher numéros</button>
-              </div>
-
-              <div class="small" style="margin-top:10px">
-                Conseil RGPD : éviter de stocker plus que nécessaire.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Historique</h2>
-              <p>Recherche + suppression (responsable).</p>
-            </div>
-            <span class="badge">CRM light</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <label>Filtrer</label>
-              <input id="noteFilter" type="text" placeholder="Nom, mot, numéro..." />
-              <div class="hr"></div>
-              <div id="notesList" class="list"></div>
-            </div>
-          </div>
-        </section>
+      <div class="tabSwitch" id="notesTabSwitch">
+        <button class="tabBtn active" data-tab="notes" onclick="setNotesTab('notes')">Notes</button>
+        <button class="tabBtn" data-tab="followups" onclick="setNotesTab('followups')">Suivis / Rappels</button>
       </div>
-    </div>
 
-    <!-- FOLLOWUP -->
-    <div id="view-followup" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Suivi client</h2>
-              <p>Planifier un rappel après vente.</p>
+      <div id="notesTab-notes">
+        <div class="grid cols2">
+          <section class="panel">
+            <div class="ph">
+              <div>
+                <h2>Notes client</h2>
+                <p>Suivi local (protégé).</p>
+              </div>
+              <span class="badge">Local</span>
             </div>
-            <span class="badge">CRM</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <div class="two">
-                <div>
-                  <label>Nom / prénom client *</label>
-                  <input id="followName" type="text" placeholder="Ex: Jean Dupont" />
+            <div class="pb">
+              <div class="q">
+                <div class="two">
+                  <div>
+                    <label>Nom / pseudo client</label>
+                    <input id="noteName" type="text" placeholder="Ex: M. Dupont" />
+                  </div>
+                  <div>
+                    <label>Téléphone (optionnel)</label>
+                    <input id="notePhone" type="text" placeholder="Ex: 06..." />
+                  </div>
                 </div>
-                <div>
-                  <label>Téléphone (optionnel)</label>
-                  <input id="followPhone" type="text" placeholder="Ex: 06..." />
-                </div>
-              </div>
 
-              <div class="two" style="margin-top:10px">
-                <div>
-                  <label>Profil fumeur</label>
-                  <input id="followSmoker" type="text" placeholder="Ex: 15 cig/j, roulées" />
+                <div style="margin-top:10px">
+                  <label>Note</label>
+                  <textarea id="noteText" placeholder="Ex: 20 cig/j, 10mg sel, MTL. Sensible → baisser puissance."></textarea>
                 </div>
-                <div>
-                  <label>Matériel proposé</label>
-                  <input id="followHardware" type="text" placeholder="Ex: XROS 3, résist. 0.8" />
-                </div>
-              </div>
 
-              <div style="margin-top:10px">
-                <label>Liquide choisi + taux + type de nicotine</label>
-                <input id="followLiquid" type="text" placeholder="Ex: 50/50, menthol, 10 mg sels" />
-              </div>
-
-              <div class="two" style="margin-top:10px">
-                <div>
-                  <label>Date de vente</label>
-                  <input id="followSaleDate" type="date" />
+                <div class="btnrow">
+                  <button class="btn primary" onclick="saveNote()">Enregistrer</button>
+                  <button class="btn" onclick="clearNoteForm()">Effacer</button>
+                  <button class="btn" id="toggleMaskBtn" style="display:none" onclick="toggleMaskPhones()">Masquer/afficher numéros</button>
                 </div>
-                <div>
-                  <label>Date de rappel prévue</label>
-                  <input id="followNextDate" type="date" />
+
+                <div class="small" style="margin-top:10px">
+                  Conseil RGPD : éviter de stocker plus que nécessaire.
                 </div>
               </div>
-
-              <div style="margin-top:10px">
-                <label>Statut</label>
-                <select id="followStatus">
-                  <option value="todo">À faire</option>
-                  <option value="done">Fait</option>
-                  <option value="reschedule">À reprogrammer</option>
-                </select>
-              </div>
-
-              <div style="margin-top:10px">
-                <label>Notes de suivi</label>
-                <textarea id="followNotes" placeholder="Ex: rappeler à J+7, vérifier confort, proposer pack résistances."></textarea>
-              </div>
-
-              <div class="btnrow" style="margin-top:10px">
-                <button class="btn primary" onclick="saveFollowup()">Enregistrer suivi</button>
-                <button class="btn" onclick="clearFollowupForm()">Nouvelle fiche</button>
-              </div>
-              <div class="small" style="margin-top:8px">Vendeurs : création / modification OK. Suppression : responsable uniquement.</div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Liste des suivis</h2>
-              <p>Filtrer + rappeler.</p>
+          <section class="panel">
+            <div class="ph">
+              <div>
+                <h2>Historique</h2>
+                <p>Recherche + suppression (responsable).</p>
+              </div>
+              <span class="badge">CRM light</span>
             </div>
-            <span class="badge">Agenda</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <label>Recherche</label>
-              <input id="followFilter" type="text" placeholder="Nom, téléphone, produit, note..." />
-              <div class="hr"></div>
-              <div id="followList" class="list"></div>
+            <div class="pb">
+              <div class="q">
+                <label>Filtrer</label>
+                <input id="noteFilter" type="text" placeholder="Nom, mot, numéro..." />
+                <div class="hr"></div>
+                <div id="notesList" class="list"></div>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
+      </div>
+
+      <div id="notesTab-followups" style="display:none">
+        <div class="grid cols2">
+          <section class="panel">
+            <div class="ph">
+              <div>
+                <h2>Suivis / Rappels</h2>
+                <p>Planifier et tracer les appels.</p>
+              </div>
+              <span class="badge">Agenda</span>
+            </div>
+            <div class="pb">
+              <div class="q">
+                <div class="two">
+                  <div>
+                    <label>Nom client *</label>
+                    <input id="followName" type="text" placeholder="Ex: Jean Dupont" />
+                  </div>
+                  <div>
+                    <label>Téléphone</label>
+                    <input id="followPhone" type="text" placeholder="Ex: 06..." />
+                  </div>
+                </div>
+
+                <div class="two" style="margin-top:10px">
+                  <div>
+                    <label>Date de rappel *</label>
+                    <input id="followDueDate" type="date" />
+                  </div>
+                  <div>
+                    <label>Heure (optionnel)</label>
+                    <input id="followDueTime" type="time" />
+                  </div>
+                </div>
+
+                <div style="margin-top:10px">
+                  <label>Résumé / fiche client</label>
+                  <textarea id="followSummary" placeholder="Profil fumeur, matériel proposé, liquide/taux…"></textarea>
+                </div>
+
+                <div class="btnrow" style="margin-top:10px">
+                  <button class="btn primary" id="followSaveBtn" onclick="saveFollowup()">Créer le rappel</button>
+                  <button class="btn" onclick="clearFollowupForm()">Nouvelle fiche</button>
+                </div>
+                <div class="small" style="margin-top:8px">Création/édition vendeur OK. Suppression/export : responsable uniquement.</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="ph">
+              <div>
+                <h2>Rappels programmés</h2>
+                <p>Statuts + actions rapides.</p>
+              </div>
+              <span class="badge">Suivi</span>
+            </div>
+            <div class="pb">
+              <div class="q">
+                <label>Recherche</label>
+                <input id="followupFilter" type="text" placeholder="Nom, téléphone, résumé, résultat..." />
+                <div class="btnrow" style="margin-top:10px">
+                  <button class="btn" onclick="renderFollowups()">Appliquer</button>
+                  <button class="btn" id="exportFollowupsBtn" onclick="exportFollowupsCSV()">Exporter CSV</button>
+                  <button class="btn danger" id="clearFollowupsBtn" onclick="clearFollowups()">Vider suivis</button>
+                </div>
+                <div class="hr"></div>
+                <div id="followList" class="list"></div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
 
@@ -1304,6 +1340,7 @@ const DEFAULT_STATE = {
   ],
   currentUser: null,
   view: "home",
+  notesTab: "notes",
   audit: [],
   notes: [],
   followups: [],
@@ -1352,6 +1389,7 @@ function saveState(){
   refreshHomeLastSheet();
   refreshRulesSummary();
   renderAuditPeek();
+  updateFollowUpAlerts();
 }
 function loadState(){
   const raw = localStorage.getItem(LS.state);
@@ -1419,6 +1457,11 @@ function audit(action, detail){
 
 /* ---------- Navigation ---------- */
 function go(view){
+  const requestedView = view;
+  if(view === "followup"){
+    state.notesTab = "followups";
+    view = "notes";
+  }
   if(!requireAuth()) return;
   if(view === "manager" && !isManager()){
     toast("Accès refusé", "Réservé aux responsables.");
@@ -1428,23 +1471,24 @@ function go(view){
   state.view = view;
   $all(".view").forEach(v => v.style.display = "none");
   $("#view-"+view).style.display = "block";
-  $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view || (requestedView === "followup" && b.dataset.view === "followup")));
 
   if(view === "client") renderClient();
   if(view === "sav") renderSav();
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
-  if(view === "followup") renderFollowups();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
-  audit("NAVIGATE", view);
+  audit("NAVIGATE", requestedView);
   saveState();
 }
 function bindNav(){
   $("#nav").addEventListener("click", (e)=>{
     const btn = e.target.closest(".navbtn");
     if(!btn) return;
+    if(btn.dataset.view === "notes") state.notesTab = "notes";
+    if(btn.dataset.view === "followup") state.notesTab = "followups";
     go(btn.dataset.view);
   });
 }
@@ -1485,6 +1529,14 @@ function refreshAuthUI(){
     $("#goManagerBtn").style.display = "none";
     $("#toggleMaskBtn").style.display = "none";
   }
+  const expFollow = $("#exportFollowupsBtn");
+  const clrFollow = $("#clearFollowupsBtn");
+  [expFollow, clrFollow].forEach(btn=>{
+    if(!btn) return;
+    const can = !!state.currentUser && isManager();
+    btn.disabled = !can;
+    btn.title = can ? "" : "Responsable uniquement";
+  });
   refreshSidebarMini();
   updateAdminButtonsLock();
 }
@@ -1596,7 +1648,7 @@ function runSearch(q){
 const clientSteps = [
   { key:"cigs", label:"Conso", desc:"cig/j" },
   { key:"cigType", label:"Cigarette", desc:"type" },
-  { key:"moments", label:"Moments", desc:"déclencheur" },
+  { key:"moments", label:"Moment", desc:"déclencheur" },
   { key:"goal", label:"Objectif", desc:"intention" },
   { key:"tried", label:"Expérience", desc:"déjà essayé" },
 ];
@@ -1622,7 +1674,7 @@ const clientQuestions = [
       {v:"soir", t:"Soir", s:"Détente"},
       {v:"journee", t:"Journée", s:"Usage fréquent"},
       {v:"apresRepas", t:"Après repas", s:"Rituel"},
-      {v:"matin", t:"Matin", s:"Démarrage"},
+      {v:"matin", t:"Matin", s:"Dmarrage"},
     ]},
   { key:"goal", title:"Objectif du client ?", subtitle:"L’objectif n°1 = éviter la rechute.", cols:"cols3",
     choices:[
@@ -2399,7 +2451,7 @@ function deleteSavHistoryItem(index){
     audit("DENY_SAV_HISTORY_DELETE", String(index));
     return;
   }
-  state.sav.history = state.sav.history || [];
+  if(!Array.isArray(state.sav.history)) state.sav.history = [];
   if(index < 0 || index >= state.sav.history.length) return;
   state.sav.history.splice(index, 1);
   audit("SAV_HISTORY_DELETE", String(index));
@@ -2505,8 +2557,9 @@ function deleteNote(id){
   saveState();
   renderNotes();
 }
-function renderNotes(){
+function renderNotesList(){
   const list = $("#notesList");
+  if(!list) return;
   const filter = ($("#noteFilter").value||"").toLowerCase().trim();
   const items = [...state.notes].sort((a,b)=> b.createdAt - a.createdAt).filter(n=>{
     if(!filter) return true;
@@ -2541,89 +2594,173 @@ function renderNotes(){
     `;
   }).join("");
 }
+function setNotesTab(tab){
+  state.notesTab = tab || "notes";
+  renderNotes();
+  saveState();
+}
+function renderNotes(){
+  const tab = state.notesTab || "notes";
+  $("#notesTab-notes")?.style.setProperty("display", tab === "notes" ? "block" : "none");
+  $("#notesTab-followups")?.style.setProperty("display", tab === "followups" ? "block" : "none");
+  $all("#notesTabSwitch .tabBtn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
+  if(tab === "notes") renderNotesList();
+  if(tab === "followups") renderFollowups();
+}
 
-/* ---------- Suivi client ---------- */
+/* ---------- Suivi client / Rappels ---------- */
 let followupEditingId = null;
-const FOLLOWUP_STATUS_LABELS = {
-  todo: "À faire",
-  done: "Fait",
-  reschedule: "À reprogrammer"
-};
+function openFollowupsTab(){
+  state.notesTab = "followups";
+  renderNotes();
+  go("notes");
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
 function ensureFollowups(){
   if(!Array.isArray(state.followups)) state.followups = [];
+  state.followups = state.followups.map(f=>{
+    const id = f.id || crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
+    const baseStatus = f.status === "done" ? "done" : "wait";
+    return {
+      id,
+      name: f.name || "",
+      phone: f.phone || "",
+      dueDate: f.dueDate || f.nextDate || "",
+      dueTime: f.dueTime || f.nextTime || "",
+      summary: f.summary ?? f.notes ?? "",
+      status: baseStatus,
+      createdAt: f.createdAt || Date.now(),
+      createdBy: f.createdBy || state.currentUser?.name || "INCONNU",
+      lastCallAt: f.lastCallAt || null,
+      lastCallBy: f.lastCallBy || null,
+      lastResult: f.lastResult || "",
+      history: Array.isArray(f.history) ? f.history : []
+    };
+  });
+}
+function getFollowupStatus(f){
+  if(f.status === "done") return "done";
+  if(f.dueDate && f.dueDate < todayStr()) return "over";
+  return "wait";
+}
+function followupStatusLabel(f){
+  const s = getFollowupStatus(f);
+  if(s === "done") return "🟢 Rappel fait";
+  if(s === "over") return "🔴 En retard";
+  return f.dueDate === todayStr() ? "🟡 À faire aujourd’hui" : "🟡 En attente";
+}
+function formatDue(f){
+  if(!f.dueDate) return "—";
+  return f.dueTime ? `${f.dueDate} ${f.dueTime}` : f.dueDate;
 }
 function clearFollowupForm(){
   $("#followName").value = "";
   $("#followPhone").value = "";
-  $("#followSmoker").value = "";
-  $("#followHardware").value = "";
-  $("#followLiquid").value = "";
-  $("#followSaleDate").value = "";
-  $("#followNextDate").value = "";
-  $("#followStatus").value = "todo";
-  $("#followNotes").value = "";
+  $("#followDueDate").value = "";
+  $("#followDueTime").value = "";
+  $("#followSummary").value = "";
   followupEditingId = null;
+  const btn = $("#followSaveBtn");
+  if(btn) btn.textContent = "Créer le rappel";
 }
 function saveFollowup(){
   if(!requireAuth()) return;
   ensureFollowups();
 
   const name = ($("#followName").value||"").trim();
-  if(!name){ toast("Suivi", "Nom/prénom obligatoire."); return; }
+  const phone = ($("#followPhone").value||"").trim();
+  const dueDate = $("#followDueDate").value;
+  const dueTime = $("#followDueTime").value;
+  const summary = ($("#followSummary").value||"").trim();
+  if(!name){ toast("Suivi", "Nom obligatoire."); return; }
+  if(!dueDate){ toast("Suivi", "Date de rappel obligatoire."); return; }
 
-  const payload = {
-    name,
-    phone: ($("#followPhone").value||"").trim(),
-    smoker: ($("#followSmoker").value||"").trim(),
-    hardware: ($("#followHardware").value||"").trim(),
-    liquid: ($("#followLiquid").value||"").trim(),
-    saleDate: $("#followSaleDate").value,
-    nextDate: $("#followNextDate").value,
-    status: $("#followStatus").value || "todo",
-    notes: ($("#followNotes").value||"").trim(),
-  };
+  const base = { name, phone, dueDate, dueTime, summary };
 
   if(followupEditingId){
     const idx = state.followups.findIndex(f=>f.id===followupEditingId);
     if(idx !== -1){
+      const prev = state.followups[idx];
       state.followups[idx] = {
-        ...state.followups[idx],
-        ...payload,
+        ...prev,
+        ...base,
         updatedAt: Date.now(),
         updatedBy: state.currentUser?.name || "INCONNU"
       };
-      audit("FOLLOWUP_EDIT", `${payload.name} (${followupEditingId})`);
+      audit("FOLLOWUP_EDIT", `${name} (${followupEditingId})`);
     }
   } else {
     const id = crypto?.randomUUID?.() || String(Date.now()) + Math.random().toString(16).slice(2);
     state.followups.push({
       id,
-      ...payload,
+      ...base,
+      status: "wait",
       createdAt: Date.now(),
-      createdBy: state.currentUser?.name || "INCONNU"
+      createdBy: state.currentUser?.name || "INCONNU",
+      lastCallAt: null,
+      lastCallBy: null,
+      lastResult: "",
+      history: []
     });
-    audit("FOLLOWUP_ADD", payload.name);
+    audit("FOLLOWUP_ADD", name);
   }
 
   saveState();
   renderFollowups();
   clearFollowupForm();
-  toast("OK", "Suivi enregistré.");
+  toast("OK", "Rappel enregistré.");
 }
-function editFollowup(id){
+function openFollowup(id){
   const f = (state.followups||[]).find(x=>x.id===id);
   if(!f) return;
   $("#followName").value = f.name || "";
   $("#followPhone").value = f.phone || "";
-  $("#followSmoker").value = f.smoker || "";
-  $("#followHardware").value = f.hardware || "";
-  $("#followLiquid").value = f.liquid || "";
-  $("#followSaleDate").value = f.saleDate || "";
-  $("#followNextDate").value = f.nextDate || "";
-  $("#followStatus").value = f.status || "todo";
-  $("#followNotes").value = f.notes || "";
+  $("#followDueDate").value = f.dueDate || "";
+  $("#followDueTime").value = f.dueTime || "";
+  $("#followSummary").value = f.summary || "";
   followupEditingId = id;
+  const btn = $("#followSaveBtn");
+  if(btn) btn.textContent = "Mettre à jour";
   toast("Mode édition", "Modifie puis enregistre.");
+}
+function markFollowupDone(id){
+  if(!requireAuth()) return;
+  ensureFollowups();
+  const f = state.followups.find(x=>x.id===id);
+  if(!f) return;
+  const note = prompt("Compte-rendu de l’appel ?", f.lastResult || "");
+  if(note === null) return;
+  const now = Date.now();
+  const by = state.currentUser?.name || "INCONNU";
+  f.status = "done";
+  f.lastCallAt = now;
+  f.lastCallBy = by;
+  f.lastResult = (note||"").trim();
+  f.history.push({ at: now, by, action:"done", note: f.lastResult });
+  audit("FOLLOWUP_DONE", `${f.name} (${id})`);
+  saveState();
+  renderFollowups();
+}
+function reprogramFollowup(id){
+  if(!requireAuth()) return;
+  ensureFollowups();
+  const f = state.followups.find(x=>x.id===id);
+  if(!f) return;
+  const newDate = prompt("Nouvelle date (YYYY-MM-DD)", f.dueDate || todayStr());
+  if(newDate === null) return;
+  if(!newDate.match(/^\d{4}-\d{2}-\d{2}$/)){ toast("Date", "Format attendu : YYYY-MM-DD."); return; }
+  const newTime = prompt("Heure (HH:MM, optionnel)", f.dueTime || "");
+  if(newTime === null) return;
+  if(newTime && !newTime.match(/^\d{2}:\d{2}$/)){ toast("Heure", "Format attendu : HH:MM."); return; }
+  f.dueDate = newDate;
+  f.dueTime = newTime || "";
+  f.status = "wait";
+  const now = Date.now();
+  const by = state.currentUser?.name || "INCONNU";
+  f.history.push({ at: now, by, action:"reschedule", note:`Reprogrammé au ${newDate}${newTime ? " "+newTime : ""}` });
+  audit("FOLLOWUP_RESCHEDULE", `${f.name} -> ${newDate} ${newTime||""}`);
+  saveState();
+  renderFollowups();
 }
 function deleteFollowup(id){
   if(!isManager()){
@@ -2640,72 +2777,145 @@ function deleteFollowup(id){
   saveState();
   renderFollowups();
 }
-function callFollowup(id){
-  const f = (state.followups||[]).find(x=>x.id===id);
-  if(!f || !f.phone){
-    toast("Téléphone", "Aucun numéro enregistré.");
+function clearFollowups(){
+  if(!isManager()){
+    toast("Accès refusé", "Vider = responsable.");
+    audit("DENY_FOLLOWUP_CLEAR", "");
     return;
   }
-  copyToClipboard(f.phone);
-  audit("FOLLOWUP_CALL", `${f.name||""} (${f.phone})`);
+  if(!confirm("Supprimer tous les rappels sur cette tablette ?")) return;
+  state.followups = [];
+  audit("FOLLOWUP_CLEAR_ALL", "");
+  saveState();
+  renderFollowups();
+}
+function exportFollowupsCSV(){
+  if(!isManager()){
+    toast("Accès refusé", "Export = responsable.");
+    audit("DENY_FOLLOWUP_EXPORT", "");
+    return;
+  }
+  ensureFollowups();
+  const esc = (v)=> `"${String(v ?? "").replace(/"/g,'""')}"`;
+  const lines = [["id","nom","phone","dueDate","dueTime","status","createdAt","createdBy","lastCallAt","lastCallBy","lastResult","summary"].join(",")];
+  state.followups.forEach(f=>{
+    lines.push([
+      esc(f.id),
+      esc(f.name),
+      esc(f.phone),
+      esc(f.dueDate),
+      esc(f.dueTime),
+      esc(getFollowupStatus(f)),
+      esc(f.createdAt ? formatDateTimeFR(f.createdAt) : ""),
+      esc(f.createdBy),
+      esc(f.lastCallAt ? formatDateTimeFR(f.lastCallAt) : ""),
+      esc(f.lastCallBy || ""),
+      esc(f.lastResult || ""),
+      esc(f.summary || "")
+    ].join(","));
+  });
+  download(`stoom-suivis-${new Date().toISOString().slice(0,10)}.csv`, lines.join("\n"), "text/csv");
+  audit("FOLLOWUP_EXPORT_CSV", "");
 }
 function renderFollowups(){
   ensureFollowups();
   const list = $("#followList");
   if(!list) return;
-  const filter = ($("#followFilter")?.value || "").toLowerCase().trim();
+  const filter = ($("#followupFilter")?.value || "").toLowerCase().trim();
 
   const rows = state.followups.slice().sort((a,b)=>{
-    const aDate = a.nextDate || "";
-    const bDate = b.nextDate || "";
+    const aDate = a.dueDate || "";
+    const bDate = b.dueDate || "";
     if(aDate && bDate && aDate !== bDate) return aDate.localeCompare(bDate);
     return (b.createdAt||0) - (a.createdAt||0);
   }).filter(f=>{
     if(!filter) return true;
     const hay = [
-      f.name, f.phone, f.smoker, f.hardware, f.liquid, f.notes,
-      f.saleDate, f.nextDate, FOLLOWUP_STATUS_LABELS[f.status] || f.status,
-      f.createdBy, f.updatedBy
+      f.name, f.phone, f.summary, f.lastResult, f.createdBy, f.lastCallBy,
+      f.dueDate, f.dueTime, followupStatusLabel(f)
     ].join(" ").toLowerCase();
     return hay.includes(filter);
   });
 
   if(rows.length === 0){
-    list.innerHTML = `<p class="muted">Aucun suivi enregistré.</p>`;
+    list.innerHTML = `<p class="muted">Aucun rappel enregistré.</p>`;
     return;
   }
 
   list.innerHTML = rows.map(f=>{
-    const statusLabel = FOLLOWUP_STATUS_LABELS[f.status] || "—";
+    const status = getFollowupStatus(f);
+    const statusLabel = followupStatusLabel(f);
     const phoneShown = state.settings.maskPhones ? maskPhone(f.phone) : (f.phone || "");
-    const meta = [
-      f.createdBy ? `Par ${f.createdBy}` : null,
-      f.createdAt ? formatDateTimeFR(f.createdAt) : null,
-      f.updatedBy ? `Modifié par ${f.updatedBy}` : null
-    ].filter(Boolean).join(" • ");
-
+    const lastLine = f.lastCallAt
+      ? `Dernier appel : ${formatDateTimeFR(f.lastCallAt)} • ${f.lastResult || "—"} (${f.lastCallBy || "—"})`
+      : "Dernier appel : —";
     return `
       <div class="item">
         <div class="top">
           <div>
             <strong>${escapeHtml(f.name || "Sans nom")}</strong>
-            <div class="small">Statut : ${escapeHtml(statusLabel)} • Rappel : ${escapeHtml(f.nextDate || "—")}</div>
-            ${meta ? `<div class="small">${escapeHtml(meta)}</div>` : ""}
+            <div class="small">${escapeHtml(formatDue(f))}</div>
+            <div class="small">${statusLabel ? `<span class="statusPill ${status}">${escapeHtml(statusLabel)}</span>` : ""}</div>
           </div>
           <div><span>${escapeHtml(phoneShown)}</span></div>
         </div>
-        <p class="muted"><b>Profil fumeur :</b> ${escapeHtml(f.smoker || "—")}</p>
-        <p class="muted"><b>Matériel :</b> ${escapeHtml(f.hardware || "—")} • <b>Liquide :</b> ${escapeHtml(f.liquid || "—")}</p>
-        <p class="muted"><b>Date vente :</b> ${escapeHtml(f.saleDate || "—")} • <b>Rappel prévu :</b> ${escapeHtml(f.nextDate || "—")}</p>
-        <p>${escapeHtml(f.notes || "")}</p>
+        <p class="muted">${escapeHtml(f.summary || "—")}</p>
+        <p class="small">${escapeHtml(lastLine)}</p>
         <div class="btnrow" style="margin-top:10px">
-          <button class="btn" onclick="callFollowup('${f.id}')">Appeler</button>
-          <button class="btn" onclick="editFollowup('${f.id}')">Modifier</button>
+          <button class="btn" onclick="openFollowup('${f.id}')">Ouvrir</button>
+          <button class="btn" onclick="reprogramFollowup('${f.id}')">Reprogrammer</button>
+          ${status !== "done" ? `<button class="btn primary" onclick="markFollowupDone('${f.id}')">Rappel fait</button>` : `<span class="small goodText">✅ Fait</span>`}
           ${isManager() ? `<button class="btn danger" onclick="deleteFollowup('${f.id}')">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
         </div>
       </div>
     `;
   }).join("");
+
+  const btn = $("#followSaveBtn");
+  if(btn && followupEditingId) btn.textContent = "Mettre à jour";
+}
+function updateFollowUpAlerts(showToast=false){
+  ensureFollowups();
+  const today = todayStr();
+  let overdue = 0;
+  let dueToday = 0;
+  let waitCount = 0;
+
+  state.followups.forEach(f=>{
+    const status = getFollowupStatus(f);
+    if(status === "done") return;
+    if(status === "over") overdue += 1;
+    if(status === "wait") waitCount += 1;
+    if(status === "wait" && f.dueDate === today) dueToday += 1;
+  });
+
+  const banner = $("#homeFollowupBanner");
+  if(banner){
+    if(overdue > 0 || dueToday > 0){
+      banner.style.display = "flex";
+      const txt = overdue > 0
+        ? `🔴 ${overdue} rappel(s) en retard${dueToday ? " + 🟡 " + dueToday + " à faire aujourd’hui" : ""}`
+        : `📞 ${dueToday} rappel(s) à faire aujourd’hui`;
+      const txtEl = $("#homeFollowupText");
+      if(txtEl) txtEl.textContent = txt;
+    } else {
+      banner.style.display = "none";
+    }
+  }
+
+  const mini = $("#followupMini");
+  if(mini){
+    const pending = overdue + waitCount;
+    mini.textContent = pending ? `${pending} (🔴${overdue} / 🟡${waitCount})` : "0";
+  }
+
+  if(showToast && (overdue || dueToday)){
+    const t = overdue ? "Rappels en retard" : "Rappels du jour";
+    const s = overdue
+      ? `${overdue} en retard${dueToday ? ` • ${dueToday} aujourd’hui` : ""}`
+      : `${dueToday} à faire aujourd’hui`;
+    toast(t, s);
+  }
 }
 
 /* ---------- Calculators ---------- */
@@ -3056,8 +3266,8 @@ function bindKeys(){
     if(k==="c") go("client");
     if(k==="s") go("sav");
     if(k==="k") go("calc");
-    if(k==="n") go("notes");
-    if(k==="r") go("followup");
+    if(k==="n"){ state.notesTab = "notes"; go("notes"); }
+    if(k==="r"){ state.notesTab = "followups"; go("notes"); }
     if(k==="a") isManager() ? go("manager") : null;
 
     if((e.ctrlKey || e.metaKey) && k==="p"){
@@ -3083,7 +3293,7 @@ function bindButtons(){
   });
 
   $("#noteFilter").addEventListener("input", renderNotes);
-  $("#followFilter")?.addEventListener("input", renderFollowups);
+  $("#followupFilter")?.addEventListener("input", renderFollowups);
 
   $("#printBtn").addEventListener("click", printSheet);
 
@@ -3108,6 +3318,8 @@ function init(){
   refreshRulesSummary();
   ensureFollowups();
   clearFollowupForm();
+  renderNotes();
+  updateFollowUpAlerts(true);
   renderAuditPeek();
   bindNav();
   bindButtons();
