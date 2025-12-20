@@ -530,6 +530,16 @@
         <div class="kbd">K</div>
       </div>
 
+    <div class="navbtn" data-view="accu" tabindex="0">
+  <div class="icon">🔋</div>
+  <div class="navtxt">
+    <div class="t">Accus &amp; Sécurité</div>
+    <div class="s">loi d’Ohm + bonnes pratiques</div>
+  </div>
+  <div class="kbd">B</div>
+</div>
+
+
       <div class="navbtn" data-view="notes" tabindex="0">
         <div class="icon">📝</div>
         <div class="navtxt"><div class="t">Notes client</div><div class="s">suivi (protégé)</div></div>
@@ -764,7 +774,7 @@
   Sélectionne un symptôme.</p>
 </div>
 
-<div class="q" style="margin-top:12px">
+
   <h3>Problème constaté (par le vendeur)</h3>
   Ce texte sera repris automatiquement dans la fiche SAV.</p>
   <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
@@ -776,7 +786,7 @@
 </div>
 
 
-            <div class="q" id="savResult" style="margin-top:12px">
+     
               <h3>En attente…</h3>
               Sélectionne un symptôme.</p>
             </div>
@@ -926,6 +936,71 @@
         </section>
       </div>
     </div>
+
+    <!-- ACCUS & SÉCURITÉ -->
+<div id="view-accu" class="view" style="display:none">
+  <div class="grid cols2">
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Accus & Sécurité</h2>
+          <p>Calculateur loi d’Ohm (automatique).</p>
+        </div>
+        <span class="badge">Sécurité</span>
+      </div>
+
+   <div class="pb">
+  <div class="q">
+    <div class="two">
+      <div>
+        <label>Puissance (W)</label>
+        <input id="accuWatts" type="number" min="1" step="1" value="30" />
+      </div>
+
+      <div>
+        <label>Box</label>
+        <select id="accuCells">
+          <option value="1">Simple accu (1)</option>
+          <option value="2">Double accus (2)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn primary" onclick="calcAccu()">Calculer</button>
+      <button class="btn" onclick="resetAccuCalc()">Reset</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="result" id="accuResult">
+      <h3>Résultat</h3>
+      <div class="small">Renseigne puis “Calculer”.</div>
+    </div>
+  </div>
+</div>
+
+
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Bonnes pratiques</h2>
+          <p>Rappels sécurité accus.</p>
+        </div>
+        <span class="badge">Important</span>
+      </div>
+
+      <div class="pb">
+        <!-- sécurité viendra ici -->
+      </div>
+    </section>
+
+  </div>
+</div>
+
 
     <!-- NOTES -->
     <div id="view-notes" class="view" style="display:none">
@@ -1355,7 +1430,23 @@ const DEFAULT_STATE = {
     answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
     sheet: null
   },
-  rules: {
+
+  accu: {
+    vMin: 3.2,
+    eff: 0.90,
+    margin: 1.25,
+    cells: 1,
+    watts: 30,
+    catalog: [
+      { id:"vtc5a", name:"Sony VTC5A", cdr:25, mah:2600, notes:"Très bon pour hautes puissances" },
+      { id:"vtc6",  name:"Sony VTC6",  cdr:15, mah:3000, notes:"Autonomie, puissance modérée" },
+      { id:"vtc5",  name:"Sony VTC5",  cdr:20, mah:2600, notes:"Polyvalent" },
+      { id:"hg2",   name:"LG HG2",     cdr:20, mah:3000, notes:"Autonomie + bon compromis" },
+      { id:"25r",   name:"Samsung 25R",cdr:15, mah:2500, notes:"Classique fiable" },
+    ]
+  },
+
+   rules: {
     byCigs: {
       "5-10":  { nicotine:"3–6 mg",        tirage:"MTL (serré à semi-serré)", power:"Modérée",  hardware:"Pod/kit MTL fiable" },
       "10-15": { nicotine:"6–12 mg",       tirage:"MTL (serré)",             power:"Modérée",  hardware:"Pod/kit MTL fiable" },
@@ -1363,6 +1454,7 @@ const DEFAULT_STATE = {
       "25+":   { nicotine:"20 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" }
     }
   }
+
 };
 
 const state = loadState();
@@ -1478,6 +1570,7 @@ function go(view){
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
+  if(view === "accu") renderAccu();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
   audit("NAVIGATE", requestedView);
@@ -2981,6 +3074,96 @@ function calcSavings(){
   `;
   audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
 }
+/* ---------- Accus & Sécurité ---------- */
+function renderAccu(){
+  // remet l'UI d'après l'état
+  $("#accuWatts").value = state.accu?.watts ?? 30;
+  $("#accuCells").value = String(state.accu?.cells ?? 1);
+
+  // Si tu veux afficher direct une suggestion au chargement :
+  $("#accuResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="small">Renseigne puis “Calculer”.</div>
+  `;
+}
+
+function calcAccu(){
+  if(!requireAuth()) return;
+
+  const watts = Math.max(1, Number($("#accuWatts").value || 0));
+  const cells = Math.max(1, Number($("#accuCells").value || 1));
+
+  // paramètres de sécurité
+  const vMin   = Number(state.accu?.vMin ?? 3.2);     // tension mini par accu (sag)
+  const eff    = Number(state.accu?.eff ?? 0.90);     // rendement
+  const margin = Number(state.accu?.margin ?? 1.25);  // marge de sécurité
+
+  // courant approximatif (par accu)
+  // I ≈ (W / (cells * Vmin * eff)) * marge
+  const iPerCell = (watts / (cells * vMin * eff)) * margin;
+
+  // Catalogue et compatibilité (CDR >= courant calculé)
+  const catalog = (state.accu?.catalog || []).slice().sort((a,b)=> b.cdr - a.cdr);
+  const ok = catalog.filter(a => Number(a.cdr) >= iPerCell);
+
+  // Sauvegarde état
+  state.accu.watts = watts;
+  state.accu.cells = cells;
+  audit("ACCU_CALC", `W=${watts} cells=${cells} I≈${iPerCell.toFixed(1)}A`);
+  saveState();
+
+  const chips = `
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Puissance</b> ${watts} W</span>
+      <span class="chip"><b>Box</b> ${cells} accu(s)</span>
+      <span class="chip"><b>Hypothèses</b> Vmin=${vMin} • eff=${Math.round(eff*100)}% • marge=${margin}</span>
+      <span class="chip"><b>Courant/accu</b> ~${iPerCell.toFixed(1)} A</span>
+    </div>
+  `;
+
+  const listOk = ok.length
+    ? `<div class="hr"></div>
+       <h3>Accus compatibles (CDR ≥ ${iPerCell.toFixed(1)}A)</h3>
+       <div class="list">
+         ${ok.map(a=>`
+           <div class="item">
+             <div class="top">
+               <strong>${escapeHtml(a.name)}</strong>
+               <span>CDR ${a.cdr}A • ${a.mah}mAh</span>
+             </div>
+             <p class="muted">${escapeHtml(a.notes || "")}</p>
+           </div>
+         `).join("")}
+       </div>`
+    : `<div class="hr"></div>
+       <p class="dangerText"><b>⚠️ Aucun accu du catalogue ne couvre ce réglage avec marge.</b></p>
+       <p class="muted small">Solutions : baisser la puissance, passer sur une box double accus, ou utiliser des accus avec CDR plus élevé.</p>`;
+
+  const safety = `
+    <div class="hr"></div>
+    <p class="small">
+      ⚠️ Calcul “vendeur” (approx) : dépend du matériel, de l’état des accus, de la résistance, du sag, etc.
+      Objectif = rester confortable et <b>loin des limites</b>.
+    </p>
+  `;
+
+  $("#accuResult").innerHTML = `<h3>Résultat</h3>${chips}${listOk}${safety}`;
+}
+
+function resetAccuCalc(){
+  if(!requireAuth()) return;
+  $("#accuWatts").value = 30;
+  $("#accuCells").value = "1";
+  state.accu.watts = 30;
+  state.accu.cells = 1;
+  audit("ACCU_RESET", "");
+  saveState();
+
+  $("#accuResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="small">Renseigne puis “Calculer”.</div>
+  `;
+}
 
 /* ---------- Manager: Rules editor ---------- */
 function refreshRulesSummary(){
@@ -3266,6 +3449,7 @@ function bindKeys(){
     if(k==="c") go("client");
     if(k==="s") go("sav");
     if(k==="k") go("calc");
+    if(k==="b") go("accu");
     if(k==="n"){ state.notesTab = "notes"; go("notes"); }
     if(k==="r"){ state.notesTab = "followups"; go("notes"); }
     if(k==="a") isManager() ? go("manager") : null;
