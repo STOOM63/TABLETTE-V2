@@ -1837,14 +1837,12 @@ function unlockWithLicense(){
   }
 
   localStorage.setItem(LICENSE.lsOk, "1");
-  closeLicenseGate();
-  
-init();
-  
-  // petit effet “pro”
-  toast("Licence validée", "Activation réussie ✅");
-  openWelcome();
-}
+closeLicenseGate();
+
+toast("Licence validée", "Activation réussie ✅");
+showWelcomePDG();
+return;
+  }
 
 function enterApp(){
   closeWelcome();
@@ -3996,8 +3994,36 @@ function init(){
   if(!state.currentUser) openAuthModal(true);
 }
 init();
+  
+function showWelcomePDG() {
+  const name = getPilotName();
+  document.getElementById("welcomeNamePDG").textContent = name;
+  document.getElementById("welcomeScreen").style.display = "block";
+}
+
+function enterFluxa() {
+  document.getElementById("welcomeScreen").style.display = "none";
+  init(); // seulement ici
+}
+
 
 
 </script>
+ <!-- ÉCRAN DE BIENVENUE PDG -->
+<div id="welcomeScreen" style="display:none">
+  <div class="welcome-card">
+    <h1>Bienvenue <span id="welcomeNamePDG">Isabelle</span></h1>
+
+    <p>
+      En activant <strong>FLUXA</strong>, vous avez choisi bien plus qu’un outil.<br><br>
+      Vous avez choisi une approche fondée sur le <strong>conseil juste</strong>,
+      la <strong>sécurité</strong>, la <strong>traçabilité</strong>.
+    </p>
+
+    <button class="btn primary" onclick="enterFluxa()">Entrer</button>
+  </div>
+</div>
+
+
 </body>
 </html>
