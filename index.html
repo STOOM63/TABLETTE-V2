@@ -1883,16 +1883,16 @@ function calcFlavorHint(a){
 function calcMomentTip(a){
   const m = a.moments;
   if(m === "stress") return "Stress : tirage stable + dosage cohérent pour éviter la frustration.";
-  if(m === "cafe") return "Café : routine simple (même liquide / même tirage) pour remplacer le rituel.";
-  if(m === "soir") return "Soir : garder le confort (ne pas baisser trop vite).";
-  if(m === "journee") return "Journée : autonomie + fiabilité + simplicité.";
-  if(m === "apresRepas") return "Après repas : setup prêt, simple, toujours dispo.";
-  if(m === "matin") return "Matin : dosage suffisant (sinon manque immédiat).";
+  if(m === "cafe") return "Café : Astuce, Prendre 2-3 boufées de vape bien dosées avant la première gorgée de café, avec un café légerment modifié (allongé ou avec du lait) pour casser le réflexe café clope";
+  if(m === "soir") return "Soir : garder une vape plud douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
+  if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
+  if(m === "apresRepas") return "Après repas : cigarette electronique toujours prête, simple, toujours dispo.";
+  if(m === "matin") return "Matin : Privilegier un taux de nicotine + fort le matin, .";
   return "Sécuriser les moments clés avec le bon dosage.";
 }
 function calcReassurance(a){
-  if(a.tried === "echec") return "Si ça a déjà échoué, c’est souvent un mauvais couple taux/matériel. On sécurise.";
-  if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable.";
+  if(a.tried === "echec") return "Si ça a déjà échoué, il s'agit souvent un mauvais couple taux/matériel. Attention de ne pas reproduire la même erreur.";
+  if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable pour le client.";
   return "On ajuste si besoin, sans se précipiter.";
 }
 function buildSheet(a){
