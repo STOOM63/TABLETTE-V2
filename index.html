@@ -1919,7 +1919,12 @@ function buildSheet(a){
   return {
     title: "Recommandation STOOM (profil client)",
     tirage, nicotine, power, hardware,
-    explain: `${reassurance}<br><br>${momentTip}<br><br>Suggestion saveurs : ${flavor}.`,
+    explain: [
+  reassurance,
+  momentTip,
+  `Suggestion saveurs : ${flavor}.`
+].join("\n\n"),
+
     addons,
     salesLine
   };
@@ -1943,12 +1948,12 @@ function renderSheet(){
       <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
       <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
     </div>
-    <p class="muted">${escapeHtml(sh.explain)}</p>
+   const explainHtml = escapeHtml(sh.explain).replace(/\n/g, "<br>");
     <div class="hr"></div>
     <div class="chips">
       ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${escapeHtml(a)}</span>`).join("")}
     </div>
-    <p class="small" style="margin-top:10px">Boutique : <span class="mono">${escapeHtml(state.settings.shopName)}</span> • ${escapeHtml(formatDateFR(new Date()))}</p>
+    <p class="muted">${explainHtml}</p>
   `;
   $("#salesLine").textContent = sh.salesLine;
   refreshSidebarMini();
@@ -1996,7 +2001,8 @@ function printSheet(){
     <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
   </div>
   <div class="hr"></div>
-  <p class="muted">${escapeHtml(sh.explain)}</p>
+  <p class="muted">${escapeHtml(sh.explain).replace(/\n/g,"<br>")}</p>
+
 </div>
 
 <div class="card">
