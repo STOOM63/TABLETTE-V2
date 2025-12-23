@@ -546,12 +546,14 @@
         </div>
 
         <div style="flex:1; min-width:260px">
-          <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
-            Félicitations <span id="pilotName">Isabelle</span> 🎉
-          </div>
+         <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
+  Activation de la démo FLUXA
+</div>
+
           <p class="muted" style="margin:8px 0 0; line-height:1.45">
-            Vous avez fait le choix de devenir <b>boutique pilote FLUXA</b> et nous vous en remercions.<br>
-            Afin d’activer la démo de notre outil, veuillez indiquer la <b>clé de licence</b> remise par votre éditeur.
+            Afin d’activer la démonstration de l’outil FLUXA Tablette PRO,
+merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
+
           </p>
 
           <div class="chips" style="margin-top:10px">
@@ -1595,7 +1597,6 @@ function hasValidLicense(){
 function openLicenseGate(){
   // Nom personnalisable (tu peux changer “Isabelle” ici)
   const name = getPilotName();
-  document.getElementById("pilotName").textContent = name;
   document.getElementById("welcomeName").textContent = name;
 
   document.getElementById("licenseKeyInput").value = "";
