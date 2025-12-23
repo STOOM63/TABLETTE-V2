@@ -1888,10 +1888,10 @@ function calcMomentTip(a){
   if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
   if(m === "apresRepas") return "Après repas : cigarette electronique toujours prête, simple, toujours dispo.";
   if(m === "matin") return "Matin : Privilegier un taux de nicotine + fort le matin, .";
-  return "Sécuriser les moments clés avec le bon dosage.";
+  return "Sécuriser les moments clés avec le bon dosage de nicotine.";
 }
 function calcReassurance(a){
-  if(a.tried === "echec") return "Si ça a déjà échoué, il s'agit souvent un mauvais couple taux/matériel. Attention de ne pas reproduire la même erreur.";
+  if(a.tried === "echec") return "Si ça a déjà échoué, il s'agit souvent d'un mauvais couple taux/matériel. ⚠️Attention de ne pas reproduire la même erreur.";
   if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable pour le client.";
   return "On ajuste si besoin, sans se précipiter.";
 }
