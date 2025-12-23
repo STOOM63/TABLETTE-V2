@@ -1646,9 +1646,9 @@ function unlockWithLicense(){
 
 function enterApp(){
   closeWelcome();
-  // Ensuite ton flux normal : ouverture du PIN vendeur si besoin
-  if(!state.currentUser) openAuthModal(true);
+  startApp();
 }
+
 
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
@@ -3766,12 +3766,7 @@ function bindButtons(){
 }
 
 /* ---------- Init ---------- */
-function init(){
-  if(!hasValidLicense()){
-    openLicenseGate();
-    return;
-  }
-
+function startApp(){
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
@@ -3790,8 +3785,15 @@ function init(){
   if(!state.currentUser) openAuthModal(true);
 }
 
-init();
+function init(){
+  if(!hasValidLicense()){
+    openLicenseGate();
+    return;
+  }
+  startApp();
+}
 
+init();
 
 </script>
 </body>
