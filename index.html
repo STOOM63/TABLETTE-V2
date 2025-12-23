@@ -820,21 +820,7 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
 </div>
 
 
-        <div class="hr"></div>
-
-        <div class="chips">
-          <span class="chip"><b>Tip</b> Utilisez <span class="mono">H C S K N R A</span> pour naviguer vite</span>
-          <span class="chip"><b>Tip</b> Le bouton “PIN” en haut sert à connecter un vendeur</span>
-        </div>
-
-        <div class="btnrow" style="margin-top:14px">
-          <button class="btn primary" onclick="enterApp()">Entrer dans FLUXA</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+    
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -3980,6 +3966,7 @@ function bindButtons(){
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
 }
+let APP_READY = false;
 
 /* ---------- Init ---------- */
 function init(){
