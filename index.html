@@ -1272,6 +1272,43 @@
     </div>
     <div class="modal-b">
       <p class="muted">Sélectionne ton nom puis entre ton PIN.</p>
+      <div id="firstSetup" style="display:none; margin-top:12px">
+  <div class="q">
+    <h3>Premier lancement</h3>
+    <p class="muted">Aucun utilisateur n’existe. Crée le premier <b>responsable</b> de la boutique.</p>
+
+    <div class="two">
+      <div>
+        <label>Nom</label>
+        <input id="firstManagerName" type="text" placeholder="Ex: Responsable Boutique" />
+      </div>
+      <div>
+        <label>PIN (4 chiffres mini)</label>
+        <input id="firstManagerPin" type="password" inputmode="numeric" placeholder="Ex: 1234" />
+      </div>
+    </div>
+
+    <div class="btnrow" style="margin-top:12px">
+      <button class="btn primary" onclick="createFirstManager()">Créer le responsable</button>
+    </div>
+  </div>
+</div>
+
+<div id="authNormal">
+  <label>Utilisateur</label>
+  <select id="authUserSelect"></select>
+
+  <div style="margin-top:10px">
+    <label>PIN</label>
+    <input type="password" id="authPin" placeholder="••••" inputmode="numeric" />
+  </div>
+
+  <div class="btnrow" style="margin-top:12px">
+    <button class="btn primary" onclick="login()">Se connecter</button>
+    <button class="btn" onclick="logout()">Déconnexion</button>
+  </div>
+</div>
+
       <label>Utilisateur</label>
       <select id="authUserSelect"></select>
 
@@ -1418,11 +1455,7 @@ const LS = { state: "stoom_tablette_v2_state" };
 
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
-  users: [
-    { id:"arnaud", name:"Arnaud", pin:"1007", role:"manager" },
-    { id:"evan",   name:"Evan",   pin:"1517", role:"seller"  },
-    { id:"lea",    name:"Léa",    pin:"2109", role:"seller"  },
-  ],
+  users: [],
   currentUser: null,
   view: "home",
   notesTab: "notes",
@@ -1598,15 +1631,28 @@ function bindNav(){
 
 /* ---------- Auth Modal ---------- */
 function openAuthModal(force=false){
-  const sel = $("#authUserSelect");
-  sel.innerHTML = state.users
-    .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
-    .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
-    .join("");
-  $("#authPin").value = "";
+  const hasUsers = Array.isArray(state.users) && state.users.length > 0;
+
+  $("#firstSetup").style.display = hasUsers ? "none" : "block";
+  $("#authNormal").style.display = hasUsers ? "block" : "none";
+
+  if(hasUsers){
+    const sel = $("#authUserSelect");
+    sel.innerHTML = state.users
+      .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
+      .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
+      .join("");
+    $("#authPin").value = "";
+    setTimeout(()=> $("#authPin").focus(), 50);
+  } else {
+    $("#firstManagerName").value = "";
+    $("#firstManagerPin").value = "";
+    setTimeout(()=> $("#firstManagerName").focus(), 50);
+  }
+
   $("#authModal").classList.add("show");
-  setTimeout(()=> $("#authPin").focus(), 50);
 }
+
 function closeAuthModal(){
   if(!state.currentUser){
     toast("Connexion", "Connexion obligatoire.");
@@ -1666,6 +1712,30 @@ function logout(){
   refreshAuthUI();
   openAuthModal(true);
 }
+  function createFirstManager(){
+  const name = ($("#firstManagerName").value || "").trim();
+  const pin  = ($("#firstManagerPin").value || "").trim();
+
+  if(!name){ toast("Création", "Nom requis."); return; }
+  if(!pin || pin.length < 4){ toast("Création", "PIN 4 chiffres mini."); return; }
+
+  const id = slugifyName(name);
+  if(state.users.some(u=>u.id === id)){
+    toast("Création", "Un utilisateur avec cet identifiant existe déjà.");
+    return;
+  }
+
+  state.users.push({ id, name, pin, role: "manager" });
+  state.currentUser = { id, name, role: "manager" };
+
+  audit("FIRST_MANAGER_CREATED", id);
+  saveState();
+
+  $("#authModal").classList.remove("show");
+  refreshAuthUI();
+  toast("OK", "Responsable créé. Tu es connecté.");
+}
+
 
 /* ---------- BLOCK Export/Import/Reset for sellers ---------- */
 function updateAdminButtonsLock(){
@@ -3254,7 +3324,7 @@ function renderUsers(){
         <p class="small mono">id=${escapeHtml(u.id)} • PIN=••••</p>
         <div class="btnrow">
           <button class="btn" onclick="openEditUser('${u.id}')">Modifier</button>
-          ${u.id === "arnaud" ? `<span class="small">Arnaud protégé</span>` : `<button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>`}
+         <button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>
         </div>
       </div>
     `;
