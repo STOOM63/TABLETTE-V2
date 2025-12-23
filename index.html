@@ -1638,7 +1638,9 @@ function unlockWithLicense(){
 
   localStorage.setItem(LICENSE.lsOk, "1");
   closeLicenseGate();
-
+  
+init();
+  
   // petit effet “pro”
   toast("Licence validée", "Activation réussie ✅");
   openWelcome();
@@ -3772,6 +3774,9 @@ function init(){
     return;
   }
 
+  if(APP_READY) return;      // ✅ évite doubles bindings
+  APP_READY = true;
+
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
@@ -3789,7 +3794,6 @@ function init(){
 
   if(!state.currentUser) openAuthModal(true);
 }
-
 init();
 
 
