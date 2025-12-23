@@ -1907,7 +1907,12 @@ function buildSheet(a){
   const reassurance = calcReassurance(a);
   const momentTip = calcMomentTip(a);
 
-  const addons = ["Résistance/cartouche de secours", "Réglage puissance (confort)","Proposer systématiquement un chargeur adapté, "Rappel : baisser la nicotine quand c’est stable"];
+ const addons = [
+  "Résistance / cartouche de secours",
+  "Réglage puissance (confort)",
+  "Proposer systématiquement un chargeur adapté",
+  "Rappel : baisser la nicotine quand c’est stable"
+];
 
   const goalLine =
     a.goal === "arreter" ? "viser d’abord zéro cigarette" :
@@ -1939,7 +1944,10 @@ function renderSheet(){
     refreshHomeLastSheet();
     return;
   }
+
   const sh = state.client.sheet;
+  const explainHtml = escapeHtml(sh.explain).replace(/\n/g, "<br>");
+
   box.innerHTML = `
     <h3>${escapeHtml(sh.title)}</h3>
     <div class="chips" style="margin:8px 0 10px">
@@ -1948,13 +1956,18 @@ function renderSheet(){
       <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
       <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
     </div>
-   const explainHtml = escapeHtml(sh.explain).replace(/\n/g, "<br>");
+
     <div class="hr"></div>
+
+    <p class="muted">${explainHtml}</p>
+
+    <div class="hr"></div>
+
     <div class="chips">
       ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${escapeHtml(a)}</span>`).join("")}
     </div>
-    <p class="muted">${explainHtml}</p>
   `;
+
   $("#salesLine").textContent = sh.salesLine;
   refreshSidebarMini();
   refreshHomeLastSheet();
