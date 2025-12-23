@@ -702,57 +702,81 @@
   <!-- =========================
      FLUXA • LICENCE GATE (Onboarding)
      ========================= -->
-<div class="modal" id="licenseGate" role="dialog" aria-modal="true" style="display:none">
-  <div class="modal-card" style="max-width:860px">
-    <div class="modal-h">
-      <h3>Activation FLUXA (démo)</h3>
-      <button class="xbtn" onclick="/* optionnel: rien */"> </button>
-    </div>
+const LICENSE = {
+  lsOk: "fluxa_license_ok",
+  lsName: "fluxa_pilot_name",
+  // ✅ Mets ici la clé remise à ta PDG (tu peux en mettre plusieurs)
+  allowed: ["7852-5487-7855-8254"]
+};
 
-    <div class="modal-b">
-      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap">
-        <div class="logoWrap" style="width:78px;height:78px;border-radius:24px">
-          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
-        </div>
+function getPilotName(){
+  return localStorage.getItem(LICENSE.lsName) || "Isabelle";
+}
+function setPilotName(n){
+  localStorage.setItem(LICENSE.lsName, n);
+}
+function hasValidLicense(){
+  return localStorage.getItem(LICENSE.lsOk) === "1";
+}
 
-        <div style="flex:1; min-width:260px">
-         <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
-  Activation de la démo FLUXA
-</div>
+function openLicenseGate(){
+  const name = getPilotName();
+  document.getElementById("welcomeName").textContent = name;
 
-          <p class="muted" style="margin:8px 0 0; line-height:1.45">
-            Afin d’activer la démonstration de l’outil FLUXA Tablette PRO,
-merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
+  document.getElementById("licenseKeyInput").value = "";
+  const gate = document.getElementById("licenseGate");
+  gate.style.display = "block";
+  gate.classList.add("show");
 
-          </p>
+  setTimeout(()=> document.getElementById("licenseKeyInput").focus(), 50);
+}
 
-          <div class="chips" style="margin-top:10px">
-            <span class="chip"><b>✔</b> Parcours client</span>
-            <span class="chip"><b>✔</b> SAV imprimable</span>
-            <span class="chip"><b>✔</b> Audit interne</span>
-            <span class="chip"><b>✔</b> Données en local</span>
-          </div>
+function closeLicenseGate(){
+  const gate = document.getElementById("licenseGate");
+  gate.classList.remove("show");
+  gate.style.display = "none";
+}
 
-          <p class="small" style="margin-top:10px; opacity:.75">
-            Astuce : collez la clé (copier/coller) puis validez.
-          </p>
-        </div>
-      </div>
+function openWelcome(){
+  const name = getPilotName();
+  document.getElementById("welcomeName").textContent = name;
 
-      <div class="hr"></div>
+  const m = document.getElementById("welcomeModal");
+  m.style.display = "block";
+  m.classList.add("show");
+}
 
-      <label>Clé de licence</label>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
-        <input id="licenseKeyInput" type="password" placeholder="Ex: FLUXA-DEMO-XXXX-XXXX" style="flex:1; min-width:260px" />
-        <button class="btn primary" onclick="unlockWithLicense()">Activer</button>
-      </div>
+function closeWelcome(){
+  const m = document.getElementById("welcomeModal");
+  m.classList.remove("show");
+  m.style.display = "none";
+}
 
-      <div class="small" style="margin-top:10px; opacity:.75">
-        En cas de besoin : contactez l’éditeur.
-      </div>
-    </div>
-  </div>
-</div>
+function unlockWithLicense(){
+  const key = (document.getElementById("licenseKeyInput").value || "").trim();
+  const normalized = key.replace(/\s+/g, "").toUpperCase();
+  const ok = LICENSE.allowed.some(k => String(k).replace(/\s+/g, "").toUpperCase() === normalized);
+
+  if(!ok){
+    toast("Clé invalide", "Vérifiez la licence remise par l’éditeur.");
+    return;
+  }
+
+  localStorage.setItem(LICENSE.lsOk, "1");
+  closeLicenseGate();
+
+  toast("Licence validée", "Activation réussie ✅");
+  openWelcome();
+}
+
+function enterApp(){
+  closeWelcome();
+
+  // ✅ important : si l’app n’a pas encore été initialisée
+  if(typeof APP_READY !== "undefined" && !APP_READY) init();
+
+  if(!state.currentUser) openAuthModal(true);
+}
 
 <!-- Congrats popup -->
 <div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
@@ -1905,6 +1929,11 @@ const DEFAULT_STATE = {
 };
 
 const state = loadState();
+  // Licence gate au lancement
+if(!hasValidLicense()){
+  openLicenseGate();
+}
+
 
 /* ---------- Utils ---------- */
 function $(q){ return document.querySelector(q); }
