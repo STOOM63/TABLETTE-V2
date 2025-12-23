@@ -525,6 +525,176 @@
   opacity:.7;
   pointer-events:none;
 }
+    /* ===== FLUXA Welcome v2 (plus intégré / pro) ===== */
+#welcomeModal .modal-card{
+  position:relative;
+  overflow:hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(900px 420px at 15% 10%, rgba(59,130,246,.20), transparent 55%),
+    radial-gradient(700px 340px at 85% 20%, rgba(236,72,153,.14), transparent 60%),
+    linear-gradient(180deg, rgba(12,18,32,.94), rgba(10,14,28,.92));
+  box-shadow: 0 28px 120px rgba(0,0,0,.68);
+}
+
+#welcomeModal .modal-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: 30px;
+  padding:2px;
+  background: linear-gradient(135deg,
+    rgba(59,130,246,.55),
+    rgba(139,92,246,.35),
+    rgba(34,197,94,.30),
+    rgba(255,255,255,.06)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events:none;
+  opacity:.55;
+}
+
+#welcomeModal .modal-b{ padding: 16px 16px 18px; }
+
+.fluxaWelcome{
+  display:grid;
+  gap:12px;
+}
+
+.fluxaHero{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+
+.fluxaSeal{
+  width:54px;height:54px;border-radius:18px;
+  display:grid;place-items:center;
+  background: rgba(34,197,94,.14);
+  border: 1px solid rgba(34,197,94,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.fluxaHero h4{
+  margin:0;
+  font-size:15px;
+  letter-spacing:.01em;
+}
+.fluxaHero p{
+  margin:6px 0 0;
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.5;
+}
+
+.fluxaName{
+  font-weight:950;
+  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(59,130,246,.90));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.fluxaGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media (max-width: 680px){
+  .fluxaGrid{ grid-template-columns: 1fr; }
+}
+
+.fluxaCard{
+  padding:12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+}
+
+.fluxaCard .k{
+  font-size:11px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color: var(--muted2);
+}
+.fluxaCard .v{
+  margin-top:6px;
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.45;
+}
+
+.fluxaTips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.fluxaTip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  font-size:12px;
+  color: var(--muted);
+}
+.fluxaTip b{ color: rgba(255,255,255,.88); }
+
+.fluxaFooter{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding-top:4px;
+}
+
+.fluxaBtnBig{
+  padding:12px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(59,130,246,.45);
+  background: linear-gradient(135deg, rgba(59,130,246,.24), rgba(139,92,246,.14));
+  color: rgba(255,255,255,.92);
+  cursor:pointer;
+  user-select:none;
+  font-weight:800;
+  letter-spacing:.01em;
+  transition: transform .08s ease, filter .15s ease;
+}
+.fluxaBtnBig:hover{ filter: brightness(1.05); }
+.fluxaBtnBig:active{ transform: scale(.99); }
+
+.fluxaGhost{
+  all:unset;
+  cursor:pointer;
+  color: var(--muted);
+  font-size:12px;
+  padding:10px 12px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.02);
+}
+.fluxaGhost:hover{ background: rgba(255,255,255,.05); }
+/* Glow premium – Welcome FLUXA */
+#welcomeModal.show .modal-card{
+  animation: fluxaPop .18s ease-out, fluxaGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes fluxaGlow{
+  0%,100%{ filter: brightness(1); }
+  50%{ filter: brightness(1.04); }
+}
+
 
   </style>
 </head>
@@ -588,23 +758,67 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
 <div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
   <div class="modal-card" style="max-width:760px">
     <div class="modal-h">
-      <h3>Bienvenue sur FLUXA</h3>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="logoWrap" style="width:40px;height:40px;border-radius:14px;padding:8px">
+          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
+        </div>
+        <div>
+          <h3 style="margin:0">Activation réussie</h3>
+          <div class="small" style="margin-top:2px;opacity:.8">FLUXA Tablette PRO</div>
+        </div>
+      </div>
       <button class="xbtn" onclick="closeWelcome()">Fermer</button>
     </div>
+
     <div class="modal-b">
-      <div class="result" style="padding:18px">
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
-          <div style="font-size:26px; line-height:1">🎊</div>
-          <div style="flex:1; min-width:240px">
-            <div style="font-weight:950; font-size:18px">
-              Félicitations, <span id="welcomeName">Isabelle</span> !
-            </div>
-            <p class="muted" style="margin:8px 0 0; line-height:1.45">
-              Licence validée ✅<br>
-              Vous pouvez maintenant accéder à l’outil Tablette PRO FLUXA.
+      <div class="fluxaWelcome">
+
+        <div class="fluxaHero">
+          <div class="fluxaSeal">✅</div>
+          <div style="flex:1">
+            <h4>Félicitations, <span class="fluxaName" id="welcomeName">Isabelle</span> !</h4>
+            <p>
+              Licence validée. Vous avez maintenant accès à l’outil Tablette PRO FLUXA.
+              (Données stockées localement sur l’appareil.)
             </p>
           </div>
         </div>
+
+        <div class="fluxaGrid">
+          <div class="fluxaCard">
+            <div class="k">Navigation rapide</div>
+            <div class="v">
+              <span class="mono">H C S K N R A</span> pour aller droit à l’essentiel.
+            </div>
+          </div>
+
+          <div class="fluxaCard">
+            <div class="k">Connexion vendeur</div>
+            <div class="v">
+              Le bouton <b>PIN</b> en haut sert à connecter un vendeur (rôle & accès).
+            </div>
+          </div>
+        </div>
+
+        <div class="fluxaCard">
+          <div class="k">Tips</div>
+          <div class="fluxaTips" style="margin-top:8px">
+            <span class="fluxaTip"><b>/</b> Rechercher instant</span>
+            <span class="fluxaTip"><b>Esc</b> Fermer les modales</span>
+            <span class="fluxaTip"><b>Ctrl/Cmd+P</b> Imprimer fiche</span>
+          </div>
+        </div>
+
+        <div class="fluxaFooter">
+          <button class="fluxaGhost" onclick="closeWelcome()">Plus tard</button>
+          <button class="fluxaBtnBig" onclick="enterApp()">Entrer dans FLUXA →</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 
         <div class="hr"></div>
 
