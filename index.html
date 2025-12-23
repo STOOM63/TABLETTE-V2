@@ -525,176 +525,6 @@
   opacity:.7;
   pointer-events:none;
 }
-    /* ===== FLUXA Welcome v2 (plus intégré / pro) ===== */
-#welcomeModal .modal-card{
-  position:relative;
-  overflow:hidden;
-  border-radius: 28px;
-  border: 1px solid rgba(255,255,255,.16);
-  background:
-    radial-gradient(900px 420px at 15% 10%, rgba(59,130,246,.20), transparent 55%),
-    radial-gradient(700px 340px at 85% 20%, rgba(236,72,153,.14), transparent 60%),
-    linear-gradient(180deg, rgba(12,18,32,.94), rgba(10,14,28,.92));
-  box-shadow: 0 28px 120px rgba(0,0,0,.68);
-}
-
-#welcomeModal .modal-card::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius: 30px;
-  padding:2px;
-  background: linear-gradient(135deg,
-    rgba(59,130,246,.55),
-    rgba(139,92,246,.35),
-    rgba(34,197,94,.30),
-    rgba(255,255,255,.06)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events:none;
-  opacity:.55;
-}
-
-#welcomeModal .modal-b{ padding: 16px 16px 18px; }
-
-.fluxaWelcome{
-  display:grid;
-  gap:12px;
-}
-
-.fluxaHero{
-  display:flex;
-  gap:14px;
-  align-items:center;
-  padding:14px;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.03);
-}
-
-.fluxaSeal{
-  width:54px;height:54px;border-radius:18px;
-  display:grid;place-items:center;
-  background: rgba(34,197,94,.14);
-  border: 1px solid rgba(34,197,94,.28);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.22);
-}
-
-.fluxaHero h4{
-  margin:0;
-  font-size:15px;
-  letter-spacing:.01em;
-}
-.fluxaHero p{
-  margin:6px 0 0;
-  font-size:12px;
-  color: var(--muted);
-  line-height:1.5;
-}
-
-.fluxaName{
-  font-weight:950;
-  background: linear-gradient(90deg, rgba(255,255,255,.96), rgba(59,130,246,.90));
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.fluxaGrid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:10px;
-}
-@media (max-width: 680px){
-  .fluxaGrid{ grid-template-columns: 1fr; }
-}
-
-.fluxaCard{
-  padding:12px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.03);
-}
-
-.fluxaCard .k{
-  font-size:11px;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color: var(--muted2);
-}
-.fluxaCard .v{
-  margin-top:6px;
-  font-size:12px;
-  color: var(--muted);
-  line-height:1.45;
-}
-
-.fluxaTips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.fluxaTip{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 10px;
-  border-radius: 999px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.03);
-  font-size:12px;
-  color: var(--muted);
-}
-.fluxaTip b{ color: rgba(255,255,255,.88); }
-
-.fluxaFooter{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding-top:4px;
-}
-
-.fluxaBtnBig{
-  padding:12px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(59,130,246,.45);
-  background: linear-gradient(135deg, rgba(59,130,246,.24), rgba(139,92,246,.14));
-  color: rgba(255,255,255,.92);
-  cursor:pointer;
-  user-select:none;
-  font-weight:800;
-  letter-spacing:.01em;
-  transition: transform .08s ease, filter .15s ease;
-}
-.fluxaBtnBig:hover{ filter: brightness(1.05); }
-.fluxaBtnBig:active{ transform: scale(.99); }
-
-.fluxaGhost{
-  all:unset;
-  cursor:pointer;
-  color: var(--muted);
-  font-size:12px;
-  padding:10px 12px;
-  border-radius: 14px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(255,255,255,.02);
-}
-.fluxaGhost:hover{ background: rgba(255,255,255,.05); }
-/* Glow premium – Welcome FLUXA */
-#welcomeModal.show .modal-card{
-  animation: fluxaPop .18s ease-out, fluxaGlow 2.8s ease-in-out infinite;
-}
-
-@keyframes fluxaGlow{
-  0%,100%{ filter: brightness(1); }
-  50%{ filter: brightness(1.04); }
-}
-
 
   </style>
 </head>
@@ -702,149 +532,95 @@
   <!-- =========================
      FLUXA • LICENCE GATE (Onboarding)
      ========================= -->
-const LICENSE = {
-  lsOk: "fluxa_license_ok",
-  lsName: "fluxa_pilot_name",
-  // ✅ Mets ici la clé remise à ta PDG (tu peux en mettre plusieurs)
-  allowed: ["7852-5487-7855-8254"]
-};
-
-function getPilotName(){
-  return localStorage.getItem(LICENSE.lsName) || "Isabelle";
-}
-function setPilotName(n){
-  localStorage.setItem(LICENSE.lsName, n);
-}
-function hasValidLicense(){
-  return localStorage.getItem(LICENSE.lsOk) === "1";
-}
-
-function openLicenseGate(){
-  const name = getPilotName();
-  document.getElementById("welcomeName").textContent = name;
-
-  document.getElementById("licenseKeyInput").value = "";
-  const gate = document.getElementById("licenseGate");
-  gate.style.display = "block";
-  gate.classList.add("show");
-
-  setTimeout(()=> document.getElementById("licenseKeyInput").focus(), 50);
-}
-
-function closeLicenseGate(){
-  const gate = document.getElementById("licenseGate");
-  gate.classList.remove("show");
-  gate.style.display = "none";
-}
-
-function openWelcome(){
-  const name = getPilotName();
-  document.getElementById("welcomeName").textContent = name;
-
-  const m = document.getElementById("welcomeModal");
-  m.style.display = "block";
-  m.classList.add("show");
-}
-
-function closeWelcome(){
-  const m = document.getElementById("welcomeModal");
-  m.classList.remove("show");
-  m.style.display = "none";
-}
-
-function unlockWithLicense(){
-  const key = (document.getElementById("licenseKeyInput").value || "").trim();
-  const normalized = key.replace(/\s+/g, "").toUpperCase();
-  const ok = LICENSE.allowed.some(k => String(k).replace(/\s+/g, "").toUpperCase() === normalized);
-
-  if(!ok){
-    toast("Clé invalide", "Vérifiez la licence remise par l’éditeur.");
-    return;
-  }
-
-  localStorage.setItem(LICENSE.lsOk, "1");
-  closeLicenseGate();
-
-  toast("Licence validée", "Activation réussie ✅");
-  openWelcome();
-}
-
-function enterApp(){
-  closeWelcome();
-
-  // ✅ important : si l’app n’a pas encore été initialisée
-  if(typeof APP_READY !== "undefined" && !APP_READY) init();
-
-  if(!state.currentUser) openAuthModal(true);
-}
-
-<!-- Congrats popup -->
-<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
-  <div class="modal-card" style="max-width:760px">
+<div class="modal" id="licenseGate" role="dialog" aria-modal="true" style="display:none">
+  <div class="modal-card" style="max-width:860px">
     <div class="modal-h">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="logoWrap" style="width:40px;height:40px;border-radius:14px;padding:8px">
-          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
-        </div>
-        <div>
-          <h3 style="margin:0">Activation réussie</h3>
-          <div class="small" style="margin-top:2px;opacity:.8">FLUXA Tablette PRO</div>
-        </div>
-      </div>
-      <button class="xbtn" onclick="closeWelcome()">Fermer</button>
+      <h3>Activation FLUXA (démo)</h3>
+      <button class="xbtn" onclick="/* optionnel: rien */"> </button>
     </div>
 
     <div class="modal-b">
-      <div class="fluxaWelcome">
-
-        <div class="fluxaHero">
-          <div class="fluxaSeal">✅</div>
-          <div style="flex:1">
-            <h4>Félicitations, <span class="fluxaName" id="welcomeName">Isabelle</span> !</h4>
-            <p>
-              Licence validée. Vous avez maintenant accès à l’outil Tablette PRO FLUXA.
-              (Données stockées localement sur l’appareil.)
-            </p>
-          </div>
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap">
+        <div class="logoWrap" style="width:78px;height:78px;border-radius:24px">
+          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
         </div>
 
-        <div class="fluxaGrid">
-          <div class="fluxaCard">
-            <div class="k">Navigation rapide</div>
-            <div class="v">
-              <span class="mono">H C S K N R A</span> pour aller droit à l’essentiel.
-            </div>
+        <div style="flex:1; min-width:260px">
+         <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
+  Activation de la démo FLUXA
+</div>
+
+          <p class="muted" style="margin:8px 0 0; line-height:1.45">
+            Afin d’activer la démonstration de l’outil FLUXA Tablette PRO,
+merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
+
+          </p>
+
+          <div class="chips" style="margin-top:10px">
+            <span class="chip"><b>✔</b> Parcours client</span>
+            <span class="chip"><b>✔</b> SAV imprimable</span>
+            <span class="chip"><b>✔</b> Audit interne</span>
+            <span class="chip"><b>✔</b> Données en local</span>
           </div>
 
-          <div class="fluxaCard">
-            <div class="k">Connexion vendeur</div>
-            <div class="v">
-              Le bouton <b>PIN</b> en haut sert à connecter un vendeur (rôle & accès).
-            </div>
-          </div>
+          <p class="small" style="margin-top:10px; opacity:.75">
+            Astuce : collez la clé (copier/coller) puis validez.
+          </p>
         </div>
+      </div>
 
-        <div class="fluxaCard">
-          <div class="k">Tips</div>
-          <div class="fluxaTips" style="margin-top:8px">
-            <span class="fluxaTip"><b>/</b> Rechercher instant</span>
-            <span class="fluxaTip"><b>Esc</b> Fermer les modales</span>
-            <span class="fluxaTip"><b>Ctrl/Cmd+P</b> Imprimer fiche</span>
-          </div>
-        </div>
+      <div class="hr"></div>
 
-        <div class="fluxaFooter">
-          <button class="fluxaGhost" onclick="closeWelcome()">Plus tard</button>
-          <button class="fluxaBtnBig" onclick="enterApp()">Entrer dans FLUXA →</button>
-        </div>
+      <label>Clé de licence</label>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+        <input id="licenseKeyInput" type="password" placeholder="Ex: FLUXA-DEMO-XXXX-XXXX" style="flex:1; min-width:260px" />
+        <button class="btn primary" onclick="unlockWithLicense()">Activer</button>
+      </div>
 
+      <div class="small" style="margin-top:10px; opacity:.75">
+        En cas de besoin : contactez l’éditeur.
       </div>
     </div>
   </div>
 </div>
 
+<!-- Congrats popup -->
+<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
+  <div class="modal-card" style="max-width:760px">
+    <div class="modal-h">
+      <h3>Bienvenue sur FLUXA</h3>
+      <button class="xbtn" onclick="closeWelcome()">Fermer</button>
+    </div>
+    <div class="modal-b">
+      <div class="result" style="padding:18px">
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <div style="font-size:26px; line-height:1">🎊</div>
+          <div style="flex:1; min-width:240px">
+            <div style="font-weight:950; font-size:18px">
+              Félicitations, <span id="welcomeName">Isabelle</span> !
+            </div>
+            <p class="muted" style="margin:8px 0 0; line-height:1.45">
+              Licence validée ✅<br>
+              Vous pouvez maintenant accéder à l’outil Tablette PRO FLUXA.
+            </p>
+          </div>
+        </div>
 
-    
+        <div class="hr"></div>
+
+        <div class="chips">
+          <span class="chip"><b>Tip</b> Utilisez <span class="mono">H C S K N R A</span> pour naviguer vite</span>
+          <span class="chip"><b>Tip</b> Le bouton “PIN” en haut sert à connecter un vendeur</span>
+        </div>
+
+        <div class="btnrow" style="margin-top:14px">
+          <button class="btn primary" onclick="enterApp()">Entrer dans FLUXA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -1848,8 +1624,10 @@ function closeWelcome(){
   document.getElementById("welcomeModal").style.display = "none";
 }
 
-ffunction unlockWithLicense(){
+function unlockWithLicense(){
   const key = (document.getElementById("licenseKeyInput").value || "").trim();
+
+  // Option : autoriser aussi une clé en minuscules/espaces
   const normalized = key.replace(/\s+/g,"").toUpperCase();
   const ok = LICENSE.allowed.some(k => k.toUpperCase() === normalized);
 
@@ -1861,26 +1639,17 @@ ffunction unlockWithLicense(){
   localStorage.setItem(LICENSE.lsOk, "1");
   closeLicenseGate();
 
+  // petit effet “pro”
   toast("Licence validée", "Activation réussie ✅");
-  openWelcome();              // ✅ au lieu de showWelcomePDG()
+  openWelcome();
 }
-
-  localStorage.setItem(LICENSE.lsOk, "1");
-closeLicenseGate();
-
-toast("Licence validée", "Activation réussie ✅");
-showWelcomePDG();
-return;
-  }
 
 function enterApp(){
   closeWelcome();
-
-  // ✅ important : si l’app n’a pas encore été initialisée
-  if(!APP_READY) init();
-
+  // Ensuite ton flux normal : ouverture du PIN vendeur si besoin
   if(!state.currentUser) openAuthModal(true);
 }
+
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
   users: [],
@@ -1929,11 +1698,6 @@ const DEFAULT_STATE = {
 };
 
 const state = loadState();
-  // Licence gate au lancement
-if(!hasValidLicense()){
-  openLicenseGate();
-}
-
 
 /* ---------- Utils ---------- */
 function $(q){ return document.querySelector(q); }
@@ -4000,7 +3764,6 @@ function bindButtons(){
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
 }
-let APP_READY = false;
 
 /* ---------- Init ---------- */
 function init(){
@@ -4008,9 +3771,6 @@ function init(){
     openLicenseGate();
     return;
   }
-
-  if(APP_READY) return;      // ✅ évite doubles bindings
-  APP_READY = true;
 
   refreshSidebarMini();
   refreshAuthUI();
@@ -4029,37 +3789,10 @@ function init(){
 
   if(!state.currentUser) openAuthModal(true);
 }
+
 init();
-  
-function showWelcomePDG() {
-  const name = getPilotName();
-  document.getElementById("welcomeNamePDG").textContent = name;
-  document.getElementById("welcomeScreen").style.display = "block";
-}
-
-function enterFluxa() {
-  document.getElementById("welcomeScreen").style.display = "none";
-  init(); // seulement ici
-}
-
 
 
 </script>
- <!-- ÉCRAN DE BIENVENUE PDG -->
-<div id="welcomeScreen" style="display:none">
-  <div class="welcome-card">
-    <h1>Bienvenue <span id="welcomeNamePDG">Isabelle</span></h1>
-
-    <p>
-      En activant <strong>FLUXA</strong>, vous avez choisi bien plus qu’un outil.<br><br>
-      Vous avez choisi une approche fondée sur le <strong>conseil juste</strong>,
-      la <strong>sécurité</strong>, la <strong>traçabilité</strong>.
-    </p>
-
-    <button class="btn primary" onclick="enterFluxa()">Entrer</button>
-  </div>
-</div>
-
-
 </body>
 </html>
