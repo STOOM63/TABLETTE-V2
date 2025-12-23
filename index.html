@@ -1772,12 +1772,12 @@ const clientQuestions = [
     ]},
   { key:"moments", title:"Moment difficile principal ?", subtitle:"On sécurise ce moment en priorité.", cols:"cols3",
     choices:[
-      {v:"stress", t:"Stress", s:"Nerfs / pression"},
+      {v:"stress", t:"Stress", s:"Pression"},
       {v:"cafe", t:"Café", s:"Habitude ancrée"},
       {v:"soir", t:"Soir", s:"Détente"},
       {v:"journee", t:"Journée", s:"Usage fréquent"},
       {v:"apresRepas", t:"Après repas", s:"Rituel"},
-      {v:"matin", t:"Matin", s:"Dmarrage"},
+      {v:"matin", t:"Matin", s:"Demarrage"},
     ]},
   { key:"goal", title:"Objectif du client ?", subtitle:"L’objectif n°1 = éviter la rechute.", cols:"cols3",
     choices:[
@@ -1882,7 +1882,7 @@ function calcFlavorHint(a){
 }
 function calcMomentTip(a){
   const m = a.moments;
-  if(m === "stress") return "Stress : tirage stable + dosage cohérent pour éviter la frustration.";
+  if(m === "stress") return "Stress : Mieux vaut vaper tranquillement quelques boufées que tirer fort et creer de la frustration.";
   if(m === "cafe") return "Café : Astuce, Prendre 2-3 boufées de vape bien dosées avant la première gorgée de café, avec un café légerment modifié (allongé ou avec du lait) pour casser le réflexe café clope";
   if(m === "soir") return "Soir : garder une vape plud douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
   if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
@@ -1909,9 +1909,10 @@ function buildSheet(a){
 
  const addons = [
   "Résistance / cartouche de secours",
-  "Réglage puissance (confort)",
+  "Affiner le réglage de la puissance avec le client pour trouver sa vape idéale",
   "Proposer systématiquement un chargeur adapté",
   "Rappel : baisser la nicotine quand c’est stable"
+  "Rappel : ⚠️ Au debut la sensation en gorge peut etre ressentie forte, cela est normal et passera en quelques jours ⚠️"
 ];
 
   const goalLine =
