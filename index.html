@@ -1907,7 +1907,7 @@ function buildSheet(a){
   const reassurance = calcReassurance(a);
   const momentTip = calcMomentTip(a);
 
-  const addons = ["Résistance/cartouche de secours", "Réglage puissance (confort)", "Rappel : baisser la nicotine quand c’est stable"];
+  const addons = ["Résistance/cartouche de secours", "Réglage puissance (confort)","Proposer systématiquement un chargeur adapté, "Rappel : baisser la nicotine quand c’est stable"];
 
   const goalLine =
     a.goal === "arreter" ? "viser d’abord zéro cigarette" :
@@ -1919,7 +1919,7 @@ function buildSheet(a){
   return {
     title: "Recommandation STOOM (profil client)",
     tirage, nicotine, power, hardware,
-    explain: `${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
+    explain: `${reassurance}<br><br>${momentTip}<br><br>Suggestion saveurs : ${flavor}.`,
     addons,
     salesLine
   };
