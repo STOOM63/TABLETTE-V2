@@ -1824,10 +1824,8 @@ function closeWelcome(){
   document.getElementById("welcomeModal").style.display = "none";
 }
 
-function unlockWithLicense(){
+ffunction unlockWithLicense(){
   const key = (document.getElementById("licenseKeyInput").value || "").trim();
-
-  // Option : autoriser aussi une clé en minuscules/espaces
   const normalized = key.replace(/\s+/g,"").toUpperCase();
   const ok = LICENSE.allowed.some(k => k.toUpperCase() === normalized);
 
@@ -1835,6 +1833,13 @@ function unlockWithLicense(){
     toast("Clé invalide", "Vérifiez la licence remise par l’éditeur.");
     return;
   }
+
+  localStorage.setItem(LICENSE.lsOk, "1");
+  closeLicenseGate();
+
+  toast("Licence validée", "Activation réussie ✅");
+  openWelcome();              // ✅ au lieu de showWelcomePDG()
+}
 
   localStorage.setItem(LICENSE.lsOk, "1");
 closeLicenseGate();
@@ -1846,10 +1851,12 @@ return;
 
 function enterApp(){
   closeWelcome();
-  // Ensuite ton flux normal : ouverture du PIN vendeur si besoin
+
+  // ✅ important : si l’app n’a pas encore été initialisée
+  if(!APP_READY) init();
+
   if(!state.currentUser) openAuthModal(true);
 }
-
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
   users: [],
