@@ -525,6 +525,17 @@
   opacity:.7;
   pointer-events:none;
 }
+/* FIX: la fiche SAV doit toujours passer au-dessus */
+#savModal{
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  display: none;
+}
+
+#savModal.show{
+  display: block !important;
+}
 
   </style>
 </head>
