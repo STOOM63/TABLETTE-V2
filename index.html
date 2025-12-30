@@ -3791,14 +3791,15 @@ function bindButtons(){
   $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
+
+   // ✅ Bouton SAV: ouvrir la fiche imprimable
+const openSavBtn = document.getElementById("openSavFormBtn");
+if (openSavBtn) {
+  openSavBtn.addEventListener("click", openSavForm);
 }
-    // ✅ Bouton SAV: ouvrir la fiche imprimable
-  const openSavBtn = document.getElementById("openSavFormBtn");
-  if(openSavBtn){
-    openSavBtn.addEventListener("click", () => {
-      openSavForm();
-    });
-  }
+
+
+    
 
 
 /* ---------- Init ---------- */
