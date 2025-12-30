@@ -34,7 +34,7 @@
   <link rel="apple-touch-icon" href="/TABLETTE-V2/icon-192.png">
 
 
-  
+  <title>STOOM • Outil Tablette PRO</title>
   <style>
     :root{
       --bg:#070B14;
@@ -483,155 +483,9 @@
     }
     .alertBanner strong{font-size:13px}
     .alertBanner .btnrow{margin:0}
-    /* ===== FLUXA Onboarding polish ===== */
-#licenseGate .modal-card, #welcomeModal .modal-card{
-  animation: fluxaPop .18s ease-out;
-}
-@keyframes fluxaPop{
-  from{ transform: translateY(10px); opacity:.2 }
-  to{ transform: translateY(0); opacity:1 }
-}
-
-/* petit “halo” premium sur la carte */
-#licenseGate .modal-card::before, #welcomeModal .modal-card::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius: var(--radius);
-  background: radial-gradient(600px 240px at 20% 10%, rgba(59,130,246,.22), transparent 60%),
-              radial-gradient(500px 220px at 80% 10%, rgba(236,72,153,.16), transparent 55%),
-              radial-gradient(600px 260px at 50% 90%, rgba(34,197,94,.14), transparent 60%);
-  pointer-events:none;
-  z-index:-1;
-  filter: blur(10px);
-  opacity:.75;
-}
-
-/* “confettis” léger en overlay sur le welcome */
-#welcomeModal .result{
-  position:relative;
-  overflow:hidden;
-}
-#welcomeModal .result::after{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:
-    radial-gradient(circle at 10% 20%, rgba(255,255,255,.18), transparent 35%),
-    radial-gradient(circle at 80% 30%, rgba(59,130,246,.18), transparent 35%),
-    radial-gradient(circle at 30% 80%, rgba(34,197,94,.14), transparent 35%),
-    radial-gradient(circle at 70% 85%, rgba(236,72,153,.14), transparent 35%);
-  transform: rotate(12deg);
-  opacity:.7;
-  pointer-events:none;
-}
-/* FIX: la fiche SAV doit toujours passer au-dessus */
-#savModal{
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999999 !important;
-  display: none;
-}
-
-#savModal.show{
-  display: block !important;
-}
-
   </style>
 </head>
 <body>
-  <!-- =========================
-     FLUXA • LICENCE GATE (Onboarding)
-     ========================= -->
-<div class="modal" id="licenseGate" role="dialog" aria-modal="true" style="display:none">
-  <div class="modal-card" style="max-width:860px">
-    <div class="modal-h">
-      <h3>Activation FLUXA (démo)</h3>
-      <button class="xbtn" onclick="/* optionnel: rien */"> </button>
-    </div>
-
-    <div class="modal-b">
-      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap">
-        <div class="logoWrap" style="width:78px;height:78px;border-radius:24px">
-          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
-        </div>
-
-        <div style="flex:1; min-width:260px">
-         <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
-  Activation de la démo FLUXA
-</div>
-
-          <p class="muted" style="margin:8px 0 0; line-height:1.45">
-            Afin d’activer la démonstration de l’outil FLUXA Tablette PRO,
-merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
-
-          </p>
-
-          <div class="chips" style="margin-top:10px">
-            <span class="chip"><b>✔</b> Parcours client</span>
-            <span class="chip"><b>✔</b> SAV imprimable</span>
-            <span class="chip"><b>✔</b> Audit interne</span>
-            <span class="chip"><b>✔</b> Données en local</span>
-          </div>
-
-          <p class="small" style="margin-top:10px; opacity:.75">
-            Astuce : collez la clé (copier/coller) puis validez.
-          </p>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <label>Clé de licence</label>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
-        <input id="licenseKeyInput" type="password" placeholder="Ex: FLUXA-DEMO-XXXX-XXXX" style="flex:1; min-width:260px" />
-        <button class="btn primary" onclick="unlockWithLicense()">Activer</button>
-      </div>
-
-      <div class="small" style="margin-top:10px; opacity:.75">
-        En cas de besoin : contactez l’éditeur.
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Congrats popup -->
-<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
-  <div class="modal-card" style="max-width:760px">
-    <div class="modal-h">
-      <h3>Bienvenue sur FLUXA</h3>
-      <button class="xbtn" onclick="closeWelcome()">Fermer</button>
-    </div>
-    <div class="modal-b">
-      <div class="result" style="padding:18px">
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
-          <div style="font-size:26px; line-height:1">🎊</div>
-          <div style="flex:1; min-width:240px">
-            <div style="font-weight:950; font-size:18px">
-              Félicitations, <span id="welcomeName">Isabelle</span> !
-            </div>
-            <p class="muted" style="margin:8px 0 0; line-height:1.45">
-              Licence validée ✅<br>
-              Vous pouvez maintenant accéder à l’outil Tablette PRO FLUXA.
-            </p>
-          </div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="chips">
-          <span class="chip"><b>Tip</b> Utilisez <span class="mono">H C S K N R A</span> pour naviguer vite</span>
-          <span class="chip"><b>Tip</b> Le bouton “PIN” en haut sert à connecter un vendeur</span>
-        </div>
-
-        <div class="btnrow" style="margin-top:14px">
-          <button class="btn primary" onclick="enterApp()">Entrer dans FLUXA</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -929,13 +783,7 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
           <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
           <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
           <div class="btnrow" style="margin-top:10px">
-            <button
-  id="openSavFormBtn"
-  type="button"
-  class="btn primary">
-  Créer fiche SAV imprimable
-</button>
-
+            <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
             <button class="btn" onclick="clearSavProblem()">Effacer</button>
           </div>
           <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
@@ -1424,30 +1272,6 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
     </div>
     <div class="modal-b">
       <p class="muted">Sélectionne ton nom puis entre ton PIN.</p>
-      <div id="firstSetup" style="display:none; margin-top:12px">
-  <div class="q">
-    <h3>Premier lancement</h3>
-    <p class="muted">Aucun utilisateur n’existe. Crée le premier <b>responsable</b> de la boutique.</p>
-
-    <div class="two">
-      <div>
-        <label>Nom</label>
-        <input id="firstManagerName" type="text" placeholder="Ex: Responsable Boutique" />
-      </div>
-      <div>
-        <label>PIN (4 chiffres mini)</label>
-        <input id="firstManagerPin" type="password" inputmode="numeric" placeholder="Ex: 1234" />
-      </div>
-    </div>
-
-    <div class="btnrow" style="margin-top:12px">
-      <button class="btn primary" onclick="createFirstManager()">Créer le responsable</button>
-    </div>
-  </div>
-</div>
-
-<div id="authNormal">
-  
       <label>Utilisateur</label>
       <select id="authUserSelect"></select>
 
@@ -1591,85 +1415,14 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
    ========================= */
 
 const LS = { state: "stoom_tablette_v2_state" };
-/* =========================
-   FLUXA • Licence gate
-   ========================= */
-const LICENSE = {
-  lsOk: "fluxa_license_ok",
-  lsName: "fluxa_pilot_name",
-  // ✅ Mets ici la clé remise à ta PDG
-  allowed: ["7852-5487-7855-8254"]
-};
-
-function getPilotName(){
-  return localStorage.getItem(LICENSE.lsName) || "Isabelle";
-}
-function setPilotName(n){
-  localStorage.setItem(LICENSE.lsName, n);
-}
-function hasValidLicense(){
-  return localStorage.getItem(LICENSE.lsOk) === "1";
-}
-
-function openLicenseGate(){
-  // Nom personnalisable (tu peux changer “Isabelle” ici)
-  const name = getPilotName();
-  document.getElementById("welcomeName").textContent = name;
-
-  document.getElementById("licenseKeyInput").value = "";
-  document.getElementById("licenseGate").style.display = "block";
-  document.getElementById("licenseGate").classList.add("show");
-
-  setTimeout(()=> document.getElementById("licenseKeyInput").focus(), 50);
-}
-
-function closeLicenseGate(){
-  document.getElementById("licenseGate").classList.remove("show");
-  document.getElementById("licenseGate").style.display = "none";
-}
-
-function openWelcome(){
-  const name = getPilotName();
-  document.getElementById("welcomeName").textContent = name;
-
-  document.getElementById("welcomeModal").style.display = "block";
-  document.getElementById("welcomeModal").classList.add("show");
-}
-
-function closeWelcome(){
-  document.getElementById("welcomeModal").classList.remove("show");
-  document.getElementById("welcomeModal").style.display = "none";
-}
-
-function unlockWithLicense(){
-  const key = (document.getElementById("licenseKeyInput").value || "").trim();
-
-  // Option : autoriser aussi une clé en minuscules/espaces
-  const normalized = key.replace(/\s+/g,"").toUpperCase();
-  const ok = LICENSE.allowed.some(k => k.toUpperCase() === normalized);
-
-  if(!ok){
-    toast("Clé invalide", "Vérifiez la licence remise par l’éditeur.");
-    return;
-  }
-
-  localStorage.setItem(LICENSE.lsOk, "1");
-  closeLicenseGate();
-
-  // petit effet “pro”
-  toast("Licence validée", "Activation réussie ✅");
-  openWelcome();
-}
-
-function enterApp(){
-  closeWelcome();
-  startApp();
-}
-
 
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
-  users: [],
+  users: [
+    { id:"arnaud", name:"Arnaud", pin:"1007", role:"manager" },
+    { id:"evan",   name:"Evan",   pin:"1517", role:"seller"  },
+    { id:"lea",    name:"Léa",    pin:"2109", role:"seller"  },
+  ],
   currentUser: null,
   view: "home",
   notesTab: "notes",
@@ -1823,6 +1576,7 @@ function go(view){
   $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view || (requestedView === "followup" && b.dataset.view === "followup")));
 
   if(view === "client") renderClient();
+  if(view === "sav") renderSav();
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
@@ -1844,28 +1598,15 @@ function bindNav(){
 
 /* ---------- Auth Modal ---------- */
 function openAuthModal(force=false){
-  const hasUsers = Array.isArray(state.users) && state.users.length > 0;
-
-  $("#firstSetup").style.display = hasUsers ? "none" : "block";
-  $("#authNormal").style.display = hasUsers ? "block" : "none";
-
-  if(hasUsers){
-    const sel = $("#authUserSelect");
-    sel.innerHTML = state.users
-      .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
-      .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
-      .join("");
-    $("#authPin").value = "";
-    setTimeout(()=> $("#authPin").focus(), 50);
-  } else {
-    $("#firstManagerName").value = "";
-    $("#firstManagerPin").value = "";
-    setTimeout(()=> $("#firstManagerName").focus(), 50);
-  }
-
+  const sel = $("#authUserSelect");
+  sel.innerHTML = state.users
+    .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
+    .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
+    .join("");
+  $("#authPin").value = "";
   $("#authModal").classList.add("show");
+  setTimeout(()=> $("#authPin").focus(), 50);
 }
-
 function closeAuthModal(){
   if(!state.currentUser){
     toast("Connexion", "Connexion obligatoire.");
@@ -1925,30 +1666,6 @@ function logout(){
   refreshAuthUI();
   openAuthModal(true);
 }
-  function createFirstManager(){
-  const name = ($("#firstManagerName").value || "").trim();
-  const pin  = ($("#firstManagerPin").value || "").trim();
-
-  if(!name){ toast("Création", "Nom requis."); return; }
-  if(!pin || pin.length < 4){ toast("Création", "PIN 4 chiffres mini."); return; }
-
-  const id = slugifyName(name);
-  if(state.users.some(u=>u.id === id)){
-    toast("Création", "Un utilisateur avec cet identifiant existe déjà.");
-    return;
-  }
-
-  state.users.push({ id, name, pin, role: "manager" });
-  state.currentUser = { id, name, role: "manager" };
-
-  audit("FIRST_MANAGER_CREATED", id);
-  saveState();
-
-  $("#authModal").classList.remove("show");
-  refreshAuthUI();
-  toast("OK", "Responsable créé. Tu es connecté.");
-}
-
 
 /* ---------- BLOCK Export/Import/Reset for sellers ---------- */
 function updateAdminButtonsLock(){
@@ -2167,7 +1884,7 @@ function calcMomentTip(a){
   const m = a.moments;
   if(m === "stress") return "Stress : Mieux vaut vaper tranquillement quelques boufées que tirer fort et creer de la frustration.";
   if(m === "cafe") return "Café : Astuce, Prendre 2-3 boufées de vape bien dosées avant la première gorgée de café, avec un café légerment modifié (allongé ou avec du lait) pour casser le réflexe café clope";
-  if(m === "soir") return "Soir : garder une vape plus douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
+  if(m === "soir") return "Soir : garder une vape plud douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
   if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
   if(m === "apresRepas") return "Après repas : cigarette electronique toujours prête, simple, toujours dispo.";
   if(m === "matin") return "Matin : Privilegier un taux de nicotine + fort le matin, .";
@@ -2519,11 +2236,7 @@ function renderSavResult(){
 
 
 function openSavForm(){
-  // DEBUG : confirme que le clic déclenche bien la fonction
-  toast("SAV", "Ouverture de la fiche…");
-
   if(!requireAuth()) return;
-
   if(!state.sav.symptom){
     toast("SAV", "Choisis d’abord un symptôme.");
     return;
@@ -2535,6 +2248,8 @@ function openSavForm(){
   // reset
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
+
+  // ✅ AJOUT : reset champs produit
   $("#savProductRef").value = "";
   $("#savProductColor").value = "";
   $("#savScratchCode").value = "";
@@ -2548,21 +2263,11 @@ function openSavForm(){
   $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
 
-  // ✅ FORÇAGE AFFICHAGE (au cas où le CSS .modal.show ne s’applique pas)
-  const modal = $("#savModal");
-  modal.style.display = "block";
-  modal.classList.add("show");
-
+  $("#savModal").classList.add("show");
   audit("SAV_OPEN_FORM", state.sav.symptom);
 }
 
-
-function closeSavModal(){
-  const modal = $("#savModal");
-  modal.classList.remove("show");
-  modal.style.display = "none";
-}
-
+function closeSavModal(){ $("#savModal").classList.remove("show"); }
 
 function computeSavDecision(data){
   const reasons = [];
@@ -3549,7 +3254,7 @@ function renderUsers(){
         <p class="small mono">id=${escapeHtml(u.id)} • PIN=••••</p>
         <div class="btnrow">
           <button class="btn" onclick="openEditUser('${u.id}')">Modifier</button>
-         <button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>
+          ${u.id === "arnaud" ? `<span class="small">Arnaud protégé</span>` : `<button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>`}
         </div>
       </div>
     `;
@@ -3727,12 +3432,12 @@ function refreshHomeLastSheet(){
 /* ---------- Keyboard shortcuts ---------- */
 function bindKeys(){
   window.addEventListener("keydown", (e)=>{
-   if(e.key === "Escape"){
-  closeAuthModal();
-  closeImportModal();
-  closeSavModal();
-  return;
-}
+    if(e.key === "Escape"){
+      $("#authModal").classList.remove("show");
+      $("#importModal").classList.remove("show");
+      $("#savModal").classList.remove("show");
+      return;
+    }
     if(e.key === "/" && !e.metaKey && !e.ctrlKey){
       e.preventDefault();
       $("#searchInput").focus();
@@ -3791,19 +3496,10 @@ function bindButtons(){
   $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
-
-   // ✅ Bouton SAV: ouvrir la fiche imprimable
-const openSavBtn = document.getElementById("openSavFormBtn");
-if (openSavBtn) {
-  openSavBtn.addEventListener("click", openSavForm);
 }
 
-
-    
-
-
 /* ---------- Init ---------- */
-function startApp(){
+function init(){
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
@@ -3816,22 +3512,12 @@ function startApp(){
   bindButtons();
   bindKeys();
 
-  $all(".view").forEach(v => v.style.display = "none");
+  $all(".view").forEach(v=> v.style.display="none");
   $("#view-home").style.display = "block";
 
   if(!state.currentUser) openAuthModal(true);
 }
-
-function init(){
-  if(!hasValidLicense()){
-    openLicenseGate();
-    return;
-  }
-  startApp();
-}
-
 init();
-
 </script>
 </body>
 </html>
