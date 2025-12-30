@@ -918,7 +918,7 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
           <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
           <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
           <div class="btnrow" style="margin-top:10px">
-            <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
+            <button class="btn primary" id="openSavFormBtn" onclick="openSavForm()">Créer fiche SAV imprimable</button>
             <button class="btn" onclick="clearSavProblem()">Effacer</button>
           </div>
           <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
@@ -2453,6 +2453,9 @@ function renderSav(){
     d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
   d.onclick = ()=> {
   state.sav.symptom = it.id;
+    const btn = $("#openSavFormBtn");
+if(btn) btn.disabled = false;
+
   audit("SAV_SYMPTOM", it.id);
 
   // ✅ met à jour le bouton sélectionné visuellement
@@ -2468,6 +2471,10 @@ function renderSav(){
   });
   $("#savVendorProblem").value = state.sav.vendorProblem || "";
   renderSavResult();
+
+  const btn = $("#openSavFormBtn");
+if(btn) btn.disabled = !state.sav.symptom;
+
 }
 function renderSavResult(){
   const r = $("#savResult");
