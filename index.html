@@ -536,25 +536,6 @@
 #savModal.show{
   display: block !important;
 }
-/* Patch sécurité: le modal doit TOUJOURS passer devant */
-.modal{
-  position: fixed;
-  inset: 0;
-  z-index: 999999;
-  display: none;
-}
-
-.modal.show{
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
-/* Pour être sûr que la carte est visible */
-.modal-card{
-  position: relative;
-  z-index: 1000000;
-}
 
   </style>
 </head>
@@ -2565,26 +2546,6 @@ function openSavForm(){
   const modal = $("#savModal");
   modal.style.display = "block";
   modal.classList.add("show");
-
-  const modal = document.getElementById("savModal");
-if(!modal){
-  toast("ERREUR", "savModal introuvable dans le DOM");
-  return;
-}
-
-// FORÇAGE TOTAL d'affichage (anti CSS relou / anti iPad)
-modal.style.display = "block";
-modal.style.position = "fixed";
-modal.style.inset = "0";
-modal.style.zIndex = "999999";
-modal.style.background = "rgba(0,0,0,.55)";
-modal.style.opacity = "1";
-modal.style.visibility = "visible";
-
-modal.classList.add("show");
-
-// DEBUG : confirme l'état
-console.log("savModal:", modal, getComputedStyle(modal).display, modal.className);
 
   audit("SAV_OPEN_FORM", state.sav.symptom);
 }
