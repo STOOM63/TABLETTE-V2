@@ -3801,6 +3801,31 @@ function handleSavCreate(){
 
   openSavForm();
 }
+// 🔓 Rendre les fonctions accessibles aux onclick=""
+window.go = go;
+window.openSavForm = openSavForm;
+window.validateSavAndPrint = validateSavAndPrint;
+window.previewSavEligibility = previewSavEligibility;
+window.closeSavModal = closeSavModal;
+window.reprintLastSav = reprintLastSav;
+window.printSavSheet = printSavSheet;
+
+window.setNotesTab = setNotesTab;
+window.openFollowupsTab = openFollowupsTab;
+
+window.calcBottles = calcBottles;
+window.calcSavings = calcSavings;
+window.calcAccu = calcAccu;
+window.resetAccuCalc = resetAccuCalc;
+
+window.login = login;
+window.logout = logout;
+window.closeAuthModal = closeAuthModal;
+window.openImportModal = openImportModal;
+window.closeImportModal = closeImportModal;
+window.importState = importState;
+window.exportFullState = exportFullState;
+window.clearAll = clearAll;
 
 function init(){
   if(!hasValidLicense()){
