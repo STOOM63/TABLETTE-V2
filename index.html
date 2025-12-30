@@ -3721,12 +3721,12 @@ function refreshHomeLastSheet(){
 /* ---------- Keyboard shortcuts ---------- */
 function bindKeys(){
   window.addEventListener("keydown", (e)=>{
-    if(e.key === "Escape"){
-      $("#authModal").classList.remove("show");
-      $("#importModal").classList.remove("show");
-      $("#savModal").classList.remove("show");
-      return;
-    }
+   if(e.key === "Escape"){
+  closeAuthModal();
+  closeImportModal();
+  closeSavModal();
+  return;
+}
     if(e.key === "/" && !e.metaKey && !e.ctrlKey){
       e.preventDefault();
       $("#searchInput").focus();
