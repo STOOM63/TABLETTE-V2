@@ -3826,6 +3826,26 @@ window.closeImportModal = closeImportModal;
 window.importState = importState;
 window.exportFullState = exportFullState;
 window.clearAll = clearAll;
+  // 🔧 Fonctions appelées par onclick mais pas encore exposées
+window.handleSavCreate = handleSavCreate;
+
+window.unlockWithLicense = unlockWithLicense;
+window.enterApp = enterApp;
+window.closeWelcome = closeWelcome;
+
+// (optionnel mais recommandé si tu utilises ces onclick ailleurs)
+window.clientReset = clientReset;
+window.printSheet = printSheet;
+window.renderSavHistory = renderSavHistory;
+window.exportSavHistoryCSV = exportSavHistoryCSV;
+window.clearSavHistory = clearSavHistory;
+window.clearSavProblem = clearSavProblem;
+window.toast = toast;
+window.saveNote = saveNote;
+window.clearNoteForm = clearNoteForm;
+window.copySalesLine = copySalesLine;
+window.fillExample = fillExample;
+
 
 function init(){
   if(!hasValidLicense()){
