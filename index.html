@@ -1806,7 +1806,6 @@ function go(view){
   $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view || (requestedView === "followup" && b.dataset.view === "followup")));
 
   if(view === "client") renderClient();
-  if(view === "sav") renderSav();
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
@@ -2151,7 +2150,7 @@ function calcMomentTip(a){
   const m = a.moments;
   if(m === "stress") return "Stress : Mieux vaut vaper tranquillement quelques boufées que tirer fort et creer de la frustration.";
   if(m === "cafe") return "Café : Astuce, Prendre 2-3 boufées de vape bien dosées avant la première gorgée de café, avec un café légerment modifié (allongé ou avec du lait) pour casser le réflexe café clope";
-  if(m === "soir") return "Soir : garder une vape plud douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
+  if(m === "soir") return "Soir : garder une vape plus douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
   if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
   if(m === "apresRepas") return "Après repas : cigarette electronique toujours prête, simple, toujours dispo.";
   if(m === "matin") return "Matin : Privilegier un taux de nicotine + fort le matin, .";
@@ -2503,7 +2502,11 @@ function renderSavResult(){
 
 
 function openSavForm(){
+  // DEBUG : confirme que le clic déclenche bien la fonction
+  toast("SAV", "Ouverture de la fiche…");
+
   if(!requireAuth()) return;
+
   if(!state.sav.symptom){
     toast("SAV", "Choisis d’abord un symptôme.");
     return;
@@ -2515,8 +2518,6 @@ function openSavForm(){
   // reset
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
-
-  // ✅ AJOUT : reset champs produit
   $("#savProductRef").value = "";
   $("#savProductColor").value = "";
   $("#savScratchCode").value = "";
@@ -2530,11 +2531,21 @@ function openSavForm(){
   $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
 
-  $("#savModal").classList.add("show");
+  // ✅ FORÇAGE AFFICHAGE (au cas où le CSS .modal.show ne s’applique pas)
+  const modal = $("#savModal");
+  modal.style.display = "block";
+  modal.classList.add("show");
+
   audit("SAV_OPEN_FORM", state.sav.symptom);
 }
 
-function closeSavModal(){ $("#savModal").classList.remove("show"); }
+
+function closeSavModal(){
+  const modal = $("#savModal");
+  modal.classList.remove("show");
+  modal.style.display = "none";
+}
+
 
 function computeSavDecision(data){
   const reasons = [];
