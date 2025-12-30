@@ -918,7 +918,7 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
           <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
           <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
           <div class="btnrow" style="margin-top:10px">
-            <button class="btn primary" id="openSavFormBtn" onclick="openSavForm()">Créer fiche SAV imprimable</button>
+            <button class="btn primary" onclick="handleSavCreate()">Créer fiche SAV imprimable</button>
             <button class="btn" onclick="clearSavProblem()">Effacer</button>
           </div>
           <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
@@ -3790,6 +3790,16 @@ function startApp(){
   $("#view-home").style.display = "block";
 
   if(!state.currentUser) openAuthModal(true);
+}
+function handleSavCreate(){
+  if(!requireAuth()) return;
+
+  if(!state.sav.symptom){
+    toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
+    return;
+  }
+
+  openSavForm();
 }
 
 function init(){
