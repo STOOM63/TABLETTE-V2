@@ -1775,14 +1775,19 @@ function copyToClipboard(text){
 function isManager(){ return state.currentUser?.role === "manager"; }
   let pendingAfterLogin = null;
 
-function requireAuth(afterLogin=null){
-  if(!state.currentUser){
-    if(typeof afterLogin === "function") pendingAfterLogin = afterLogin;
-    openAuthModal(true);
-    toast("Connexion requise", "Sélectionne ton nom et entre ton PIN.");
-    return false;
+ffunction requireAuth(afterLoginCb = null){
+  if(state.currentUser){
+    return true;
   }
-  return true;
+
+  // pas connecté → on mémorise l'action à faire après login
+  if(typeof afterLoginCb === "function"){
+    pendingAfterLogin = afterLoginCb;
+  }
+
+  openAuthModal(true);
+  toast("Connexion requise", "Sélectionne ton nom et entre ton PIN.");
+  return false;
 }
 
 function audit(action, detail){
@@ -1891,31 +1896,31 @@ function refreshAuthUI(){
   refreshSidebarMini();
   updateAdminButtonsLock();
 }
-function login(){
-  const userId = $("#authUserSelect").value;
-  const pin = ($("#authPin").value || "").trim();
-  const user = state.users.find(u=>u.id===userId);
-  if(!user){ toast("Erreur", "Utilisateur introuvable."); return; }
+function login() {
+  const pin = ($("#pinInput").value || "").trim();
+  const user = users.find(u => u.pin === pin);
 
-  if(!pin || pin !== user.pin){
-    toast("PIN incorrect", "Réessaie.");
-    audit("LOGIN_FAIL", userId);
+  if (!pin || !user) {
+    toast("PIN incorrect.");
+    audit("login_fail", { pin_len: pin.length });
     return;
   }
 
-  state.currentUser = { id:user.id, name:user.name, role:user.role };
+  state.currentUser = user;
   $("#authModal").classList.remove("show");
-  audit("LOGIN_OK", user.name);
-  refreshAuthUI();
-  saveState();
+  $("#pinInput").value = "";
+  toast("Connecté : " + user.name);
+  audit("login_success", { user: user.name });
 
-  // ✅ relance l’action demandée (SAV, impression, etc.)
+    // ✅ exécuter l’action demandée avant le login (ex: ouvrir la fiche SAV)
   if(pendingAfterLogin){
     const fn = pendingAfterLogin;
     pendingAfterLogin = null;
     setTimeout(fn, 0);
   }
+
 }
+
 
 
 function logout(){
@@ -3800,19 +3805,15 @@ function bindButtons(){
   const createSavBtn = document.getElementById("createSavBtn");
   if(createSavBtn){
     createSavBtn.addEventListener("click", () => {
-
-      if(!state.sav.symptom){
-        toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
+      if (!state.sav.symptom) {
+        toast("SAV", "Choisis un symptôme d’abord.");
         return;
       }
-
-      // Version SIMPLE (sans callback) : si pas connecté -> on ouvre PIN et on s'arrête
-     if(!requireAuth(openSavForm)) return;
-openSavForm();
-
+      requireAuth(openSavForm); // ✅ important
     });
   }
 }
+
 
 
 
