@@ -1773,14 +1773,18 @@ function copyToClipboard(text){
 
 /* ---------- Auth + Audit ---------- */
 function isManager(){ return state.currentUser?.role === "manager"; }
-function requireAuth(){
+  let pendingAfterLogin = null;
+
+function requireAuth(afterLogin=null){
   if(!state.currentUser){
+    if(typeof afterLogin === "function") pendingAfterLogin = afterLogin;
     openAuthModal(true);
     toast("Connexion requise", "Sélectionne ton nom et entre ton PIN.");
     return false;
   }
   return true;
 }
+
 function audit(action, detail){
   const who = state.currentUser?.name || "INCONNU";
   state.audit.push({ who, role: state.currentUser?.role || "none", action, detail: detail||"", ts: Date.now() });
@@ -1896,7 +1900,15 @@ function login(){
     toast("PIN incorrect", "Réessaie.");
     audit("LOGIN_FAIL", userId);
     return;
+      // ✅ relance l’action demandée avant le login
+  if(pendingAfterLogin){
+    const fn = pendingAfterLogin;
+    pendingAfterLogin = null;
+    setTimeout(fn, 0);
   }
+  }
+
+
   state.currentUser = { id:user.id, name:user.name, role:user.role };
   $("#authModal").classList.remove("show");
   audit("LOGIN_OK", user.name);
@@ -3786,17 +3798,20 @@ function bindButtons(){
   if(createSavBtn){
     createSavBtn.addEventListener("click", () => {
 
-      if(!requireAuth()) return;
-
       if(!state.sav.symptom){
         toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
         return;
       }
 
+      // Version SIMPLE (sans callback) : si pas connecté -> on ouvre PIN et on s'arrête
+      if(!requireAuth()) return;
+
       openSavForm();
     });
   }
 }
+
+
 
 
 /* ---------- Init ---------- */
