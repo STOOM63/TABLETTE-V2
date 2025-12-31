@@ -918,7 +918,8 @@ merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
           <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
           <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
           <div class="btnrow" style="margin-top:10px">
-            <button class="btn primary" onclick="handleSavCreate()">Créer fiche SAV imprimable</button>
+            <button class="btn primary" id="createSavBtn">Créer fiche SAV imprimable</button>
+
             <button class="btn" onclick="clearSavProblem()">Effacer</button>
           </div>
           <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
@@ -3771,6 +3772,20 @@ function bindButtons(){
   $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
   $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
 }
+    // ✅ SAV : ouvrir la fiche imprimable (évite le onclick capricieux iPad/PWA)
+  const createSavBtn = document.getElementById("createSavBtn");
+  if(createSavBtn){
+    createSavBtn.addEventListener("click", () => {
+      if(!requireAuth()) return;
+
+      if(!state.sav.symptom){
+        toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
+        return;
+
+      openSavForm(); // appel direct (pas window.openSavForm)
+    });
+  }
+
 
 /* ---------- Init ---------- */
 function startApp(){
@@ -3793,15 +3808,13 @@ function startApp(){
 }
 function handleSavCreate(){
   if(!requireAuth()) return;
-
   if(!state.sav.symptom){
     toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
     return;
   }
-
-   window.openSavForm();
-
+  openSavForm();
 }
+
 // 🔓 Rendre les fonctions accessibles aux onclick=""
 window.go = go;
 window.openSavForm = openSavForm;
