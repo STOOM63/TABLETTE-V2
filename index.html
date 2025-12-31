@@ -1895,11 +1895,7 @@ function login(){
   const userId = $("#authUserSelect").value;
   const pin = ($("#authPin").value || "").trim();
   const user = state.users.find(u=>u.id===userId);
-
-  if(!user){
-    toast("Erreur", "Utilisateur introuvable.");
-    return;
-  }
+  if(!user){ toast("Erreur", "Utilisateur introuvable."); return; }
 
   if(!pin || pin !== user.pin){
     toast("PIN incorrect", "Réessaie.");
@@ -1907,20 +1903,20 @@ function login(){
     return;
   }
 
-  // ✅ Succès
   state.currentUser = { id:user.id, name:user.name, role:user.role };
   $("#authModal").classList.remove("show");
   audit("LOGIN_OK", user.name);
   refreshAuthUI();
   saveState();
 
-  // ✅ relance l’action demandée AVANT login (ex: openSavForm)
+  // ✅ relance l’action demandée (SAV, impression, etc.)
   if(pendingAfterLogin){
     const fn = pendingAfterLogin;
     pendingAfterLogin = null;
     setTimeout(fn, 0);
   }
 }
+
 
 function logout(){
   if(state.currentUser) audit("LOGOUT", state.currentUser.name);
@@ -3811,9 +3807,9 @@ function bindButtons(){
       }
 
       // Version SIMPLE (sans callback) : si pas connecté -> on ouvre PIN et on s'arrête
-      if(!requireAuth()) return;
+     if(!requireAuth(openSavForm)) return;
+openSavForm();
 
-      openSavForm();
     });
   }
 }
