@@ -1816,9 +1816,13 @@ function go(view){
   $all(".navbtn").forEach(b => b.classList.toggle("active", b.dataset.view === view || (requestedView === "followup" && b.dataset.view === "followup")));
 
   if(view === "client") renderClient();
-  if(view === "sav") renderSav();
-  if(view === "sav") { renderSav(); renderSavHistory(); }
-  if(view === "sav") setTimeout(renderSavHistory, 0);
+  if(view === "sav"){
+  renderSav();
+  renderSavHistory();
+  // Optionnel : si tu constates parfois un affichage vide au 1er rendu, garde ça :
+  // setTimeout(renderSavHistory, 0);
+}
+
   if(view === "notes") renderNotes();
   if(view === "accu") renderAccu();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
@@ -1929,7 +1933,7 @@ function login(){
     pendingAfterLogin = null;
     setTimeout(fn, 0);
   }
-}
+
 
 }
 
@@ -2357,7 +2361,7 @@ const savMap = [
     causes:[
       "Résistance en fin de vie ou mal amorcée",
       "Airflow trop ouvert + aspiration trop forte",
-      "Liquide trop fluide / chaleur (adapter le PG/VG, Preconiser des boosters plus epais",
+      "Liquide trop fluide / chaleur (adapter le PG/VG, Preconiser des boosters plus epais)",
       "Joint ou cartouche usé"
     ],
     actions:[
