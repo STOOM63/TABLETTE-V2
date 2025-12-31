@@ -1895,26 +1895,33 @@ function login(){
   const userId = $("#authUserSelect").value;
   const pin = ($("#authPin").value || "").trim();
   const user = state.users.find(u=>u.id===userId);
-  if(!user){ toast("Erreur", "Utilisateur introuvable."); return; }
+
+  if(!user){
+    toast("Erreur", "Utilisateur introuvable.");
+    return;
+  }
+
   if(!pin || pin !== user.pin){
     toast("PIN incorrect", "Réessaie.");
     audit("LOGIN_FAIL", userId);
     return;
-      // ✅ relance l’action demandée avant le login
-  if(pendingAfterLogin){
-    const fn = pendingAfterLogin;
-    pendingAfterLogin = null;
-    setTimeout(fn, 0);
-  }
   }
 
-
+  // ✅ Succès
   state.currentUser = { id:user.id, name:user.name, role:user.role };
   $("#authModal").classList.remove("show");
   audit("LOGIN_OK", user.name);
   refreshAuthUI();
   saveState();
+
+  // ✅ relance l’action demandée AVANT login (ex: openSavForm)
+  if(pendingAfterLogin){
+    const fn = pendingAfterLogin;
+    pendingAfterLogin = null;
+    setTimeout(fn, 0);
+  }
 }
+
 function logout(){
   if(state.currentUser) audit("LOGOUT", state.currentUser.name);
   state.currentUser = null;
