@@ -3741,7 +3741,8 @@ function bindKeys(){
 
 /* ---------- Bind buttons ---------- */
 function bindButtons(){
-  $("#authBtn").addEventListener("click", ()=> openAuthModal(false));
+
+  $("#authBtn").addEventListener("click", () => openAuthModal(false));
   $("#logoutBtn").addEventListener("click", logout);
 
   $("#quickNew").addEventListener("click", ()=>{
@@ -3750,12 +3751,12 @@ function bindButtons(){
     go("client");
   });
 
-  $("#searchInput").addEventListener("keydown", (e)=>{
+  $("#searchInput").addEventListener("keydown",(e)=>{
     if(e.key === "Enter") runSearch(e.target.value);
   });
 
   $("#noteFilter").addEventListener("input", renderNotes);
-  $("#followupFilter")?.addEventListener("input", renderFollowups);
+  $("#followupFilter").addEventListener("input", renderFollowups);
 
   $("#printBtn").addEventListener("click", printSheet);
 
@@ -3768,23 +3769,34 @@ function bindButtons(){
     saveState();
   });
 
-  $("#authModal").addEventListener("click", (e)=>{ if(e.target.id==="authModal") closeAuthModal(); });
-  $("#importModal").addEventListener("click", (e)=>{ if(e.target.id==="importModal") closeImportModal(); });
-  $("#savModal").addEventListener("click", (e)=>{ if(e.target.id==="savModal") closeSavModal(); });
-}
-    // ✅ SAV : ouvrir la fiche imprimable (évite le onclick capricieux iPad/PWA)
+  $("#authModal").addEventListener("click",(e)=>{
+    if(e.target.id==="authModal") closeAuthModal();
+  });
+
+  $("#importModal").addEventListener("click",(e)=>{
+    if(e.target.id==="importModal") closeImportModal();
+  });
+
+  $("#savModal").addEventListener("click",(e)=>{
+    if(e.target.id==="savModal") closeSavModal();
+  });
+
+  // ✅ SAV : ouvrir la fiche imprimable
   const createSavBtn = document.getElementById("createSavBtn");
   if(createSavBtn){
     createSavBtn.addEventListener("click", () => {
+
       if(!requireAuth()) return;
 
       if(!state.sav.symptom){
         toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
         return;
+      }
 
-      openSavForm(); // appel direct (pas window.openSavForm)
+      openSavForm();
     });
   }
+}
 
 
 /* ---------- Init ---------- */
