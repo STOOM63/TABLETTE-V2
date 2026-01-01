@@ -3854,11 +3854,19 @@ function startApp(){
   if(!state.currentUser) openAuthModal(true);
 }
 function handleSavCreate(){
-  if(!requireAuth()) return;
+  toast("TEST", "clic sur Créer fiche SAV"); // 1) preuve que le onclick marche
+
+  const ok = requireAuth();
+  toast("TEST", "requireAuth() = " + ok);    // 2) on voit si ça bloque ici
+  if(!ok) return;
+
+  toast("TEST", "symptom = " + (state.sav && state.sav.symptom)); // 3) on voit le symptom
   if(!state.sav.symptom){
     toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
     return;
   }
+
+  toast("TEST", "j'ouvre openSavForm()");
   openSavForm();
 }
 
