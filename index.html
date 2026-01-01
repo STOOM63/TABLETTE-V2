@@ -2547,7 +2547,6 @@ function renderSavResult(){
 
 
 function openSavForm(){
-  if(!requireAuth()) return;
   if(!state.sav.symptom){
     toast("SAV", "Choisis d’abord un symptôme.");
     return;
