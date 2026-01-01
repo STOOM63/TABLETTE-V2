@@ -393,14 +393,33 @@
     .toast .s{font-size:11px;color:var(--muted); margin-top:4px}
 
     .modal{
-      position:fixed; inset:0;
-      display:none; z-index:9998;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      padding:18px; overflow:auto;
-    }
-    .modal.show{display:block}
+  position: fixed;
+  inset: 0;
+  display: none;
+
+  /* ✅ overlay au-dessus de tout */
+  z-index: 10000;
+
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  /* ✅ centre la carte */
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ✅ quand ouvert : FLEX (pas block) */
+.modal.show{
+  display: flex;
+}
+
+/* toast doit rester au-dessus si besoin */
+.toast{ z-index: 11000; }
     .modal-card{
       max-width: 820px;
       margin: 40px auto;
@@ -2554,7 +2573,7 @@ function openSavForm(){
   state.sav.vendorProblem = ($("#savVendorProblem").value || "").trim();
   saveState();
 
-  // reset
+  // reset champs
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
   $("#savProductRef").value = "";
@@ -2576,23 +2595,13 @@ function openSavForm(){
     return;
   }
 
-  // Force affichage + au-dessus de tout
-  m.style.display = "flex";
-  m.style.position = "fixed";
-  m.style.inset = "0";
-  m.style.zIndex = "999999";
-  m.style.visibility = "visible";
-  m.style.opacity = "1";
-
-  m.classList.add("open", "show", "active");
+  // ✅ ouverture propre (CSS gère tout)
+  m.classList.add("show");
   m.removeAttribute("aria-hidden");
 
-  // Force reflow + scroll top (Android)
-  void m.offsetHeight;
-  window.scrollTo(0,0);
-
-  audit("SAV_OPEN_FORM", state.sav.symptom);
-               }
+  // ✅ Android: remonte en haut (optionnel)
+  m.scrollTop = 0;
+  }
 
 function closeSavModal(){
   const m = $("#savModal");
