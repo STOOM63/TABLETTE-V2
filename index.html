@@ -2574,6 +2574,17 @@ function openSavForm(){
 
   $("#savModal").classList.add("show");
   audit("SAV_OPEN_FORM", state.sav.symptom);
+  // ✅ DEBUG/FIX: forcer l’affichage du modal SAV
+  const m = $("#savModal");
+  toast("TEST", "savModal existe = " + !!m);
+
+  if (m) {
+    m.style.display = "flex";
+    m.classList.add("open", "show", "active");
+    m.removeAttribute("aria-hidden");
+  } else {
+    toast("ERREUR", "Impossible de trouver #savModal (ID incorrect ou élément absent)");
+  }
 }
 
 function closeSavModal(){ $("#savModal").classList.remove("show"); }
