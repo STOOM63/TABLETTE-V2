@@ -2602,7 +2602,7 @@ function computeSavDecision(data){
 }
 
 function validateSavAndPrint(){
-  if(!requireAuth()) return;
+  if(!requireAuth(validateSavAndPrint)) return;
 
   const data = {
     clientName: ($("#savClientName").value||"").trim(),
