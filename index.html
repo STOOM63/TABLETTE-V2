@@ -2596,7 +2596,8 @@ function openSavForm(){
   }
 
   // ✅ ouverture propre (CSS gère tout)
-  m.classList.add("show");
+  m.style.display = "";            // ✅ important si un ancien "display:none" a été posé
+m.classList.add("show");
   m.removeAttribute("aria-hidden");
 
   // ✅ Android: remonte en haut (optionnel)
@@ -2606,8 +2607,9 @@ function openSavForm(){
 function closeSavModal(){
   const m = $("#savModal");
   m.classList.remove("show");
-  m.style.display = "none";
-}
+  m.style.display = "";          // ✅ on enlève l’override inline
+  m.setAttribute("aria-hidden","true");
+        }
     
 function computeSavDecision(data){
   const reasons = [];
