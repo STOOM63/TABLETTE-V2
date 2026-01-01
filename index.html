@@ -2558,7 +2558,7 @@ function openSavForm(){
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
 
-  // ✅ AJOUT : reset champs produit
+  // reset champs produit
   $("#savProductRef").value = "";
   $("#savProductColor").value = "";
   $("#savScratchCode").value = "";
@@ -2569,21 +2569,19 @@ function openSavForm(){
   $("#savCablePresent").value = "yes";
 
   $("#savProblemText").value = state.sav.vendorProblem || "";
-  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
+  $("#savSymptomLabel").textContent =
+    (savMap.find(x => x.id === state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
 
-  const m = $("#savModal");
-m.style.display = "block";     // 👈 important (écrase display:none inline)
-m.classList.add("show");
-  audit("SAV_OPEN_FORM", state.sav.symptom);
-  // ✅ DEBUG/FIX: forcer l’affichage du modal SAV
+  // ✅ un seul m
   const m = $("#savModal");
   toast("TEST", "savModal existe = " + !!m);
 
   if (m) {
-    m.style.display = "flex";
+    m.style.display = "flex";          // ou "block" selon ton CSS
     m.classList.add("open", "show", "active");
     m.removeAttribute("aria-hidden");
+    audit("SAV_OPEN_FORM", state.sav.symptom);
   } else {
     toast("ERREUR", "Impossible de trouver #savModal (ID incorrect ou élément absent)");
   }
@@ -2592,9 +2590,9 @@ m.classList.add("show");
 function closeSavModal(){
   const m = $("#savModal");
   m.classList.remove("show");
-  m.style.display = "none";    // 👈 important
+  m.style.display = "none";
 }
-
+    
 function computeSavDecision(data){
   const reasons = [];
 
