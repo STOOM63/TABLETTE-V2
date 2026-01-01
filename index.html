@@ -2490,7 +2490,7 @@ function renderSav(){
     d.innerHTML = `<div class="ct">${escapeHtml(it.t)}</div><div class="cs">${escapeHtml(it.s)}</div>`;
   d.onclick = ()=> {
   state.sav.symptom = it.id;
-    const btn = $("#openSavFormBtn");
+    const btn = $("#createSavBtn");
 if(btn) btn.disabled = false;
 
   audit("SAV_SYMPTOM", it.id);
@@ -2509,7 +2509,7 @@ if(btn) btn.disabled = false;
   $("#savVendorProblem").value = state.sav.vendorProblem || "";
   renderSavResult();
 
-  const btn = $("#openSavFormBtn");
+  const btn = $("#createSavBtn");
 if(btn) btn.disabled = !state.sav.symptom;
 
 }
