@@ -2557,8 +2557,6 @@ function openSavForm(){
   // reset
   $("#savClientName").value = "";
   $("#savPurchaseDate").value = "";
-
-  // reset champs produit
   $("#savProductRef").value = "";
   $("#savProductColor").value = "";
   $("#savScratchCode").value = "";
@@ -2569,23 +2567,32 @@ function openSavForm(){
   $("#savCablePresent").value = "yes";
 
   $("#savProblemText").value = state.sav.vendorProblem || "";
-  $("#savSymptomLabel").textContent =
-    (savMap.find(x => x.id === state.sav.symptom)?.t || state.sav.symptom);
+  $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
 
-  // ✅ un seul m
   const m = $("#savModal");
-  toast("TEST", "savModal existe = " + !!m);
-
-  if (m) {
-    m.style.display = "flex";          // ou "block" selon ton CSS
-    m.classList.add("open", "show", "active");
-    m.removeAttribute("aria-hidden");
-    audit("SAV_OPEN_FORM", state.sav.symptom);
-  } else {
-    toast("ERREUR", "Impossible de trouver #savModal (ID incorrect ou élément absent)");
+  if(!m){
+    toast("ERREUR", "Impossible de trouver #savModal");
+    return;
   }
-}
+
+  // Force affichage + au-dessus de tout
+  m.style.display = "flex";
+  m.style.position = "fixed";
+  m.style.inset = "0";
+  m.style.zIndex = "999999";
+  m.style.visibility = "visible";
+  m.style.opacity = "1";
+
+  m.classList.add("open", "show", "active");
+  m.removeAttribute("aria-hidden");
+
+  // Force reflow + scroll top (Android)
+  void m.offsetHeight;
+  window.scrollTo(0,0);
+
+  audit("SAV_OPEN_FORM", state.sav.symptom);
+               }
 
 function closeSavModal(){
   const m = $("#savModal");
