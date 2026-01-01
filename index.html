@@ -2572,7 +2572,9 @@ function openSavForm(){
   $("#savSymptomLabel").textContent = (savMap.find(x=>x.id===state.sav.symptom)?.t || state.sav.symptom);
   $("#savDecisionBox").textContent = "—";
 
-  $("#savModal").classList.add("show");
+  const m = $("#savModal");
+m.style.display = "block";     // 👈 important (écrase display:none inline)
+m.classList.add("show");
   audit("SAV_OPEN_FORM", state.sav.symptom);
   // ✅ DEBUG/FIX: forcer l’affichage du modal SAV
   const m = $("#savModal");
@@ -2587,7 +2589,11 @@ function openSavForm(){
   }
 }
 
-function closeSavModal(){ $("#savModal").classList.remove("show"); }
+function closeSavModal(){
+  const m = $("#savModal");
+  m.classList.remove("show");
+  m.style.display = "none";    // 👈 important
+}
 
 function computeSavDecision(data){
   const reasons = [];
