@@ -1946,11 +1946,12 @@ function login(){
   saveState();
 
   // ✅ rejouer l’action demandée avant login
-  if(pendingAfterLogin){
-    const fn = pendingAfterLogin;
-    pendingAfterLogin = null;
-    setTimeout(fn, 0);
-  }
+const fn = pendingAfterLogin;
+pendingAfterLogin = null;
+
+if (typeof fn === "function") {
+  setTimeout(fn, 0);
+}
 
 
 }
@@ -3848,7 +3849,7 @@ function bindButtons(){
     if(e.target.id==="savModal") closeSavModal();
   });
 
-  // ✅ SAV : ouvrir la fiche imprimable
+  
   }
 
 
@@ -3875,11 +3876,16 @@ function startApp(){
   if(!state.currentUser) openAuthModal(true);
 }
 function handleSavCreate(){
-  // Si pas de symptôme, on stop
   if(!state.sav?.symptom){
-    toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
+    toast("SAV", "Sélectionne d’abord un symptôme.");
     return;
   }
+
+  // ✅ On passe openSavForm en callback post-auth
+  if(!requireAuth(openSavForm)) return;
+
+  openSavForm();
+}
 
   // IMPORTANT : on passe openSavForm comme callback → après login ça s'ouvre tout seul
   if(!requireAuth(openSavForm)) return;
