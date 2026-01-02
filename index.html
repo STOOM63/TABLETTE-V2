@@ -3849,19 +3849,7 @@ function bindButtons(){
   });
 
   // ✅ SAV : ouvrir la fiche imprimable
-  const createSavBtn = document.getElementById("createSavBtn");
-if(createSavBtn){
-  createSavBtn.addEventListener("click", () => {
-    if (!state.sav.symptom) {
-      toast("SAV", "Choisis un symptôme d’abord.");
-      return;
-    }
-    if(!requireAuth(openSavForm)) return;
-    openSavForm();
-  });
-}
-
-}
+  }
 
 
 
@@ -3887,19 +3875,16 @@ function startApp(){
   if(!state.currentUser) openAuthModal(true);
 }
 function handleSavCreate(){
-  toast("TEST", "clic sur Créer fiche SAV"); // 1) preuve que le onclick marche
-
-  const ok = requireAuth();
-  toast("TEST", "requireAuth() = " + ok);    // 2) on voit si ça bloque ici
-  if(!ok) return;
-
-  toast("TEST", "symptom = " + (state.sav && state.sav.symptom)); // 3) on voit le symptom
-  if(!state.sav.symptom){
+  // Si pas de symptôme, on stop
+  if(!state.sav?.symptom){
     toast("SAV", "Sélectionne d’abord un symptôme (fuite, brûlé, panne…).");
     return;
   }
 
-  toast("TEST", "j'ouvre openSavForm()");
+  // IMPORTANT : on passe openSavForm comme callback → après login ça s'ouvre tout seul
+  if(!requireAuth(openSavForm)) return;
+
+  // Déjà connecté → on ouvre direct
   openSavForm();
 }
 
