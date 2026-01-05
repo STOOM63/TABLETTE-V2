@@ -34,7 +34,7 @@
   <link rel="apple-touch-icon" href="/TABLETTE-V2/icon-192.png">
 
 
-  <title>STOOM • Outil Tablette PRO</title>
+  
   <style>
     :root{
       --bg:#070B14;
@@ -483,9 +483,144 @@
     }
     .alertBanner strong{font-size:13px}
     .alertBanner .btnrow{margin:0}
+    /* ===== FLUXA Onboarding polish ===== */
+#licenseGate .modal-card, #welcomeModal .modal-card{
+  animation: fluxaPop .18s ease-out;
+}
+@keyframes fluxaPop{
+  from{ transform: translateY(10px); opacity:.2 }
+  to{ transform: translateY(0); opacity:1 }
+}
+
+/* petit “halo” premium sur la carte */
+#licenseGate .modal-card::before, #welcomeModal .modal-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: var(--radius);
+  background: radial-gradient(600px 240px at 20% 10%, rgba(59,130,246,.22), transparent 60%),
+              radial-gradient(500px 220px at 80% 10%, rgba(236,72,153,.16), transparent 55%),
+              radial-gradient(600px 260px at 50% 90%, rgba(34,197,94,.14), transparent 60%);
+  pointer-events:none;
+  z-index:-1;
+  filter: blur(10px);
+  opacity:.75;
+}
+
+/* “confettis” léger en overlay sur le welcome */
+#welcomeModal .result{
+  position:relative;
+  overflow:hidden;
+}
+#welcomeModal .result::after{
+  content:"";
+  position:absolute;
+  inset:-40%;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,.18), transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(59,130,246,.18), transparent 35%),
+    radial-gradient(circle at 30% 80%, rgba(34,197,94,.14), transparent 35%),
+    radial-gradient(circle at 70% 85%, rgba(236,72,153,.14), transparent 35%);
+  transform: rotate(12deg);
+  opacity:.7;
+  pointer-events:none;
+}
+
   </style>
 </head>
 <body>
+  <!-- =========================
+     FLUXA • LICENCE GATE (Onboarding)
+     ========================= -->
+<div class="modal" id="licenseGate" role="dialog" aria-modal="true" style="display:none">
+  <div class="modal-card" style="max-width:860px">
+    <div class="modal-h">
+      <h3>Activation FLUXA (démo)</h3>
+      <button class="xbtn" onclick="/* optionnel: rien */"> </button>
+    </div>
+
+    <div class="modal-b">
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap">
+        <div class="logoWrap" style="width:78px;height:78px;border-radius:24px">
+          <img class="logoImg" src="/TABLETTE-V2/assets/logo-fluxa.png" alt="FLUXA">
+        </div>
+
+        <div style="flex:1; min-width:260px">
+         <div style="font-weight:900; font-size:18px; letter-spacing:.02em">
+  Activation de la démo FLUXA
+</div>
+
+          <p class="muted" style="margin:8px 0 0; line-height:1.45">
+            Afin d’activer la démonstration de l’outil FLUXA Tablette PRO,
+merci d’indiquer la <b>clé de licence</b> remise par votre éditeur.
+
+          </p>
+
+          <div class="chips" style="margin-top:10px">
+            <span class="chip"><b>✔</b> Parcours client</span>
+            <span class="chip"><b>✔</b> SAV imprimable</span>
+            <span class="chip"><b>✔</b> Audit interne</span>
+            <span class="chip"><b>✔</b> Données en local</span>
+          </div>
+
+          <p class="small" style="margin-top:10px; opacity:.75">
+            Astuce : collez la clé (copier/coller) puis validez.
+          </p>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <label>Clé de licence</label>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+        <input id="licenseKeyInput" type="password" placeholder="Ex: FLUXA-DEMO-XXXX-XXXX" style="flex:1; min-width:260px" />
+        <button class="btn primary" onclick="unlockWithLicense()">Activer</button>
+      </div>
+
+      <div class="small" style="margin-top:10px; opacity:.75">
+        En cas de besoin : contactez l’éditeur.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Congrats popup -->
+<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" style="display:none">
+  <div class="modal-card" style="max-width:760px">
+    <div class="modal-h">
+      <h3>Bienvenue sur FLUXA</h3>
+      <button class="xbtn" onclick="closeWelcome()">Fermer</button>
+    </div>
+    <div class="modal-b">
+      <div class="result" style="padding:18px">
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+          <div style="font-size:26px; line-height:1">🎊</div>
+          <div style="flex:1; min-width:240px">
+            <div style="font-weight:950; font-size:18px">
+              Félicitations, <span id="welcomeName">Isabelle</span> !
+            </div>
+            <p class="muted" style="margin:8px 0 0; line-height:1.45">
+              Licence validée ✅<br>
+              Vous pouvez maintenant accéder à l’outil Tablette PRO FLUXA.
+            </p>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="chips">
+          <span class="chip"><b>Tip</b> Utilisez <span class="mono">H C S K N R A</span> pour naviguer vite</span>
+          <span class="chip"><b>Tip</b> Le bouton “PIN” en haut sert à connecter un vendeur</span>
+        </div>
+
+        <div class="btnrow" style="margin-top:14px">
+          <button class="btn primary" onclick="enterApp()">Entrer dans FLUXA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="app">
   <aside class="sidebar">
     <div class="brand">
@@ -529,6 +664,16 @@
         <div class="navtxt"><div class="t">Calculs</div><div class="s">conso & économies</div></div>
         <div class="kbd">K</div>
       </div>
+
+    <div class="navbtn" data-view="accu" tabindex="0">
+  <div class="icon">🔋</div>
+  <div class="navtxt">
+    <div class="t">Accus &amp; Sécurité</div>
+    <div class="s">loi d’Ohm + bonnes pratiques</div>
+  </div>
+  <div class="kbd">B</div>
+</div>
+
 
       <div class="navbtn" data-view="notes" tabindex="0">
         <div class="icon">📝</div>
@@ -574,7 +719,10 @@
       <div class="small" style="margin-top:12px; opacity:.55">
   Logiciel développé par <b>Arnaud BLANC</b><br/>
   © 2024–2025 Arnaud BLANC – Tous droits réservés<br/>
-  Propriété intellectuelle exclusive – usage interne STOOM
+  Propriété intellectuelle exclusive – usage interne STOOM<br/>
+  INPI : DSO2025030622<br/>
+  RGPD Ready : Les données enregistrées ne sont en aucun cas stockées par léditeur<br/>
+  Les données sont stockées uniquement en local
 </div>
 
     </div>
@@ -741,91 +889,87 @@
       </div>
     </div>
 
-    <!-- SAV -->
-    <div id="view-sav" class="view" style="display:none">
-      <div class="grid cols2">
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>SAV guidé</h2>
-              <p>Symptôme → causes → actions → fiche imprimable.</p>
-            </div>
-            <span class="badge">SAV</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Quel problème principal ?</h3>
-              Choisis le symptôme dominant.</p>
-              <div class="choices cols3" id="savChoices"></div>
-            </div>
-
-           <div class="q" id="savResult" style="margin-top:12px">
-  <h3>En attente…</h3>
-  Sélectionne un symptôme.</p>
-</div>
-
-<div class="q" style="margin-top:12px">
-  <h3>Problème constaté (par le vendeur)</h3>
-  Ce texte sera repris automatiquement dans la fiche SAV.</p>
-  <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
-  <div class="btnrow" style="margin-top:10px">
-    <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
-    <button class="btn" onclick="clearSavProblem()">Effacer</button>
-  </div>
-  <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
-</div>
-
-
-            <div class="q" id="savResult" style="margin-top:12px">
-              <h3>En attente…</h3>
-              Sélectionne un symptôme.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div class="ph">
-            <div>
-              <h2>Checklist SAV</h2>
-              <p>Trame simple (60 secondes).</p>
-            </div>
-            <span class="badge">Pro</span>
-          </div>
-          <div class="pb">
-            <div class="q">
-              <h3>Questions à poser</h3>
-              <ul class="muted" style="margin:10px 0 0; padding-left:18px">
-                <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
-                <li>Liquide : taux / ratio / nouveauté ?</li>
-                <li>Résistance : neuve ? amorçage ? puissance ?</li>
-                <li>Airflow : trop ouvert ? tirage trop fort ?</li>
-                <li>Choc / chaleur / fuite dans la poche ?</li>
-              </ul>
-              <div class="hr"></div>
-              <h3>Conclusion</h3>
-              “On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
-            </div>
-            <div class="q" style="margin-top:12px">
-  <h3>Historique SAV</h3>
-  <p class="muted">Recherche + ré-impression. Suppression/Export : responsable.</p>
-
-  <label>Filtrer (produit, raison, opérateur...)</label>
-  <input id="savHistoryFilter" type="text" placeholder="Ex: XROS, fuite, Evan..." />
-
-  <div class="btnrow" style="margin-top:10px">
-    <button class="btn" onclick="renderSavHistory()">Appliquer</button>
-    <button class="btn primary" onclick="exportSavHistoryCSV()">Exporter CSV</button>
-    <button class="btn danger" onclick="clearSavHistory()">Vider historique</button>
-  </div>
-
-  <div class="hr"></div>
-  <div id="savHistoryList" class="list"></div>
-</div>
-
-          </div>
-        </section>
+   <!-- SAV -->
+<div id="view-sav" class="view" style="display:none">
+  <div class="grid cols2">
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>SAV guidé</h2>
+          <p>Symptôme → causes → actions → fiche imprimable.</p>
+        </div>
+        <span class="badge">SAV</span>
       </div>
-    </div>
+
+      <div class="pb">
+        <div class="q">
+          <h3>Quel problème principal ?</h3>
+          <p class="muted">Choisis le symptôme dominant.</p>
+          <div class="choices cols3" id="savChoices"></div>
+        </div>
+
+        <div class="q" id="savResult" style="margin-top:12px">
+          <h3>En attente…</h3>
+          <p class="muted">Sélectionne un symptôme.</p>
+        </div>
+
+        <div class="q" style="margin-top:12px">
+          <h3>Problème constaté (par le vendeur)</h3>
+          <p class="muted">Ce texte sera repris automatiquement dans la fiche SAV.</p>
+          <textarea id="savVendorProblem" placeholder="Ex: ne charge plus / fuite importante / goût brûlé malgré changement de résistance..."></textarea>
+          <div class="btnrow" style="margin-top:10px">
+            <button class="btn primary" onclick="openSavForm()">Créer fiche SAV imprimable</button>
+            <button class="btn" onclick="clearSavProblem()">Effacer</button>
+          </div>
+          <div class="small">La fiche SAV sert de preuve interne + justificatif dans le colis fournisseur.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Checklist SAV</h2>
+          <p>Trame simple (60 secondes).</p>
+        </div>
+        <span class="badge">Pro</span>
+      </div>
+
+      <div class="pb">
+        <div class="q">
+          <h3>Questions à poser</h3>
+          <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+            <li>Depuis quand ? (aujourd’hui / 2 jours / 1 semaine)</li>
+            <li>Liquide : taux / ratio / nouveauté ?</li>
+            <li>Résistance : neuve ? amorçage ? puissance ?</li>
+            <li>Airflow : trop ouvert ? tirage trop fort ?</li>
+            <li>Choc / chaleur / fuite dans la poche ?</li>
+          </ul>
+          <div class="hr"></div>
+          <h3>Conclusion</h3>
+          <p class="muted">“On fait <b>1 changement à la fois</b>, puis on valide. Le but : usage stable.”</p>
+        </div>
+
+        <div class="q" style="margin-top:12px">
+          <h3>Historique SAV</h3>
+          <p class="muted">Recherche + ré-impression. Suppression/Export : responsable.</p>
+
+          <label>Filtrer (produit, raison, opérateur...)</label>
+          <input id="savHistoryFilter" type="text" placeholder="Ex: XROS, fuite, Evan..." />
+
+          <div class="btnrow" style="margin-top:10px">
+            <button class="btn" onclick="renderSavHistory()">Appliquer</button>
+            <button class="btn primary" onclick="exportSavHistoryCSV()">Exporter CSV</button>
+            <button class="btn danger" onclick="clearSavHistory()">Vider historique</button>
+          </div>
+
+          <div class="hr"></div>
+          <div id="savHistoryList" class="list"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
 
     <!-- CALC -->
     <div id="view-calc" class="view" style="display:none">
@@ -926,6 +1070,82 @@
         </section>
       </div>
     </div>
+
+    <!-- ACCUS & SÉCURITÉ -->
+<div id="view-accu" class="view" style="display:none">
+  <div class="grid cols2">
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Accus & Sécurité</h2>
+          <p>Calculateur loi d’Ohm (automatique).</p>
+        </div>
+        <span class="badge">Sécurité</span>
+      </div>
+
+   <div class="pb">
+  <div class="q">
+    <div class="two">
+      <div>
+        <label>Puissance (W)</label>
+        <input id="accuWatts" type="number" min="1" step="1" value="30" />
+      </div>
+
+      <div>
+        <label>Box</label>
+        <select id="accuCells">
+          <option value="1">Simple accu (1)</option>
+          <option value="2">Double accus (2)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn primary" onclick="calcAccu()">Calculer</button>
+      <button class="btn" onclick="resetAccuCalc()">Reset</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="result" id="accuResult">
+      <h3>Résultat</h3>
+      <div class="small">Renseigne puis “Calculer”.</div>
+    </div>
+  </div>
+</div>
+
+
+    </section>
+
+    <section class="panel">
+      <div class="ph">
+        <div>
+          <h2>Bonnes pratiques</h2>
+          <p>Rappels sécurité accus.</p>
+        </div>
+        <span class="badge">Important</span>
+      </div>
+
+      <div class="pb">
+        <div class="q">
+  <h3>Rappels sécurité accus</h3>
+  <ul class="muted" style="margin:10px 0 0; padding-left:18px">
+    <li>Accus dans un étui, jamais en vrac (clés/monnaie = court-circuit).</li>
+    <li>Wrap/isolant abîmé = stop immédiat (rewrap ou remplacement).</li>
+    <li>Ne jamais charger un accu abîmé, chaud, ou suspect.</li>
+    <li>Éviter charge “rapide” inutile : privilégier charge lente / chargeur externe.</li>
+    <li>Stockage : au frais, au sec, à l’abri du soleil / voiture.</li>
+    <li>On reste loin des limites : marge de sécurité obligatoire.</li>
+  </ul>
+</div>
+
+      </div>
+    </section>
+
+  </div>
+</div>
+
 
     <!-- NOTES -->
     <div id="view-notes" class="view" style="display:none">
@@ -1187,6 +1407,30 @@
     </div>
     <div class="modal-b">
       <p class="muted">Sélectionne ton nom puis entre ton PIN.</p>
+      <div id="firstSetup" style="display:none; margin-top:12px">
+  <div class="q">
+    <h3>Premier lancement</h3>
+    <p class="muted">Aucun utilisateur n’existe. Crée le premier <b>responsable</b> de la boutique.</p>
+
+    <div class="two">
+      <div>
+        <label>Nom</label>
+        <input id="firstManagerName" type="text" placeholder="Ex: Responsable Boutique" />
+      </div>
+      <div>
+        <label>PIN (4 chiffres mini)</label>
+        <input id="firstManagerPin" type="password" inputmode="numeric" placeholder="Ex: 1234" />
+      </div>
+    </div>
+
+    <div class="btnrow" style="margin-top:12px">
+      <button class="btn primary" onclick="createFirstManager()">Créer le responsable</button>
+    </div>
+  </div>
+</div>
+
+<div id="authNormal">
+  
       <label>Utilisateur</label>
       <select id="authUserSelect"></select>
 
@@ -1330,14 +1574,85 @@
    ========================= */
 
 const LS = { state: "stoom_tablette_v2_state" };
+/* =========================
+   FLUXA • Licence gate
+   ========================= */
+const LICENSE = {
+  lsOk: "fluxa_license_ok",
+  lsName: "fluxa_pilot_name",
+  // ✅ Mets ici la clé remise à ta PDG
+  allowed: ["7852-5487-7855-8254"]
+};
+
+function getPilotName(){
+  return localStorage.getItem(LICENSE.lsName) || "Isabelle";
+}
+function setPilotName(n){
+  localStorage.setItem(LICENSE.lsName, n);
+}
+function hasValidLicense(){
+  return localStorage.getItem(LICENSE.lsOk) === "1";
+}
+
+function openLicenseGate(){
+  // Nom personnalisable (tu peux changer “Isabelle” ici)
+  const name = getPilotName();
+  document.getElementById("welcomeName").textContent = name;
+
+  document.getElementById("licenseKeyInput").value = "";
+  document.getElementById("licenseGate").style.display = "block";
+  document.getElementById("licenseGate").classList.add("show");
+
+  setTimeout(()=> document.getElementById("licenseKeyInput").focus(), 50);
+}
+
+function closeLicenseGate(){
+  document.getElementById("licenseGate").classList.remove("show");
+  document.getElementById("licenseGate").style.display = "none";
+}
+
+function openWelcome(){
+  const name = getPilotName();
+  document.getElementById("welcomeName").textContent = name;
+
+  document.getElementById("welcomeModal").style.display = "block";
+  document.getElementById("welcomeModal").classList.add("show");
+}
+
+function closeWelcome(){
+  document.getElementById("welcomeModal").classList.remove("show");
+  document.getElementById("welcomeModal").style.display = "none";
+}
+
+function unlockWithLicense(){
+  const key = (document.getElementById("licenseKeyInput").value || "").trim();
+
+  // Option : autoriser aussi une clé en minuscules/espaces
+  const normalized = key.replace(/\s+/g,"").toUpperCase();
+  const ok = LICENSE.allowed.some(k => k.toUpperCase() === normalized);
+
+  if(!ok){
+    toast("Clé invalide", "Vérifiez la licence remise par l’éditeur.");
+    return;
+  }
+
+  localStorage.setItem(LICENSE.lsOk, "1");
+  closeLicenseGate();
+
+  // petit effet “pro”
+  toast("Licence validée", "Activation réussie ✅");
+  openWelcome();
+}
+
+function enterApp(){
+  closeWelcome();
+  startApp();
+}
+
 
 const DEFAULT_STATE = {
   settings: { shopName: "STOOM Clermont-Ferrand", maskPhones: true },
-  users: [
-    { id:"arnaud", name:"Arnaud", pin:"1007", role:"manager" },
-    { id:"evan",   name:"Evan",   pin:"1517", role:"seller"  },
-    { id:"lea",    name:"Léa",    pin:"2109", role:"seller"  },
-  ],
+  users: [],
   currentUser: null,
   view: "home",
   notesTab: "notes",
@@ -1355,7 +1670,23 @@ const DEFAULT_STATE = {
     answers: { cigs:null, cigType:null, moments:null, goal:null, tried:null },
     sheet: null
   },
-  rules: {
+
+  accu: {
+    vMin: 3.2,
+    eff: 0.90,
+    margin: 1.25,
+    cells: 1,
+    watts: 30,
+    catalog: [
+      { id:"vtc5a", name:"Sony VTC5A", cdr:25, mah:2600, notes:"Très bon pour hautes puissances" },
+      { id:"vtc6",  name:"Sony VTC6",  cdr:15, mah:3000, notes:"Autonomie, puissance modérée" },
+      { id:"vtc5",  name:"Sony VTC5",  cdr:20, mah:2600, notes:"Polyvalent" },
+      { id:"hg2",   name:"LG HG2",     cdr:20, mah:3000, notes:"Autonomie + bon compromis" },
+      { id:"25r",   name:"Samsung 25R",cdr:15, mah:2500, notes:"Classique fiable" },
+    ]
+  },
+
+   rules: {
     byCigs: {
       "5-10":  { nicotine:"3–6 mg",        tirage:"MTL (serré à semi-serré)", power:"Modérée",  hardware:"Pod/kit MTL fiable" },
       "10-15": { nicotine:"6–12 mg",       tirage:"MTL (serré)",             power:"Modérée",  hardware:"Pod/kit MTL fiable" },
@@ -1363,6 +1694,7 @@ const DEFAULT_STATE = {
       "25+":   { nicotine:"20 mg (sels)",  tirage:"MTL (serré, régulier)",   power:"Faible (confort)", hardware:"Pod MTL / tirage serré" }
     }
   }
+
 };
 
 const state = loadState();
@@ -1478,6 +1810,7 @@ function go(view){
   if(view === "sav") { renderSav(); renderSavHistory(); }
   if(view === "sav") setTimeout(renderSavHistory, 0);
   if(view === "notes") renderNotes();
+  if(view === "accu") renderAccu();
   if(view === "manager") { renderRulesEditor(); renderUsers(); renderAudit(); }
 
   audit("NAVIGATE", requestedView);
@@ -1495,15 +1828,28 @@ function bindNav(){
 
 /* ---------- Auth Modal ---------- */
 function openAuthModal(force=false){
-  const sel = $("#authUserSelect");
-  sel.innerHTML = state.users
-    .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
-    .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
-    .join("");
-  $("#authPin").value = "";
+  const hasUsers = Array.isArray(state.users) && state.users.length > 0;
+
+  $("#firstSetup").style.display = hasUsers ? "none" : "block";
+  $("#authNormal").style.display = hasUsers ? "block" : "none";
+
+  if(hasUsers){
+    const sel = $("#authUserSelect");
+    sel.innerHTML = state.users
+      .slice().sort((a,b)=> a.name.localeCompare(b.name,'fr'))
+      .map(u=>`<option value="${u.id}">${escapeHtml(u.name)} (${u.role==="manager"?"responsable":"vendeur"})</option>`)
+      .join("");
+    $("#authPin").value = "";
+    setTimeout(()=> $("#authPin").focus(), 50);
+  } else {
+    $("#firstManagerName").value = "";
+    $("#firstManagerPin").value = "";
+    setTimeout(()=> $("#firstManagerName").focus(), 50);
+  }
+
   $("#authModal").classList.add("show");
-  setTimeout(()=> $("#authPin").focus(), 50);
 }
+
 function closeAuthModal(){
   if(!state.currentUser){
     toast("Connexion", "Connexion obligatoire.");
@@ -1563,6 +1909,30 @@ function logout(){
   refreshAuthUI();
   openAuthModal(true);
 }
+  function createFirstManager(){
+  const name = ($("#firstManagerName").value || "").trim();
+  const pin  = ($("#firstManagerPin").value || "").trim();
+
+  if(!name){ toast("Création", "Nom requis."); return; }
+  if(!pin || pin.length < 4){ toast("Création", "PIN 4 chiffres mini."); return; }
+
+  const id = slugifyName(name);
+  if(state.users.some(u=>u.id === id)){
+    toast("Création", "Un utilisateur avec cet identifiant existe déjà.");
+    return;
+  }
+
+  state.users.push({ id, name, pin, role: "manager" });
+  state.currentUser = { id, name, role: "manager" };
+
+  audit("FIRST_MANAGER_CREATED", id);
+  saveState();
+
+  $("#authModal").classList.remove("show");
+  refreshAuthUI();
+  toast("OK", "Responsable créé. Tu es connecté.");
+}
+
 
 /* ---------- BLOCK Export/Import/Reset for sellers ---------- */
 function updateAdminButtonsLock(){
@@ -1669,12 +2039,12 @@ const clientQuestions = [
     ]},
   { key:"moments", title:"Moment difficile principal ?", subtitle:"On sécurise ce moment en priorité.", cols:"cols3",
     choices:[
-      {v:"stress", t:"Stress", s:"Nerfs / pression"},
+      {v:"stress", t:"Stress", s:"Pression"},
       {v:"cafe", t:"Café", s:"Habitude ancrée"},
       {v:"soir", t:"Soir", s:"Détente"},
       {v:"journee", t:"Journée", s:"Usage fréquent"},
       {v:"apresRepas", t:"Après repas", s:"Rituel"},
-      {v:"matin", t:"Matin", s:"Dmarrage"},
+      {v:"matin", t:"Matin", s:"Demarrage"},
     ]},
   { key:"goal", title:"Objectif du client ?", subtitle:"L’objectif n°1 = éviter la rechute.", cols:"cols3",
     choices:[
@@ -1779,17 +2149,17 @@ function calcFlavorHint(a){
 }
 function calcMomentTip(a){
   const m = a.moments;
-  if(m === "stress") return "Stress : tirage stable + dosage cohérent pour éviter la frustration.";
-  if(m === "cafe") return "Café : routine simple (même liquide / même tirage) pour remplacer le rituel.";
-  if(m === "soir") return "Soir : garder le confort (ne pas baisser trop vite).";
-  if(m === "journee") return "Journée : autonomie + fiabilité + simplicité.";
-  if(m === "apresRepas") return "Après repas : setup prêt, simple, toujours dispo.";
-  if(m === "matin") return "Matin : dosage suffisant (sinon manque immédiat).";
-  return "Sécuriser les moments clés avec le bon dosage.";
+  if(m === "stress") return "Stress : Mieux vaut vaper tranquillement quelques boufées que tirer fort et creer de la frustration.";
+  if(m === "cafe") return "Café : Astuce, Prendre 2-3 boufées de vape bien dosées avant la première gorgée de café, avec un café légerment modifié (allongé ou avec du lait) pour casser le réflexe café clope";
+  if(m === "soir") return "Soir : garder une vape plud douce (moins de nicotine), essayer d'associer la vape à un autre rituel (tisane, eau fraiche etc...) vaper dans un contexte calme.";
+  if(m === "journee") return "Journée : autonomie + fiabilité + simplicité, ne pas se retenir de vaper : Mieux vaut trop vaper que de rechuter sur une cigarette !";
+  if(m === "apresRepas") return "Après repas : cigarette electronique toujours prête, simple, toujours dispo.";
+  if(m === "matin") return "Matin : Privilegier un taux de nicotine + fort le matin, .";
+  return "Sécuriser les moments clés avec le bon dosage de nicotine.";
 }
 function calcReassurance(a){
-  if(a.tried === "echec") return "Si ça a déjà échoué, c’est souvent un mauvais couple taux/matériel. On sécurise.";
-  if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable.";
+  if(a.tried === "echec") return "Si ça a déjà échoué, il s'agit souvent d'un mauvais couple taux/matériel. ⚠️Attention de ne pas reproduire la même erreur.";
+  if(a.tried === "ok") return "Si ça marchait, on réplique ce qui était confortable et stable pour le client.";
   return "On ajuste si besoin, sans se précipiter.";
 }
 function buildSheet(a){
@@ -1804,7 +2174,13 @@ function buildSheet(a){
   const reassurance = calcReassurance(a);
   const momentTip = calcMomentTip(a);
 
-  const addons = ["Résistance/cartouche de secours", "Réglage puissance (confort)", "Rappel : baisser la nicotine quand c’est stable"];
+ const addons = [
+  "Résistance / cartouche de secours",
+  "Affiner le réglage de la puissance avec le client pour trouver sa vape idéale",
+  "Proposer systématiquement un chargeur adapté",
+  "Rappel : baisser la nicotine quand c’est stable",
+  "Rappel : ⚠️ Au debut la sensation en gorge peut etre ressentie forte, cela est normal et passera en quelques jours ⚠️",
+];
 
   const goalLine =
     a.goal === "arreter" ? "viser d’abord zéro cigarette" :
@@ -1816,7 +2192,12 @@ function buildSheet(a){
   return {
     title: "Recommandation STOOM (profil client)",
     tirage, nicotine, power, hardware,
-    explain: `${reassurance} ${momentTip} Suggestion saveurs : ${flavor}.`,
+    explain: [
+  reassurance,
+  momentTip,
+  `Suggestion saveurs : ${flavor}.`
+].join("\n\n"),
+
     addons,
     salesLine
   };
@@ -1831,7 +2212,10 @@ function renderSheet(){
     refreshHomeLastSheet();
     return;
   }
+
   const sh = state.client.sheet;
+  const explainHtml = escapeHtml(sh.explain).replace(/\n/g, "<br>");
+
   box.innerHTML = `
     <h3>${escapeHtml(sh.title)}</h3>
     <div class="chips" style="margin:8px 0 10px">
@@ -1840,13 +2224,18 @@ function renderSheet(){
       <span class="chip"><b>Puissance</b> ${escapeHtml(sh.power)}</span>
       <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
     </div>
-    <p class="muted">${escapeHtml(sh.explain)}</p>
+
     <div class="hr"></div>
+
+    <p class="muted">${explainHtml}</p>
+
+    <div class="hr"></div>
+
     <div class="chips">
       ${sh.addons.map(a=>`<span class="chip"><b>+</b> ${escapeHtml(a)}</span>`).join("")}
     </div>
-    <p class="small" style="margin-top:10px">Boutique : <span class="mono">${escapeHtml(state.settings.shopName)}</span> • ${escapeHtml(formatDateFR(new Date()))}</p>
   `;
+
   $("#salesLine").textContent = sh.salesLine;
   refreshSidebarMini();
   refreshHomeLastSheet();
@@ -1893,7 +2282,8 @@ function printSheet(){
     <span class="chip"><b>Matériel</b> ${escapeHtml(sh.hardware)}</span>
   </div>
   <div class="hr"></div>
-  <p class="muted">${escapeHtml(sh.explain)}</p>
+  <p class="muted">${escapeHtml(sh.explain).replace(/\n/g,"<br>")}</p>
+
 </div>
 
 <div class="card">
@@ -2351,51 +2741,16 @@ function reprintLastSav(){
   }
   printSavSheet(state.sav.lastSavSheet);
 }
- function renderSavHistory(){
-  const box = $("#savHistoryList");
-  if(!box) return;
-
-  const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
-  const list = (state.sav.history || []).slice().reverse();
-
-  const filtered = list.filter(s =>
-    !q ||
-    (s.productRef||"").toLowerCase().includes(q) ||
-    (s.symptomLabel||"").toLowerCase().includes(q) ||
-    (s.vendor||"").toLowerCase().includes(q) ||
-    (s.decision||"").toLowerCase().includes(q)
-  );
-
-  if(filtered.length === 0){
-    box.innerHTML = `<p class="muted">Aucun SAV enregistré.</p>`;
-    return;
-  }
-
-  box.innerHTML = filtered.map(s => `
-    <div class="item">
-      <div class="top">
-        <strong>${escapeHtml(s.productRef || "—")} • ${escapeHtml(s.symptomLabel || "—")}</strong>
-        <span>${escapeHtml(s.when || "")}</span>
-      </div>
-      <p class="muted">
-        ${escapeHtml(s.decision)} — par ${escapeHtml(s.vendor || "—")}
-      </p>
-      <div class="btnrow">
-        <button class="btn" onclick="printSavSheet(${JSON.stringify(s).replace(/"/g,'&quot;')})">
-          Ré-imprimer
-        </button>
-      </div>
-    </div>
-  `).join("");
-}
 function renderSavHistory(){
   const box = $("#savHistoryList");
   if(!box) return;
 
   const q = ($("#savHistoryFilter")?.value || "").toLowerCase().trim();
-  const rows = (state.sav.history || []).slice().reverse();
+  const history = (state.sav.history || []);
+  const histRev = history.slice().reverse();
+  const total = history.length;
 
-  const filtered = rows.filter(s=>{
+  const filtered = histRev.filter(s=>{
     if(!q) return true;
     const hay = [
       s.when, s.vendor, s.decision, s.symptomLabel,
@@ -2417,6 +2772,9 @@ function renderSavHistory(){
     const reasons = (s.reasons && s.reasons.length) ? s.reasons.join(" • ") : "—";
     const productLine = `${s.productRef || "—"} • ${s.productColor || "—"}${s.scratchCode ? " • " + s.scratchCode : ""}`;
 
+    // index réel dans state.sav.history (filtered vient d’un reverse)
+    const originalIndex = total - 1 - idx;
+
     return `
       <div class="item">
         <div class="top">
@@ -2437,13 +2795,18 @@ function renderSavHistory(){
         </p>
 
         <div class="btnrow" style="margin-top:10px">
-          <button class="btn" onclick="printSavSheet(state.sav.history[${(state.sav.history || []).length - 1 - idx}])">Ré-imprimer</button>
-          ${isManager() ? `<button class="btn danger" onclick="deleteSavHistoryItem(${(state.sav.history || []).length - 1 - idx})">Supprimer</button>` : `<span class="small">Suppression : responsable</span>`}
+          <button class="btn" onclick="printSavSheet(state.sav.history[${originalIndex}])">Ré-imprimer</button>
+          ${
+            isManager()
+              ? `<button class="btn danger" onclick="deleteSavHistoryItem(${originalIndex})">Supprimer</button>`
+              : `<span class="small">Suppression : responsable</span>`
+          }
         </div>
       </div>
     `;
   }).join("");
 }
+
 
 function deleteSavHistoryItem(index){
   if(!isManager()){
@@ -2981,6 +3344,96 @@ function calcSavings(){
   `;
   audit("CALC_SAVINGS", `pack=${packPrice},ppd=${packsPerDay},vape=${vapeMonthly},months=${months}`);
 }
+/* ---------- Accus & Sécurité ---------- */
+function renderAccu(){
+  // remet l'UI d'après l'état
+  $("#accuWatts").value = state.accu?.watts ?? 30;
+  $("#accuCells").value = String(state.accu?.cells ?? 1);
+
+  // Si tu veux afficher direct une suggestion au chargement :
+  $("#accuResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="small">Renseigne puis “Calculer”.</div>
+  `;
+}
+
+function calcAccu(){
+  if(!requireAuth()) return;
+
+  const watts = Math.max(1, Number($("#accuWatts").value || 0));
+  const cells = Math.max(1, Number($("#accuCells").value || 1));
+
+  // paramètres de sécurité
+  const vMin   = Number(state.accu?.vMin ?? 3.2);     // tension mini par accu (sag)
+  const eff    = Number(state.accu?.eff ?? 0.90);     // rendement
+  const margin = Number(state.accu?.margin ?? 1.25);  // marge de sécurité
+
+  // courant approximatif (par accu)
+  // I ≈ (W / (cells * Vmin * eff)) * marge
+  const iPerCell = (watts / (cells * vMin * eff)) * margin;
+
+  // Catalogue et compatibilité (CDR >= courant calculé)
+  const catalog = (state.accu?.catalog || []).slice().sort((a,b)=> b.cdr - a.cdr);
+  const ok = catalog.filter(a => Number(a.cdr) >= iPerCell);
+
+  // Sauvegarde état
+  state.accu.watts = watts;
+  state.accu.cells = cells;
+  audit("ACCU_CALC", `W=${watts} cells=${cells} I≈${iPerCell.toFixed(1)}A`);
+  saveState();
+
+  const chips = `
+    <div class="chips" style="margin:8px 0 10px">
+      <span class="chip"><b>Puissance</b> ${watts} W</span>
+      <span class="chip"><b>Box</b> ${cells} accu(s)</span>
+      <span class="chip"><b>Hypothèses</b> Vmin=${vMin} • eff=${Math.round(eff*100)}% • marge=${margin}</span>
+      <span class="chip"><b>Courant/accu</b> ~${iPerCell.toFixed(1)} A</span>
+    </div>
+  `;
+
+  const listOk = ok.length
+    ? `<div class="hr"></div>
+       <h3>Accus compatibles (CDR ≥ ${iPerCell.toFixed(1)}A)</h3>
+       <div class="list">
+         ${ok.map(a=>`
+           <div class="item">
+             <div class="top">
+               <strong>${escapeHtml(a.name)}</strong>
+               <span>CDR ${a.cdr}A • ${a.mah}mAh</span>
+             </div>
+             <p class="muted">${escapeHtml(a.notes || "")}</p>
+           </div>
+         `).join("")}
+       </div>`
+    : `<div class="hr"></div>
+       <p class="dangerText"><b>⚠️ Aucun accu du catalogue ne couvre ce réglage avec marge.</b></p>
+       <p class="muted small">Solutions : baisser la puissance, passer sur une box double accus, ou utiliser des accus avec CDR plus élevé.</p>`;
+
+  const safety = `
+    <div class="hr"></div>
+    <p class="small">
+      ⚠️ Calcul “vendeur” (approx) : dépend du matériel, de l’état des accus, de la résistance, du sag, etc.
+      Objectif = rester confortable et <b>loin des limites</b>.
+    </p>
+  `;
+
+  $("#accuResult").innerHTML = `<h3>Résultat</h3>${chips}${listOk}${safety}`;
+}
+
+function resetAccuCalc(){
+  if(!requireAuth()) return;
+  $("#accuWatts").value = 30;
+  $("#accuCells").value = "1";
+  state.accu.watts = 30;
+  state.accu.cells = 1;
+  audit("ACCU_RESET", "");
+  saveState();
+
+  $("#accuResult").innerHTML = `
+    <h3>Résultat</h3>
+    <div class="small">Renseigne puis “Calculer”.</div>
+  `;
+}
 
 /* ---------- Manager: Rules editor ---------- */
 function refreshRulesSummary(){
@@ -3068,7 +3521,7 @@ function renderUsers(){
         <p class="small mono">id=${escapeHtml(u.id)} • PIN=••••</p>
         <div class="btnrow">
           <button class="btn" onclick="openEditUser('${u.id}')">Modifier</button>
-          ${u.id === "arnaud" ? `<span class="small">Arnaud protégé</span>` : `<button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>`}
+         <button class="btn danger" onclick="removeUser('${u.id}')">Supprimer</button>
         </div>
       </div>
     `;
@@ -3266,6 +3719,7 @@ function bindKeys(){
     if(k==="c") go("client");
     if(k==="s") go("sav");
     if(k==="k") go("calc");
+    if(k==="b") go("accu");
     if(k==="n"){ state.notesTab = "notes"; go("notes"); }
     if(k==="r"){ state.notesTab = "followups"; go("notes"); }
     if(k==="a") isManager() ? go("manager") : null;
@@ -3312,7 +3766,7 @@ function bindButtons(){
 }
 
 /* ---------- Init ---------- */
-function init(){
+function startApp(){
   refreshSidebarMini();
   refreshAuthUI();
   refreshRulesSummary();
@@ -3325,12 +3779,22 @@ function init(){
   bindButtons();
   bindKeys();
 
-  $all(".view").forEach(v=> v.style.display="none");
+  $all(".view").forEach(v => v.style.display = "none");
   $("#view-home").style.display = "block";
 
   if(!state.currentUser) openAuthModal(true);
 }
+
+function init(){
+  if(!hasValidLicense()){
+    openLicenseGate();
+    return;
+  }
+  startApp();
+}
+
 init();
+
 </script>
 </body>
 </html>
